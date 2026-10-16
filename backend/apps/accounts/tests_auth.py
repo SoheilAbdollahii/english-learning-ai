@@ -34,6 +34,7 @@ def test_login_and_logout_session_flow():
     assert login_response.status_code == 200
     assert client.get("/api/v1/me/").status_code == 200
 
+    token = client.get("/api/v1/auth/csrf/").json()["csrfToken"]
     logout_response = client.post(
         "/api/v1/auth/logout/",
         data="{}",
