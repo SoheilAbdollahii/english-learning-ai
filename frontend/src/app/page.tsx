@@ -8,7 +8,7 @@ const learningAreas = [
     description: "Build clearer sentences and learn from structured feedback.",
     level: "Guided practice",
     symbol: "✎",
-    href: "#writing",
+    href: "/writing",
   },
   {
     number: "02",
@@ -53,7 +53,7 @@ export default function HomePage() {
             <span aria-hidden="true">⌂</span> Overview
           </a>
           <Link className="nav-link" href="/placement"><span aria-hidden="true">✦</span> Level check</Link>
-          <a className="nav-link" href="#writing"><span aria-hidden="true">✎</span> Writing</a>
+          <Link className="nav-link" href="/writing"><span aria-hidden="true">✎</span> Writing</Link>
           <a className="nav-link" href="#reading"><span aria-hidden="true">▤</span> Reading</a>
           <a className="nav-link" href="#vocabulary"><span aria-hidden="true">Aa</span> Vocabulary</a>
         </nav>
@@ -128,7 +128,7 @@ export default function HomePage() {
                   <p className="area-description">{area.description}</p>
                   <div className="area-card-bottom">
                     <span className="area-level">{area.level}</span>
-                    <a href="#coming-soon" aria-label={`Learn about ${area.title}`} className="area-arrow">↗</a>
+                    <Link href={area.href} aria-label={`Open ${area.title}`} className="area-arrow">↗</Link>
                   </div>
                 </article>
               ))}

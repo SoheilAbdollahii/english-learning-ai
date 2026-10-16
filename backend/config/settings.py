@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "apps.accounts.apps.AccountsConfig",
     "apps.placement.apps.PlacementConfig",
+    "apps.writing.apps.WritingConfig",
 ]
 
 MIDDLEWARE = [
