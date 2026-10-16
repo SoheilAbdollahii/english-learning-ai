@@ -20,6 +20,8 @@ Custom user model, profile, authentication, cross-user authorization tests, vers
 ### Phase 4 — Writing MVP
 Provider-neutral adapter, fake provider for tests, versioned result schema, span validation, history, timeout/failure handling, usage accounting, evaluation baseline.
 
+Current status: **In progress — implemented but unverified.** The branch includes the provider-neutral demo adapter, schema-v1 validation, owner-scoped submissions/history, and safe failure responses. The demo adapter is not a grammar evaluator. Real-provider timeouts, usage accounting, and an evaluation baseline are still outstanding.
+
 ### Phase 5 — Reading and Vocabulary
 Curated licensed/versioned content, server-side Reading scoring, vocabulary review state and tested spaced-repetition rules.
 
