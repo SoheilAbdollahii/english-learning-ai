@@ -316,3 +316,49 @@ a:focus-visible { outline: 3px solid #b4cdb5; outline-offset: 3px; }
 @media (prefers-reduced-motion: reduce) {
   .placement-progress-fill { transition: none; }
 }
+
+
+/* Writing studio */
+.writing-shell { width: min(100% - 32px, 850px); min-height: 100vh; margin: 0 auto; padding: 28px 0 64px; }
+.writing-topline { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding-bottom: 24px; border-bottom: 1px solid var(--line); }
+.writing-intro { padding: 43px 0 29px; }
+.writing-intro h1 { margin: 0; font-family: var(--serif); font-size: clamp(2.3rem, 5vw, 3.7rem); font-weight: 500; letter-spacing: -.06em; line-height: 1.05; }
+.writing-intro h1 em { color: var(--accent); font-weight: 500; }
+.writing-intro > p:not(.placement-eyebrow) { max-width: 650px; margin: 17px 0 0; color: #718078; font-size: .9rem; line-height: 1.75; }
+.writing-composer, .writing-result, .writing-history { padding: 25px; border: 1px solid var(--line); border-radius: 17px; background: #fff; }
+.writing-composer-heading, .writing-composer-footer, .writing-result-header, .writing-history-heading { display: flex; align-items: center; justify-content: space-between; gap: 15px; }
+.writing-composer h2, .writing-result h2, .writing-history h2 { margin: 6px 0 0; font-family: var(--serif); font-size: 1.5rem; font-weight: 500; letter-spacing: -.035em; }
+.writing-character-count, .writing-history-heading > span { color: #8b978d; font-size: .68rem; white-space: nowrap; }
+.writing-composer textarea { display: block; width: 100%; min-height: 210px; margin-top: 20px; padding: 16px; resize: vertical; border: 1px solid #dfe6dd; border-radius: 11px; background: #fdfdfb; color: var(--ink); font: inherit; font-size: .91rem; line-height: 1.75; }
+.writing-composer textarea:focus { border-color: #7fa68b; outline: 3px solid #e2eee1; }
+.writing-composer textarea::placeholder { color: #a3aca3; }
+.writing-composer-footer { align-items: center; margin-top: 17px; }
+.writing-composer-footer p { max-width: 340px; margin: 0; color: #8a968c; font-size: .7rem; line-height: 1.6; }
+.writing-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+.writing-result { margin-top: 18px; }
+.writing-status { padding: 7px 10px; border-radius: 100px; background: #edf3e9; color: var(--accent-dark); font-size: .66rem; font-weight: 700; text-transform: capitalize; }
+.writing-original { margin: 20px 0 0; padding: 15px 17px; border-left: 3px solid #b6cbb1; background: #f8faf5; color: #4d5f53; font-size: .87rem; line-height: 1.75; white-space: pre-wrap; }
+.writing-feedback { margin: 17px 0 0; color: #65746a; font-size: .82rem; line-height: 1.7; }
+.writing-limitations { margin-top: 16px; padding: 15px 16px; border: 1px solid #eee5cf; border-radius: 10px; background: #fbf8ef; color: #756647; font-size: .73rem; line-height: 1.65; }
+.writing-limitations ul { margin: 8px 0 0; padding-left: 18px; }
+.writing-history { margin-top: 18px; }
+.writing-history-heading { margin-bottom: 16px; }
+.writing-empty { margin: 0; padding: 18px; border: 1px dashed #dfe6dc; border-radius: 10px; color: #8a968c; font-size: .78rem; line-height: 1.65; }
+.writing-history-list { display: grid; }
+.writing-history-item { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 15px 0; border-top: 1px solid #edf0e9; }
+.writing-history-item-copy { min-width: 0; }
+.writing-history-item-copy p { display: -webkit-box; margin: 0; overflow: hidden; color: #53645a; font-size: .82rem; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.writing-history-item-copy > span { display: block; margin-top: 6px; color: #98a197; font-size: .64rem; }
+.writing-view-button { flex: 0 0 auto; padding: 8px 11px; border: 1px solid #dce5d8; border-radius: 8px; background: white; color: var(--accent-dark); font: inherit; font-size: .7rem; font-weight: 700; cursor: pointer; }
+.writing-view-button:disabled { cursor: not-allowed; opacity: .45; }
+.writing-view-button:hover:not(:disabled) { background: #eff4ec; }
+@media (max-width: 600px) {
+  .writing-shell { width: min(100% - 28px, 850px); padding-top: 17px; }
+  .writing-topline { align-items: flex-start; }
+  .writing-intro { padding: 30px 0 22px; }
+  .writing-composer, .writing-result, .writing-history { padding: 17px; }
+  .writing-composer-heading { align-items: flex-start; }
+  .writing-composer h2, .writing-result h2, .writing-history h2 { font-size: 1.3rem; }
+  .writing-composer-footer { align-items: stretch; flex-direction: column; }
+  .writing-composer-footer .placement-submit { width: 100%; }
+}
