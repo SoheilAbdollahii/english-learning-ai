@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 import { useEffect, useState } from "react";
 
 type CurrentUser = { username: string };
@@ -60,7 +62,7 @@ export default function AuthStatus() {
   }
 
   if (!ready) return <span className="auth-status-placeholder" aria-label="Checking sign-in status" />;
-  if (!username) return <a className="auth-link" href="/login">Sign in</a>;
+  if (!username) return <Link className="auth-link" href="/login">Sign in</Link>;
 
   return (
     <div className="auth-status">
