@@ -32,12 +32,13 @@ Status: partially implemented. Session CSRF/login/logout and the current-user pr
 - The frontend login form is available at `/login`. Public registration is intentionally not available yet; create users through the Django admin or `createsuperuser` for local testing.
 - Registration policy and endpoint remain to be designed before public launch.
 
-### Placement (initial implementation)
+### Placement (implemented backend and frontend flow)
 - GET /api/v1/placement/assessments/ — published assessments only.
 - GET /api/v1/placement/assessments/{assessment_id}/ — public question fields only; answer keys and explanations are withheld.
 - POST /api/v1/placement/attempts/ — authenticated; validates complete answer sets and calculates score on the server.
 - GET /api/v1/placement/attempts/{attempt_id}/ — authenticated owner-only result.
-- A six-question starter assessment is seeded by the initial migration. CEFR estimates use a documented-in-code percentage threshold heuristic and are provisional, not a validated adaptive placement instrument.
+- A six-question starter assessment is seeded by the initial migration. The Next.js /placement page fetches the public question set, validates that all answers are selected client-side, retrieves a CSRF token, and submits the answers through the same-origin API proxy. The server scores and persists the attempt; the result screen displays the returned score and provisional level.
+- CEFR estimates use a documented-in-code percentage threshold heuristic and are provisional, not a validated adaptive placement instrument. The browser never receives answer keys or calculates the official score.
 
 ## Planned endpoint inventory
 
