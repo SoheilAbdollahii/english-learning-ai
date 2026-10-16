@@ -9,7 +9,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = ("locale", "target_level", "daily_goal_minutes", "timezone")
 
 class MeSerializer(serializers.ModelSerializer):
-    profile = ProfileSerializer()
+    profile = ProfileSerializer(partial=True)
     class Meta:
         model = User
         fields = ("id", "username", "email", "first_name", "last_name", "profile")
