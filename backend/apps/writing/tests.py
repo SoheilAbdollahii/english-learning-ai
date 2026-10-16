@@ -103,3 +103,79 @@ def test_provider_failure_is_reported_as_failure_not_success(monkeypatch):
     assert response.data["code"] == "analysis_unavailable"
     assert "private internal detail" not in str(response.data)
     assert WritingSubmission.objects.get(pk=response.data["id"]).status == "failed"
+
+
+def test_provider_selection_uses_demo_without_api_key(monkeypatch):
+    from .services import DemoWritingProvider, get_provider
+
+    monkeypatch.delenv("GEMINI_API_KEY", raising=False)
+    assert isinstance(get_provider(), DemoWritingProvider)
+
+
+def test_gemini_provider_sends_key_in_header_and_parses_json(monkeypatch):
+    import json
+    from .services import GeminiWritingProvider
+
+    captured = {}
+
+    class FakeResponse:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_args):
+            return False
+
+        def read(self):
+            return json.dumps({
+                "candidates": [{
+                    "content": {
+                        "parts": [{
+                            "text": json.dumps({
+                                "schema_version": 1,
+                                "corrected_text": "I go to school.",
+                                "errors": [{
+                                    "category": "grammar",
+                                    "start": 0,
+                                    "end": 2,
+                                    "original": "I ",
+                                    "correction": "I",
+                                    "explanation": "Example correction.",
+                                }],
+                                "general_feedback": "Good start.",
+                                "limitations": [],
+                            })
+                        }]
+                    }
+                }]
+            }).encode("utf-8")
+
+    def fake_urlopen(request, timeout):
+        captured["request"] = request
+        captured["timeout"] = timeout
+        return FakeResponse()
+
+    monkeypatch.setattr("apps.writing.services.urlopen", fake_urlopen)
+    provider = GeminiWritingProvider(api_key="test-secret", timeout=9)
+    result = provider.analyze("I go to school.")
+    assert result["schema_version"] == 1
+    assert captured["request"].get_header("X-goog-api-key") == "test-secret"
+    assert captured["timeout"] == 9
+    assert "test-secret" not in captured["request"].full_url
+
+
+def test_gemini_provider_reports_unreadable_output_safely(monkeypatch):
+    from .services import GeminiWritingProvider, WritingProviderError
+
+    class FakeResponse:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_args):
+            return False
+
+        def read(self):
+            return b'{"candidates": []}'
+
+    monkeypatch.setattr("apps.writing.services.urlopen", lambda *_args, **_kwargs: FakeResponse())
+    with pytest.raises(WritingProviderError, match="unreadable"):
+        GeminiWritingProvider(api_key="test-secret").analyze("I am learning English.")
