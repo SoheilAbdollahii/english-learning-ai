@@ -1,6 +1,7 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { useState } from "react";
+import type { FormEvent } from "react";
 
 async function getCsrfToken(): Promise<string> {
   const response = await fetch("/api/v1/auth/csrf/", {
