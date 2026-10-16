@@ -23,20 +23,21 @@ Status: partially implemented. The current-user profile endpoint is implemented 
 - Unauthenticated requests are denied. The endpoint always resolves the current authenticated user; callers cannot supply another user's ID.
 - Authentication currently uses Django session authentication. For browser clients, production deployment must use HTTPS and correctly configure CSRF and cookie settings.
 
-## Planned endpoint inventory
-
 ### Authentication
-- GET /api/v1/auth/csrf/ — returns a CSRF token and sets the CSRF cookie.
-- POST /api/v1/auth/login/ — accepts username/password and creates a Django session; CSRF header/cookie required.
-- POST /api/v1/auth/logout/ — ends the authenticated session; CSRF header/cookie required.
+- GET /api/v1/auth/csrf/ — implemented; returns a CSRF token and sets the CSRF cookie.
+- POST /api/v1/auth/login/ — implemented; accepts username/password and creates a Django session; CSRF header/cookie required.
+- POST /api/v1/auth/logout/ — implemented; ends the authenticated session; CSRF header/cookie required.
 - Login rotates the CSRF token; browser clients should obtain a fresh token after login before a subsequent unsafe request.
 - Registration policy and endpoint remain to be designed before public launch.
 
-### Placement
-- GET /api/v1/placement/assessments/
-- GET /api/v1/placement/assessments/{assessment_id}/ — public question fields only
-- POST /api/v1/placement/attempts/ — server calculates score
-- GET /api/v1/placement/attempts/{attempt_id}/ — owner-only result
+### Placement (initial implementation)
+- GET /api/v1/placement/assessments/ — published assessments only.
+- GET /api/v1/placement/assessments/{assessment_id}/ — public question fields only; answer keys and explanations are withheld.
+- POST /api/v1/placement/attempts/ — authenticated; validates complete answer sets and calculates score on the server.
+- GET /api/v1/placement/attempts/{attempt_id}/ — authenticated owner-only result.
+- A six-question starter assessment is seeded by the initial migration. CEFR estimates use a documented-in-code percentage threshold heuristic and are provisional, not a validated adaptive placement instrument.
+
+## Planned endpoint inventory
 
 ### Writing
 - POST /api/v1/writing/submissions/
