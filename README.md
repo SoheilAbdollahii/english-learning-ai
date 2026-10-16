@@ -2,7 +2,7 @@
 
 An AI-powered English learning web application.
 
-> **Project status:** early MVP. Architecture and delivery documentation, a Django API starter, and a responsive learner dashboard UI shell are in place. The dashboard currently uses placeholder progress values; authentication, persisted learner activity, Writing analysis, Reading exercises, Vocabulary review, and dashboard metrics are not implemented yet.
+> **Project status:** early MVP. Architecture and delivery documentation, a Django API starter, a responsive learner dashboard, and a CSRF-protected frontend session login/logout flow are in place. The current-user profile API is integrated for session status. Progress values remain placeholders; public registration, persisted learner activity, Writing analysis, Reading exercises, Vocabulary review, and real dashboard metrics are not implemented yet.
 
 ## Technology stack
 
@@ -15,7 +15,7 @@ An AI-powered English learning web application.
 ## Repository map
 
 - `backend/` — Django API starter and health endpoint
-- `frontend/` — Next.js learner dashboard UI preview
+- `frontend/` — Next.js learner dashboard UI and session sign-in screen
 - `frontend/tests/` — frontend dashboard smoke tests
 - `docs/architecture.md` — architecture decisions
 - `docs/data-model.md` — proposed learning data model
@@ -34,7 +34,7 @@ From the repository root, create a local environment file if needed:
 cp .env.example .env
 ```
 
-Replace local placeholder values as appropriate. Never commit real secrets. For a quick local run, the backend can use SQLite when `DATABASE_URL` is omitted.
+The sample file documents the expected environment values but Django does not automatically load `.env`; export the variables in your shell or configure your local environment manager. Never commit real secrets. For a quick local run, leave `DATABASE_URL` unset to use SQLite, or configure a running PostgreSQL instance.
 
 ### Backend
 
@@ -45,6 +45,7 @@ source .venv/bin/activate
 python -m pip install -r requirements.txt
 python manage.py check
 python manage.py migrate
+python manage.py createsuperuser
 python manage.py runserver
 ```
 
@@ -60,7 +61,7 @@ npm install
 npm run dev
 ```
 
-Open `http://localhost:3000`. The dashboard is a UI preview; its progress values are placeholders and its learning-area links do not yet launch working lessons.
+Open `http://localhost:3000`. Sign in at `http://localhost:3000/login` using the Django superuser you created. The frontend proxies `/api/*` to `http://127.0.0.1:8000` by default; set `BACKEND_API_URL` if your backend runs elsewhere. The dashboard progress values remain placeholders and its learning-area links do not yet launch working lessons. For a different frontend origin, set `DJANGO_CSRF_TRUSTED_ORIGINS` to comma-separated origins including `https://` in production.
 
 ## Checks
 
@@ -89,7 +90,7 @@ The checks above are configured in CI but must be observed running successfully 
 
 - Do not commit `.env` or provider API keys.
 - The current health endpoint is a scaffold, not a production readiness check.
-- Authentication, object-level permissions, AI output validation, quotas, and production settings still need implementation and tests before handling real learner data.
+- Session login/logout and the current-user profile endpoint are implemented and tested, but public registration, account recovery, production cookie/security settings, object-level permissions for future learning records, AI output validation, and quotas still need implementation before production use.
 - Dashboard metrics are intentionally shown as placeholders until they can be derived from persisted activity records.
 
 ## Development status
