@@ -20,7 +20,7 @@ Custom user model, profile, authentication, cross-user authorization tests, vers
 ### Phase 4 — Writing MVP
 Provider-neutral adapter, fake provider for tests, versioned result schema, span validation, history, timeout/failure handling, usage accounting, evaluation baseline.
 
-Current status: **In progress — scaffold verified by CI.** PR #5 passes backend checks/tests and frontend lint, typecheck, tests, and production build. The branch includes the provider-neutral demo adapter, schema-v1 validation, owner-scoped submissions/history, safe failure responses, and the Writing Studio UI. The demo adapter is not a grammar evaluator. Real-provider integration and timeouts, usage accounting, and an evaluation baseline are still outstanding.
+Current status: **In progress — Gemini integration added; latest CI pending.** The branch includes a server-side Gemini Developer API adapter (default model `gemini-2.5-flash`), bounded request timeout, schema/span validation, owner-scoped submissions/history, safe failure responses, and the Writing Studio UI. Without `GEMINI_API_KEY`, the clearly-labelled demo adapter remains active. Free-tier quota monitoring, usage accounting, and an evaluation baseline remain outstanding.
 
 ### Phase 5 — Reading and Vocabulary
 Curated licensed/versioned content, server-side Reading scoring, vocabulary review state and tested spaced-repetition rules.
