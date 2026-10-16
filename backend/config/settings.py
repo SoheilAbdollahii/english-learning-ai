@@ -6,7 +6,7 @@ import dj_database_url
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "unsafe-local-development-key-change-me")
 DEBUG = os.environ.get("DJANGO_DEBUG", "false").lower() == "true"
-ALLOWED_HOSTS = [
+CSRF_TRUSTED_ORIGINS = [\n    origin.strip()\n    for origin in os.environ.get(\n        "DJANGO_CSRF_TRUSTED_ORIGINS",\n        "http://localhost:3000,http://127.0.0.1:3000",\n    ).split(",")\n    if origin.strip()\n]\n\nALLOWED_HOSTS = [
     host.strip()
     for host in os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
     if host.strip()
