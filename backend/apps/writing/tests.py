@@ -34,7 +34,7 @@ def test_writing_submission_uses_demo_provider_and_persists_result():
 def test_writing_endpoints_require_authentication():
     client = APIClient()
     assert client.post("/api/v1/writing/submissions/", {"text": "Hello world."}, format="json").status_code == 403
-    assert client.get("/api/v1/writing/submissions/history/").status_code == 403
+    assert client.get("/api/v1/writing/submissions/").status_code == 403
 
 
 @pytest.mark.django_db
@@ -55,10 +55,12 @@ def test_writing_history_and_details_are_owner_scoped():
     client = APIClient()
     client.force_authenticate(user=other)
     assert client.get(f"/api/v1/writing/submissions/{submission.id}/").status_code == 404
-    assert client.get("/api/v1/writing/submissions/history/").data == []
+    assert client.get("/api/v1/writing/submissions/").data["results"] == []
 
     client.force_authenticate(user=owner)
-    assert len(client.get("/api/v1/writing/submissions/history/").data) == 1
+    response = client.get("/api/v1/writing/submissions/")
+    assert response.data["count"] == 1
+    assert len(response.data["results"]) == 1
 
 
 def test_result_validation_rejects_spans_that_do_not_match_source_text():
