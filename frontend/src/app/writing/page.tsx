@@ -128,7 +128,7 @@ export default function WritingPage() {
             <p className="placement-eyebrow">YOUR DRAFT</p>
             <h2 id="composer-title">What would you like to say?</h2>
           </div>
-          <span className="writing-character-count">{text.length.toLocaleString()} / 5,000</span>
+          <span className="writing-character-count">{text.length} / 5,000</span>
         </div>
         <label className="writing-sr-only" htmlFor="writing-text">Your English writing</label>
         <textarea
