@@ -1,6 +1,6 @@
 # Initial REST API Contract
 
-Status: partially implemented. Session CSRF/login/logout and the current-user profile endpoint are implemented and covered by tests. Reading, Vocabulary, progress, and usage endpoints below remain proposals until implemented and tested. The Writing API is implemented on the `feat/writing-mvp-api` branch; automated verification is pending CI.
+Status: partially implemented. Session CSRF/login/logout and the current-user profile endpoint are implemented and covered by tests. Reading, Vocabulary, progress, and usage endpoints below remain proposals until implemented and tested. The Writing API and frontend Writing Studio are implemented on the `feat/writing-mvp-api` branch. CI passed for the current implementation (backend checks/tests and frontend lint/typecheck/tests/production build).
 
 ## Conventions
 - Prefix routes with /api/v1/.
