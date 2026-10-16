@@ -26,8 +26,10 @@ Status: partially implemented. The current-user profile endpoint is implemented 
 ## Planned endpoint inventory
 
 ### Authentication
-- POST /api/v1/auth/login/
-- POST /api/v1/auth/logout/
+- GET /api/v1/auth/csrf/ — returns a CSRF token and sets the CSRF cookie.
+- POST /api/v1/auth/login/ — accepts username/password and creates a Django session; CSRF header/cookie required.
+- POST /api/v1/auth/logout/ — ends the authenticated session; CSRF header/cookie required.
+- Login rotates the CSRF token; browser clients should obtain a fresh token after login before a subsequent unsafe request.
 - Registration policy and endpoint remain to be designed before public launch.
 
 ### Placement
