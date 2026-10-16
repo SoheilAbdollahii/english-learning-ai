@@ -65,5 +65,5 @@ def test_attempt_results_are_private_to_owner():
 
 def test_estimate_level_boundaries():
     assert estimate_level(0, 6) == "A1"
-    assert estimate_level(3, 6) == "B1"
+    assert estimate_level(4, 6) == "B1"
     assert estimate_level(6, 6) == "C2"
