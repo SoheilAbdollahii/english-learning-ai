@@ -1,20 +1,28 @@
 # Initial Data Model
 
-Status: proposed logical model. Field-level schema and migrations are not implemented yet.
+Status: logical model plus first implemented profile schema. Remaining domain entities are proposals until implemented with migrations and tests.
 
 ## Design rules
-- Use a custom Django user model from the first migration.
+- The current scaffold uses Django's built-in User model to avoid premature custom-auth complexity. Revisit any custom-user requirement before production data exists; changing user models after launch is a high-cost migration.
 - Give every private learner record explicit ownership.
 - Store timestamps in UTC.
 - Use database constraints as well as application validation.
 - Version assessment content and AI schemas where historical interpretation depends on them.
 - Define data retention and deletion before production launch.
 
-## Core entities
+## Implemented: Profile
+- One-to-one relation to the authenticated Django user.
+- locale: en or fa, default en.
+- target_level: A1-C2 or unknown, default unknown.
+- daily_goal_minutes: integer from 5 to 180, default 15.
+- timezone: string, default UTC.
+- Creation and update timestamps.
+- Profile creation is lazy on GET /api/v1/me/ and the endpoint only addresses the authenticated user.
+
+## Proposed core entities
 
 ### Accounts and placement
-- User: authentication identity.
-- Profile: interface locale, learning preferences, optional goals.
+- User: Django authentication identity.
 - PlacementAttempt: user, assessment version, answers, score, estimated level, completion time, scoring version.
 
 ### Writing
