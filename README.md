@@ -2,7 +2,7 @@
 
 An AI-powered English learning web application.
 
-> **Project status:** early scaffold. Architecture and delivery documentation are in place, with minimal Django and Next.js starter applications. Writing analysis, Reading exercises, Vocabulary review, authentication flows, and dashboard metrics are not implemented yet.
+> **Project status:** early MVP. Architecture and delivery documentation, a Django API starter, and a responsive learner dashboard UI shell are in place. The dashboard currently uses placeholder progress values; authentication, persisted learner activity, Writing analysis, Reading exercises, Vocabulary review, and dashboard metrics are not implemented yet.
 
 ## Technology stack
 
@@ -15,7 +15,8 @@ An AI-powered English learning web application.
 ## Repository map
 
 - `backend/` — Django API starter and health endpoint
-- `frontend/` — Next.js landing page scaffold
+- `frontend/` — Next.js learner dashboard UI preview
+- `frontend/tests/` — frontend dashboard smoke tests
 - `docs/architecture.md` — architecture decisions
 - `docs/data-model.md` — proposed learning data model
 - `docs/api-contract.md` — initial endpoint inventory
@@ -27,30 +28,39 @@ An AI-powered English learning web application.
 
 Requirements: Python 3.12+, Node.js 22+, npm, and optionally PostgreSQL.
 
-1. Copy `.env.example` to `.env` and replace local placeholder values. Never commit real secrets.
-2. Backend:
+From the repository root, create a local environment file if needed:
 
-   ```bash
-   cd backend
-   python -m venv .venv
-   # Activate the virtual environment, then:
-   pip install -r requirements.txt
-   python manage.py check
-   python manage.py migrate
-   python manage.py runserver
-   ```
+```bash
+cp .env.example .env
+```
 
-   Health endpoint: `http://127.0.0.1:8000/api/v1/health/`
+Replace local placeholder values as appropriate. Never commit real secrets. For a quick local run, the backend can use SQLite when `DATABASE_URL` is omitted.
 
-3. Frontend, in a separate terminal:
+### Backend
 
-   ```bash
-   cd frontend
-   npm install
-   npm run dev
-   ```
+```bash
+cd backend
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+python manage.py check
+python manage.py migrate
+python manage.py runserver
+```
 
-   Open `http://localhost:3000`.
+Health endpoint: `http://127.0.0.1:8000/api/v1/health/`
+
+### Frontend
+
+Open a second terminal from the repository root:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Open `http://localhost:3000`. The dashboard is a UI preview; its progress values are placeholders and its learning-area links do not yet launch working lessons.
 
 ## Checks
 
@@ -80,6 +90,7 @@ The checks above are configured in CI but must be observed running successfully 
 - Do not commit `.env` or provider API keys.
 - The current health endpoint is a scaffold, not a production readiness check.
 - Authentication, object-level permissions, AI output validation, quotas, and production settings still need implementation and tests before handling real learner data.
+- Dashboard metrics are intentionally shown as placeholders until they can be derived from persisted activity records.
 
 ## Development status
 
