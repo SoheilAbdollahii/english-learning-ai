@@ -1,3 +1,5 @@
+import AuthStatus from "./components/auth-status";
+
 const learningAreas = [
   {
     number: "01",
@@ -65,7 +67,7 @@ export default function HomePage() {
       <section className="main-panel" id="home">
         <header className="topbar">
           <p><span className="topbar-dot" /> YOUR PERSONAL LEARNING SPACE</p>
-          <span className="preview-pill">UI PREVIEW</span>
+          <div className="topbar-actions"><span className="preview-pill">UI PREVIEW</span><AuthStatus /></div>
         </header>
 
         <div className="content-wrap">
