@@ -1,6 +1,6 @@
 # Initial REST API Contract
 
-Status: partially implemented. The current-user profile endpoint is implemented and covered by tests; remaining endpoints are proposals until implemented and tested.
+Status: partially implemented. Session CSRF/login/logout and the current-user profile endpoint are implemented and covered by tests. Reading, Writing, Vocabulary, progress, and usage endpoints below remain proposals until implemented and tested.
 
 ## Conventions
 - Prefix routes with /api/v1/.
@@ -28,6 +28,8 @@ Status: partially implemented. The current-user profile endpoint is implemented 
 - POST /api/v1/auth/login/ — implemented; accepts username/password and creates a Django session; CSRF header/cookie required.
 - POST /api/v1/auth/logout/ — implemented; ends the authenticated session; CSRF header/cookie required.
 - Login rotates the CSRF token; browser clients should obtain a fresh token after login before a subsequent unsafe request.
+- The Next.js frontend proxies `/api/*` to `BACKEND_API_URL` (default `http://127.0.0.1:8000`) so browser requests remain same-origin. Add the frontend origin to `DJANGO_CSRF_TRUSTED_ORIGINS`; production origins must be configured explicitly.
+- The frontend login form is available at `/login`. Public registration is intentionally not available yet; create users through the Django admin or `createsuperuser` for local testing.
 - Registration policy and endpoint remain to be designed before public launch.
 
 ### Placement (initial implementation)
