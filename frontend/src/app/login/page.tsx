@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import type { FormEvent } from "react";
 
@@ -50,12 +51,12 @@ export default function LoginPage() {
 
   return (
     <main className="login-shell">
-      <a className="login-back" href="/" aria-label="Back to dashboard">← Back to dashboard</a>
+      <Link className="login-back" href="/" aria-label="Back to dashboard">← Back to dashboard</Link>
       <section className="login-card" aria-labelledby="login-title">
-        <a className="brand login-brand" href="/">
+        <Link className="brand login-brand" href="/">
           <span className="brand-mark" aria-hidden="true">e.</span>
           <span className="brand-name">wordwise<span>LEARNING STUDIO</span></span>
-        </a>
+        </Link>
         <p className="eyebrow login-eyebrow">WELCOME BACK</p>
         <h1 id="login-title">Make today<br /><em>count.</em></h1>
         <p className="login-description">Sign in to continue your English learning journey.</p>
