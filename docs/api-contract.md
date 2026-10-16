@@ -1,6 +1,6 @@
 # Initial REST API Contract
 
-Status: partially implemented. Session CSRF/login/logout and the current-user profile endpoint are implemented and covered by tests. Reading, Vocabulary, progress, and usage endpoints below remain proposals until implemented and tested. The Writing API and frontend Writing Studio are implemented on the `feat/writing-mvp-api` branch. CI passed for the current implementation (backend checks/tests and frontend lint/typecheck/tests/production build).
+Status: partially implemented. Session CSRF/login/logout and the current-user profile endpoint are implemented and covered by tests. Reading, Vocabulary, progress, and usage endpoints below remain proposals until implemented and tested. The Writing API and frontend Writing Studio are implemented on the `feat/writing-mvp-api` branch. Gemini Developer API integration is optional and enabled only when the backend environment has a configured `GEMINI_API_KEY`; without it, the clearly labelled demo provider remains active. CI status for the latest provider integration is being checked.
 
 ## Conventions
 - Prefix routes with /api/v1/.
