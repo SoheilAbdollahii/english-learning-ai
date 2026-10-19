@@ -1,0 +1,42 @@
+from django.utils import timezone
+from rest_framework import generics, permissions, status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from .models import VocabularyCard
+from .serializers import (
+    VocabularyCardCreateSerializer,
+    VocabularyCardSerializer,
+    VocabularyReviewSerializer,
+)
+from .services import apply_review
+
+
+class VocabularyCardListCreateView(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    pagination_class = None
+
+    def get_queryset(self):
+        queryset = VocabularyCard.objects.filter(user=self.request.user)
+        if self.request.query_params.get("due", "").lower() in {"1", "true", "yes"}:
+            queryset = queryset.filter(due_at__lte=timezone.now())
+        return queryset
+
+    def get_serializer_class(self):
+        if self.request.method == "POST":
+            return VocabularyCardCreateSerializer
+        return VocabularyCardSerializer
+
+
+class VocabularyReviewView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, pk):
+        serializer = VocabularyReviewSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        try:
+            card = VocabularyCard.objects.get(pk=pk, user=request.user)
+        except VocabularyCard.DoesNotExist:
+            return Response({"detail": "Vocabulary card not found."}, status=status.HTTP_404_NOT_FOUND)
+        card = apply_review(card, serializer.validated_data["quality"])
+        return Response(VocabularyCardSerializer(card).data, status=status.HTTP_200_OK)
