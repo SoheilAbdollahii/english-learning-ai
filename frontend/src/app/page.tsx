@@ -1,36 +1,160 @@
+"use client";
+
+import Link from "next/link";
+import AuthStatus from "./components/auth-status";
+import ProgressOverview from "./components/progress-overview";
+import { useLocale } from "./components/locale-provider";
+
+const learningAreas = [
+  {
+    number: "01",
+    title: "Writing",
+    description: "Build clearer sentences and learn from structured feedback.",
+    level: "Guided practice",
+    symbol: "✎",
+    href: "/writing",
+  },
+  {
+    number: "02",
+    title: "Reading",
+    description: "Read short passages and check what you understood.",
+    level: "Reading practice",
+    symbol: "▤",
+    href: "/reading",
+  },
+  {
+    number: "03",
+    title: "Vocabulary",
+    description: "Keep useful words close with focused review sessions.",
+    level: "Word review",
+    symbol: "Aa",
+    href: "/vocabulary",
+  },
+];
+
+const weeklyPlan = [
+  { day: "M", label: "Mon", active: false },
+  { day: "T", label: "Tue", active: false },
+  { day: "W", label: "Wed", active: true },
+  { day: "T", label: "Thu", active: false },
+  { day: "F", label: "Fri", active: false },
+  { day: "S", label: "Sat", active: false },
+  { day: "S", label: "Sun", active: false },
+];
+
 export default function HomePage() {
+  const { t } = useLocale();
   return (
-    <main className="page-shell">
-      <section className="hero" aria-labelledby="page-title">
-        <p className="eyebrow">YOUR ENGLISH LEARNING SPACE</p>
-        <h1 id="page-title">Build your English, one step at a time.</h1>
-        <p className="intro">
-          Practice writing, explore reading, and grow your vocabulary.
-          Your personal learning dashboard is being built.
-        </p>
-        <div className="feature-grid" aria-label="Learning areas">
-          <article className="feature-card">
-            <span className="feature-number">01</span>
-            <h2>Writing</h2>
-            <p>Get clear, educational feedback on your English.</p>
-            <span className="status">Planned</span>
-          </article>
-          <article className="feature-card">
-            <span className="feature-number">02</span>
-            <h2>Reading</h2>
-            <p>Read levelled passages and check your understanding.</p>
-            <span className="status">Planned</span>
-          </article>
-          <article className="feature-card">
-            <span className="feature-number">03</span>
-            <h2>Vocabulary</h2>
-            <p>Review words and track learning over time.</p>
-            <span className="status">Planned</span>
-          </article>
+    <main className="app-shell">
+      <aside className="sidebar" aria-label="Main navigation">
+        <a className="brand" href="#home" aria-label="English Learning home">
+          <span className="brand-mark" aria-hidden="true">e.</span>
+          <span className="brand-name">wordwise<span>{t("LEARNING STUDIO")}</span></span>
+        </a>
+
+        <p className="nav-label">{t("WORKSPACE")}</p>
+        <nav className="main-nav">
+          <a className="nav-link nav-link-active" href="#home" aria-current="page">
+            <span aria-hidden="true">⌂</span> {t("Overview")}
+          </a>
+          <Link className="nav-link" href="/placement"><span aria-hidden="true">✦</span> {t("Level check")}</Link>
+          <Link className="nav-link" href="/writing"><span aria-hidden="true">✎</span> {t("Writing")}</Link>
+          <Link className="nav-link" href="/reading"><span aria-hidden="true">▤</span> {t("Reading")}</Link>
+          <Link className="nav-link" href="/vocabulary"><span aria-hidden="true">Aa</span> {t("Vocabulary")}</Link>
+        </nav>
+
+        <div className="sidebar-note">
+          <span className="note-icon" aria-hidden="true">✦</span>
+          <p className="note-title">{t("Small steps add up.")}</p>
+          <p className="note-copy">{t("A little practice today makes tomorrow easier.")}</p>
         </div>
-        <p className="footnote">
-          This is an early project scaffold. Learning features are not yet implemented.
-        </p>
+        <p className="sidebar-foot">{t("EARLY ACCESS · PREVIEW")}</p>
+      </aside>
+
+      <section className="main-panel" id="home">
+        <header className="topbar">
+          <p><span className="topbar-dot" /> {t("YOUR PERSONAL LEARNING SPACE")}</p>
+          <div className="topbar-actions"><span className="preview-pill">{t("UI PREVIEW")}</span><AuthStatus /></div>
+        </header>
+
+        <div className="content-wrap">
+          <section className="welcome" aria-labelledby="page-title">
+            <div>
+              <p className="eyebrow">{t("MAKE ROOM FOR PROGRESS")}</p>
+              <h1 id="page-title">{t("Your English journey,")}<br /><em>{t("one day at a time.")}</em></h1>
+              <p className="welcome-copy">
+                {t("A calmer place to practice, build confidence, and make English part of your routine.")}
+              </p>
+            </div>
+            <div className="welcome-art" aria-hidden="true">
+              <div className="art-sun" />
+              <div className="art-book art-book-back" />
+              <div className="art-book art-book-front"><span>abc</span><i>✦</i></div>
+              <span className="art-spark spark-one">✳</span>
+              <span className="art-spark spark-two">✦</span>
+            </div>
+          </section>
+
+          <ProgressOverview />
+
+          <section className="section-block" aria-labelledby="areas-title">
+            <div className="section-heading">
+              <div>
+                <p className="eyebrow">{t("YOUR TOOLKIT")}</p>
+                <h2 id="areas-title">{t("Choose your next step")}</h2>
+              </div>
+              <span className="section-caption">{t("3 learning areas")}</span>
+            </div>
+            <div className="area-grid">
+              {learningAreas.map((area) => (
+                <article className="area-card" id={area.title.toLowerCase()} key={area.number}>
+                  <div className={`area-symbol area-symbol-${area.number}`} aria-hidden="true">{area.symbol}</div>
+                  <p className="area-number">AREA {area.number}</p>
+                  <h3>{t(area.title)}</h3>
+                  <p className="area-description">{t(area.description)}</p>
+                  <div className="area-card-bottom">
+                    <span className="area-level">{t(area.level)}</span>
+                    <Link href={area.href} aria-label={`${t("Open")} ${t(area.title)}`} className="area-arrow">↗</Link>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          <section className="bottom-grid">
+            <article className="week-card">
+              <div className="section-heading compact-heading">
+                <div>
+                  <p className="eyebrow">{t("BUILD A ROUTINE")}</p>
+                  <h2>{t("Your week")}</h2>
+                </div>
+                <span className="week-tag">{t("A fresh start")}</span>
+              </div>
+              <p className="week-copy">{t("Consistency matters more than a perfect streak. Pick a small goal and keep it kind.")}</p>
+              <div className="week-days" aria-label="Illustrative weekly schedule">
+                {weeklyPlan.map((day, index) => (
+                  <div className="week-day" key={`${day.label}-${index}`}>
+                    <span>{day.label}</span>
+                    <span className={day.active ? "day-circle day-circle-active" : "day-circle"}>{day.active ? "•" : ""}</span>
+                  </div>
+                ))}
+              </div>
+              <p className="demo-note">{t("Sample layout only — activity tracking is not connected yet.")}</p>
+            </article>
+            <article className="focus-card" id="coming-soon">
+              <div className="focus-decoration" aria-hidden="true">✦</div>
+              <p className="eyebrow">{t("A GENTLE REMINDER")}</p>
+              <h2>{t("Progress, not")}<br /><em>{t("perfection.")}</em></h2>
+              <p>{t("Ten thoughtful minutes can be more useful than an hour of distracted studying.")}</p>
+              <span className="focus-label">{t("YOUR PACE IS THE RIGHT PACE")}</span>
+              <Link className="placement-cta" href="/placement">{t("Take the level check")} <span aria-hidden="true">↗</span></Link>
+            </article>
+          </section>
+          <footer className="page-footer">
+            <span>{t("WORDWISE · ENGLISH LEARNING STUDIO")}</span>
+            <span>{t("Built for steady progress")} <span aria-hidden="true">✦</span></span>
+          </footer>
+        </div>
       </section>
     </main>
   );

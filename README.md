@@ -2,7 +2,7 @@
 
 An AI-powered English learning web application.
 
-> **Project status:** early scaffold. Architecture and delivery documentation are in place, with minimal Django and Next.js starter applications. Writing analysis, Reading exercises, Vocabulary review, authentication flows, and dashboard metrics are not implemented yet.
+> **Project status:** active MVP development. Session authentication/profile, placement assessment, Writing Studio, Vocabulary spaced repetition, Reading comprehension, persisted progress metrics, and transparent rule-based recommendations are implemented on a stacked set of open pull requests. The dashboard and learning flows are under automated CI verification; they are not yet a production release. Without `GEMINI_API_KEY`, Writing uses an explicitly labelled demo adapter and does not evaluate grammar.
 
 ## Technology stack
 
@@ -14,8 +14,9 @@ An AI-powered English learning web application.
 
 ## Repository map
 
-- `backend/` — Django API starter and health endpoint
-- `frontend/` — Next.js landing page scaffold
+- `backend/` — Django REST API for accounts, placement, writing, vocabulary, reading, and progress
+- `frontend/` — Next.js learner dashboard, registration/sign-in, placement quiz, Writing Studio, Vocabulary review, and Reading Room
+- `frontend/tests/` — frontend dashboard smoke tests
 - `docs/architecture.md` — architecture decisions
 - `docs/data-model.md` — proposed learning data model
 - `docs/api-contract.md` — initial endpoint inventory
@@ -27,30 +28,51 @@ An AI-powered English learning web application.
 
 Requirements: Python 3.12+, Node.js 22+, npm, and optionally PostgreSQL.
 
-1. Copy `.env.example` to `.env` and replace local placeholder values. Never commit real secrets.
-2. Backend:
+From the repository root, create a local environment file if needed:
 
-   ```bash
-   cd backend
-   python -m venv .venv
-   # Activate the virtual environment, then:
-   pip install -r requirements.txt
-   python manage.py check
-   python manage.py migrate
-   python manage.py runserver
-   ```
+```bash
+cp .env.example .env
+```
 
-   Health endpoint: `http://127.0.0.1:8000/api/v1/health/`
+The sample file documents the expected environment values but Django does not automatically load `.env`; export the variables in your shell or configure your local environment manager. Never commit real secrets. For a quick local run, leave `DATABASE_URL` unset to use SQLite, or configure a running PostgreSQL instance.
 
-3. Frontend, in a separate terminal:
+### Backend
 
-   ```bash
-   cd frontend
-   npm install
-   npm run dev
-   ```
+```bash
+cd backend
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+python manage.py check
+python manage.py migrate
+python manage.py createsuperuser
+python manage.py runserver
+```
 
-   Open `http://localhost:3000`.
+Health endpoints: `http://127.0.0.1:8000/api/v1/health/` (liveness) and `http://127.0.0.1:8000/api/v1/ready/` (database and migration readiness).
+
+### Frontend
+
+Open a second terminal from the repository root:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Open `http://localhost:3000`. Create a learner account at `http://localhost:3000/register` or sign in at `http://localhost:3000/login`. The frontend proxies `/api/*` to `http://127.0.0.1:8000` by default; set `BACKEND_API_URL` if your backend runs elsewhere. The dashboard's progress summary is derived from saved activities; study duration is intentionally not shown because reliable session-duration tracking is not yet implemented. For a different frontend origin, set `DJANGO_CSRF_TRUSTED_ORIGINS` to comma-separated origins including `https://` in production. Registration is CSRF-protected and throttled, with a 12-character minimum password policy. Email verification and password recovery are not yet available; add them before a broad public launch.
+
+### Containerized local run
+
+Docker Compose is provided for a local PostgreSQL-backed smoke test. Before starting, copy `.env.example` to `.env`, replace the placeholder secret and database password, then run:
+
+```bash
+docker compose config
+docker compose up --build
+```
+
+Open `http://localhost:3000`. The Compose command runs migrations at startup for local convenience only. In production, run migrations as a controlled one-off release step and do not let multiple replicas migrate concurrently. See `docs/release-checklist.md` before any deployment. The Compose PostgreSQL password defaults are for local development only and must never be reused in production.
 
 ## Checks
 
@@ -78,8 +100,10 @@ The checks above are configured in CI but must be observed running successfully 
 ## Security notes
 
 - Do not commit `.env` or provider API keys.
-- The current health endpoint is a scaffold, not a production readiness check.
-- Authentication, object-level permissions, AI output validation, quotas, and production settings still need implementation and tests before handling real learner data.
+- `/api/v1/health/` is liveness only; `/api/v1/ready/` checks database connectivity and unapplied migrations without exposing internals.
+- Session login/logout, profile, owner-scoped learning records, server-side placement/reading scoring, vocabulary review scheduling, Writing result validation, production-mode secret enforcement, and basic AI request throttling and a database-backed rolling-24-hour Writing quota are implemented in the current PR stack.
+- Writing uses a demo provider unless a Gemini API key is configured; the demo provider is not a tutor and must not be presented as real grammar feedback.
+- Before production: complete and merge the stacked PRs in dependency order; configure HTTPS/proxy settings and secure cookies for the actual deployment; add account recovery/registration policy, immutable content/version controls, provider token/cost accounting, privacy/retention policy, backup/restore drills, and an evaluated writing dataset. Run the full release checklist and CI on the final merge commit.
 
 ## Development status
 

@@ -57,3 +57,53 @@ def test_login_rejects_wrong_password():
         HTTP_X_CSRFTOKEN=token,
     )
     assert response.status_code == 400
+
+
+@pytest.mark.django_db
+def test_registration_requires_csrf_and_creates_normalized_username():
+    client = Client(enforce_csrf_checks=True)
+    denied = client.post(
+        "/api/v1/auth/register/",
+        data=json.dumps({"username": "NewLearner", "password": "Strong-test-pass-123"}),
+        content_type="application/json",
+    )
+    assert denied.status_code == 403
+
+    token = client.get("/api/v1/auth/csrf/").json()["csrfToken"]
+    response = client.post(
+        "/api/v1/auth/register/",
+        data=json.dumps({"username": "NewLearner", "password": "Strong-test-pass-123"}),
+        content_type="application/json",
+        HTTP_X_CSRFTOKEN=token,
+    )
+    assert response.status_code == 201
+    assert response.json()["username"] == "newlearner"
+    user = User.objects.get(username="newlearner")
+    assert user.check_password("Strong-test-pass-123")
+    assert client.get("/api/v1/me/").status_code == 403
+
+
+@pytest.mark.django_db
+def test_registration_rejects_weak_password_and_case_insensitive_duplicate():
+    client = Client(enforce_csrf_checks=True)
+    token = client.get("/api/v1/auth/csrf/").json()["csrfToken"]
+    weak = client.post(
+        "/api/v1/auth/register/",
+        data=json.dumps({"username": "weak-password", "password": "short"}),
+        content_type="application/json",
+        HTTP_X_CSRFTOKEN=token,
+    )
+    assert weak.status_code == 400
+    assert "password" in weak.json()
+    assert not User.objects.filter(username="weak-password").exists()
+
+    User.objects.create_user(username="existinguser", password="Strong-test-pass-123")
+    token = client.get("/api/v1/auth/csrf/").json()["csrfToken"]
+    duplicate = client.post(
+        "/api/v1/auth/register/",
+        data=json.dumps({"username": "ExistingUser", "password": "Another-strong-pass-456"}),
+        content_type="application/json",
+        HTTP_X_CSRFTOKEN=token,
+    )
+    assert duplicate.status_code == 400
+    assert "username" in duplicate.json()

@@ -2,6 +2,8 @@ from django.contrib import admin
 from django.http import JsonResponse
 from django.urls import include, path
 
+from apps.accounts.health_views import readiness
+
 
 def health(_request):
     return JsonResponse({"status": "ok", "service": "english-learning-api"})
@@ -10,6 +12,12 @@ def health(_request):
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/v1/health/", health, name="health"),
+    path("api/v1/ready/", readiness, name="readiness"),
     path("api/v1/", include("apps.accounts.urls")),
     path("api/v1/placement/", include("apps.placement.urls")),
+    path("api/v1/writing/", include("apps.writing.urls")),
+    path("api/v1/vocabulary/", include("apps.vocabulary.urls")),
+    path("api/v1/reading/", include("apps.reading.urls")),
+    path("api/v1/progress/", include("apps.progress.urls")),
+    path("api/v1/usage/", include("apps.usage.urls")),
 ]
