@@ -11,13 +11,15 @@ test("dashboard exposes the three planned learning areas", () => {
   }
 });
 
-test("dashboard navigation targets existing sections and the Writing route", () => {
-  for (const anchor of ["home", "reading", "vocabulary", "coming-soon"]) {
+test("dashboard navigation targets existing sections and the Writing and Vocabulary routes", () => {
+  for (const anchor of ["home", "reading", "coming-soon"]) {
     assert.ok(page.includes(`id="${anchor}"`) || page.includes(`href="#${anchor}"`),
       `missing dashboard anchor: ${anchor}`);
   }
   assert.ok(page.includes('href: "/writing"'), "Writing area should link to the Writing Studio route");
+  assert.ok(page.includes('href: "/vocabulary"'), "Vocabulary area should link to the review route");
   assert.ok(page.includes('href="/writing"'), "Writing navigation should open the Writing Studio");
+  assert.ok(page.includes('href="/vocabulary"'), "Vocabulary navigation should open the review page");
 });
 
 test("dashboard does not present sample progress as real learner data", () => {
