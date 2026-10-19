@@ -167,6 +167,8 @@ const fa: Record<string, string> = {
   "LEARNING STUDIO": "استودیوی یادگیری",
   "EARLY ACCESS · PREVIEW": "دسترسی زودهنگام · پیش‌نمایش",
   "UI PREVIEW": "پیش‌نمایش رابط کاربری",
+  "A SMALL NEXT STEP": "یک قدم کوچک بعدی",
+  "NEXT STEP": "قدم بعدی",
   "YOUR LEARNING TRAIL": "مسیر یادگیری شما",
   "Signing out…": "در حال خروج…",
   "YOUR STARTING POINT": "نقطهٔ شروع شما",
