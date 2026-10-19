@@ -26,7 +26,7 @@ Current status: **In progress — provider integration and initial security/usag
 
 Vocabulary status: **Implemented — CI verification pending.** The initial vocabulary MVP includes owner-scoped cards, case-insensitive duplicate prevention, due-card filtering, a deterministic SM-2-inspired schedule, review grades, and a responsive review UI. Backend and frontend regression tests were added. Remaining vocabulary work includes immutable review-event history, curated licensed word packs, and richer progress analytics.
 
-Reading status: **Not started.** Next work is curated/versioned passages, server-side question scoring, owner-scoped attempts/history, and frontend flow.
+Reading status: **Implemented — CI verification pending.** The initial flow includes two original A2/B1 passages, published-only public endpoints, hidden answer keys before submission, exact-answer validation, server-side scoring, owner-scoped saved attempts, feedback explanations, and a responsive learner page. Remaining work includes immutable question-version snapshots, authoring/content review, more passages, and attempt-history UI.
 
 ### Phase 6 — Progress and personalization
 Defined metrics from persisted records and transparent rule-based recommendations.

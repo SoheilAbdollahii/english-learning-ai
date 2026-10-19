@@ -404,3 +404,35 @@ a:focus-visible { outline: 3px solid #b4cdb5; outline-offset: 3px; }
   .vocabulary-card-head { flex-direction: column; }
   .vocabulary-due { text-align: left; }
 }
+
+
+/* Reading comprehension flow */
+.reading-library { margin: 0 0 16px; padding: 17px; border: 1px solid #e5ebe1; border-radius: 12px; background: #fff; }
+.reading-passage-tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; margin-top: 13px; }
+.reading-passage-tab { display: grid; gap: 6px; padding: 12px; border: 1px solid #e2e9de; border-radius: 9px; background: #fff; text-align: left; cursor: pointer; }
+.reading-passage-tab > span { color: #819080; font-size: .62rem; letter-spacing: .06em; }
+.reading-passage-tab strong { color: #354d3a; font-size: .83rem; }
+.reading-passage-tab small { color: #98a197; font-size: .65rem; }
+.reading-passage-tab-active { border-color: #9db69a; background: #f2f7ef; box-shadow: inset 0 0 0 1px #d9e7d5; }
+.reading-passage { margin-bottom: 16px; padding: clamp(20px, 4vw, 32px); border: 1px solid #e5ebe1; border-radius: 13px; background: #fff; }
+.reading-passage-meta { display: flex; justify-content: space-between; gap: 10px; color: #819080; font-size: .64rem; letter-spacing: .05em; }
+.reading-passage h2 { margin: 17px 0 14px; color: #2d4535; font-size: clamp(1.45rem, 4vw, 2rem); letter-spacing: -.04em; }
+.reading-passage-body { margin: 0; color: #53645a; font-size: .95rem; line-height: 1.95; white-space: pre-line; }
+.reading-source { margin: 18px 0 0; color: #98a197; font-size: .65rem; }
+.reading-quiz { margin-top: 0; }
+.reading-result { margin-top: 16px; padding: clamp(20px, 4vw, 32px); border: 1px solid #e5ebe1; border-radius: 13px; background: #fff; }
+.reading-result h2 { margin: 8px 0; color: #2d4535; font-size: 1.5rem; }
+.reading-result-score { margin: 16px 0 20px; color: #3e6841; font-size: 2.5rem; font-weight: 700; letter-spacing: -.06em; }
+.reading-result-score span { color: #829080; font-size: .78rem; font-weight: 400; letter-spacing: 0; }
+.reading-feedback-list { display: grid; }
+.reading-feedback-item { padding: 15px 0; border-top: 1px solid #edf0e9; }
+.reading-answer-mark { display: inline-block; padding: 4px 7px; border-radius: 5px; font-size: .62rem; font-weight: 700; }
+.reading-answer-correct { background: #eaf4e7; color: #467046; }
+.reading-answer-wrong { background: #f8eee5; color: #94613e; }
+.reading-feedback-item h3 { margin: 10px 0 5px; color: #405646; font-size: .85rem; }
+.reading-feedback-item p { margin: 0; color: #7c897d; font-size: .78rem; line-height: 1.7; }
+@media (max-width: 600px) {
+  .reading-passage-tabs { grid-template-columns: 1fr; }
+  .reading-passage-meta { flex-direction: column; }
+  .reading-passage { padding: 18px; }
+}
