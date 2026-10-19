@@ -38,7 +38,7 @@ Rule-based recommendations: **Verified in CI on PR #9** ([run](https://github.co
 Timezone-aware streak boundary and invalid-profile-timezone fallback tests are **verified in CI on PR #33** ([run](https://github.com/SoheilAbdollahii/english-learning-ai/actions/runs/39252572371)). Production timezone configuration and long-history performance remain deployment checks. Provider token/cost accounting is now implemented in PR #18; estimates require configured rates and are not billing records.
 
 ### Phase 7 — Frontend integration
-Source-level RTL/LTR, locale-control accessibility, named-landmark regression tests, lint/typecheck, and production build are **verified in CI on PR #31** ([run](https://github.com/SoheilAbdollahii/english-learning-ai/actions/runs/39251436800)). Real-browser keyboard/screen-reader checks and full browser E2E journeys remain outstanding.
+Source-level RTL/LTR, locale-control accessibility, named-landmark regression tests, lint/typecheck, and production build are **verified in CI on PR #31** ([run](https://github.com/SoheilAbdollahii/english-learning-ai/actions/runs/39251436800)). A Playwright browser journey covering Persian RTL/LTR, sign-in, reading submission, vocabulary review, and demo Writing submission is **verified in CI on PR #40** ([run](https://github.com/SoheilAbdollahii/english-learning-ai/actions/runs/39257137483)). Manual keyboard/screen-reader review remains outstanding.
 
 ### Phase 8 — Usage controls
 
