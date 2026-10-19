@@ -67,3 +67,12 @@ class ProgressSummaryView(APIView):
                 for item in recent
             ],
         })
+
+
+class ProgressRecommendationsView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        from .recommendations import build_recommendations
+
+        return Response({"recommendations": build_recommendations(request.user)})
