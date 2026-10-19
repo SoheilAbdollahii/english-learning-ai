@@ -51,9 +51,9 @@ Proceed only with a concrete use case; evaluate source rights, retrieval quality
 
 ### Phase 10 — Release
 
-Release tooling status: **Verified in CI on PR #13** ([run](https://github.com/SoheilAbdollahii/english-learning-ai/actions/runs/39224375843)). Added backend/frontend Dockerfiles, a local PostgreSQL Docker Compose setup, a database/migration readiness endpoint, and a release checklist that separates local smoke tests from production requirements. A running-stack Compose smoke test is added to CI in PR #37 and awaits verification.
+Release tooling status: **Verified in CI on PR #13** ([run](https://github.com/SoheilAbdollahii/english-learning-ai/actions/runs/39224375843)). Added backend/frontend Dockerfiles, a local PostgreSQL Docker Compose setup, a database/migration readiness endpoint, and a release checklist that separates local smoke tests from production requirements. A running-stack Compose smoke test is **verified in CI on PR #37** ([run](https://github.com/SoheilAbdollahii/english-learning-ai/actions/runs/39255365378)).
 
-Remaining before production: verify quota behavior in the actual multi-worker production topology; configure real HTTPS/proxy/cache/secrets and SMTP; complete privacy and backup/restore drills; complete educator review and live-provider Writing evaluation; run real-browser E2E/accessibility checks; and run the final release regression.
+Remaining before production: verify quota behavior in the actual multi-worker production topology; configure real HTTPS/proxy/cache/secrets and SMTP; complete privacy and backup/restore drills; complete educator review and live-provider Writing evaluation; complete manual keyboard/screen-reader accessibility review; and run the final deployed release regression. External release gates are tracked in [issue #39](https://github.com/SoheilAbdollahii/english-learning-ai/issues/39).
 
 ## MVP acceptance criteria
 - AC-01 Accounts: users authenticate and access only their own private records.
