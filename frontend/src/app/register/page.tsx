@@ -79,11 +79,11 @@ export default function RegisterPage() {
             <p className="login-description">{t("Create your personal learning space. Use a strong password you do not use elsewhere.")}</p>
             <form className="login-form" onSubmit={handleSubmit}>
               <label htmlFor="register-username">{t("Username")}</label>
-              <input id="register-username" name="username" autoComplete="username" value={username} onChange={(event) => setUsername(event.target.value)} required maxLength={150} minLength={1} />
+              <input id="register-username" lang="en" dir="ltr" name="username" autoComplete="username" value={username} onChange={(event) => setUsername(event.target.value)} required maxLength={150} minLength={1} />
               <label htmlFor="register-password">{t("Password")} <span>({t("at least 12 characters")})</span></label>
-              <input id="register-password" name="password" type="password" autoComplete="new-password" value={password} onChange={(event) => setPassword(event.target.value)} required minLength={12} />
+              <input id="register-password" dir="ltr" name="password" type="password" autoComplete="new-password" value={password} onChange={(event) => setPassword(event.target.value)} required minLength={12} />
               <label htmlFor="register-confirm-password">{t("Confirm password")}</label>
-              <input id="register-confirm-password" name="confirmPassword" type="password" autoComplete="new-password" value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} required minLength={12} />
+              <input id="register-confirm-password" dir="ltr" name="confirmPassword" type="password" autoComplete="new-password" value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} required minLength={12} />
               {error && <p className="login-error" role="alert">{error}</p>}
               <button className="login-submit" type="submit" disabled={busy}>{busy ? "Creating account…" : t("Create account")}</button>
             </form>
