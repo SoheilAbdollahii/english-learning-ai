@@ -54,6 +54,7 @@ const fa: Record<string, string> = {
   "WORDWISE · VOCABULARY": "وردوایز · واژگان",
   "WORDWISE · READING ROOM": "وردوایز · فضای خواندن",
   "WORDWISE · WRITING STUDIO": "وردوایز · استودیوی نوشتن",
+  "WORDWISE · LEVEL CHECK": "وردوایز · تعیین سطح",
   "Open": "باز کردن",
   "days": "روز",
   "Your account is ready. Sign in to start saving your English practice.": "حساب شما آماده است. برای ذخیرهٔ تمرین‌های انگلیسی وارد شوید.",
@@ -98,8 +99,7 @@ const fa: Record<string, string> = {
   "Saved writing": "نوشته‌های ذخیره‌شده",
   "No vocabulary cards are due right now.": "در حال حاضر واژه‌ای برای مرور موعددار نیست.",
   "No reading attempts are saved yet.": "هنوز تمرین خواندنی ذخیره نشده است.",
-  "Review saved.": "مرور ذخیره شد."
-
+  "Review saved.": "مرور ذخیره شد.",
   "Completed activities saved to your account": "فعالیت‌های تکمیل‌شده و ذخیره‌شده در حساب شما",
   "Consecutive days with recorded learning": "روزهای پیاپی با فعالیت یادگیری ثبت‌شده",
   "Saved vocabulary review outcomes": "نتایج مرور واژگان ثبت‌شده",
@@ -123,15 +123,6 @@ const fa: Record<string, string> = {
   "Open Writing": "رفتن به نوشتن",
   "Choose a practice": "انتخاب یک تمرین",
   "Read a passage": "خواندن یک متن",
-  "A clearer path to your next level.": "مسیر روشن‌تری به سوی سطح بعدی.",
-  "Start with a short assessment. Your answers are scored on the server and saved to your learner account.": "با یک ارزیابی کوتاه شروع کنید. پاسخ‌ها در سرور نمره‌دهی و در حساب شما ذخیره می‌شوند.",
-  "No published placement assessment is available yet.": "هنوز آزمون تعیین سطحی منتشر نشده است.",
-  "YOUR PLACEMENT CHECK": "آزمون تعیین سطح شما",
-  "FIND YOUR STARTING POINT": "نقطهٔ شروع خود را پیدا کنید",
-  "YOUR WRITING STUDIO": "استودیوی نوشتن شما",
-  "Writing result": "نتیجهٔ نوشتن",
-  "Your saved writing": "نوشته‌های ذخیره‌شدهٔ شما",
-  "No reading passages are available yet.": "هنوز متنی برای خواندن موجود نیست."
   "WORKSPACE": "فضای کار",
   "Overview": "نمای کلی",
   "Level check": "تعیین سطح",
@@ -167,40 +158,9 @@ const fa: Record<string, string> = {
   "LEARNING STUDIO": "استودیوی یادگیری",
   "EARLY ACCESS · PREVIEW": "دسترسی زودهنگام · پیش‌نمایش",
   "UI PREVIEW": "پیش‌نمایش رابط کاربری",
-  "A SMALL NEXT STEP": "یک قدم کوچک بعدی",
-  "NEXT STEP": "قدم بعدی",
   "YOUR LEARNING TRAIL": "مسیر یادگیری شما",
   "Signing out…": "در حال خروج…",
   "YOUR STARTING POINT": "نقطهٔ شروع شما",
-  "Choose your starting point": "نقطهٔ شروع خود را انتخاب کنید",
-  "Your result is saved to your account.": "نتیجه در حساب شما ذخیره شد.",
-  "Loading your vocabulary…": "در حال بارگذاری واژگان…",
-  "Loading your saved writing…": "در حال بارگذاری نوشته‌های ذخیره‌شده…",
-  "Analysis unavailable": "تحلیل در دسترس نیست",
-  "Demo mode": "حالت نمایشی",
-  "This is a demo result, not a grammar evaluation.": "این نتیجهٔ نمایشی است و ارزیابی دستور زبان نیست."
-
-  "Hi": "سلام",
-  "Words that stay with you.": "واژه‌هایی که در ذهن می‌مانند.",
-  "REMEMBER MORE, WITH LESS CRAMMING": "با حفظ کردن کمتر، بیشتر به خاطر بسپارید",
-  "Build your own word collection and review each card when it is due. Your next review date changes only after you record how well you remembered the word.": "مجموعهٔ واژه‌های خودتان را بسازید و هر کارت را در موعدش مرور کنید. زمان مرور بعدی فقط پس از ثبت میزان یادآوری شما تغییر می‌کند.",
-  "Ready for a review": "آمادهٔ مرور",
-  "In your collection": "در مجموعهٔ شما",
-  "Words saved to your account": "واژه‌های ذخیره‌شده در حساب",
-  "Mastered": "مسلط‌شده",
-  "Based on review history": "بر اساس سابقهٔ مرور",
-  "GROW YOUR WORD BANK": "گسترش واژگان",
-  "Meaning in English": "معنی به انگلیسی",
-  "Example sentence": "جملهٔ نمونه",
-  "Translation": "ترجمه",
-  "YOUR STUDY SESSION": "جلسهٔ مطالعهٔ شما",
-  "Words stay with you.": "واژه‌ها در ذهن می‌مانند.",
-  "READ A LITTLE, UNDERSTAND A LOT": "کمی بخوانید، بسیار بیاموزید",
-  "Stories for curious minds.": "متن‌هایی برای ذهن‌های کنجکاو.",
-  "Read an original short passage, answer a few questions, and get a score with explanations. Correct answers stay hidden until you submit.": "یک متن کوتاه تألیفی بخوانید، به چند پرسش پاسخ دهید و نتیجه را همراه توضیحات ببینید. پاسخ‌های درست تا زمان ارسال پاسخ‌ها پنهان می‌مانند.",
-  "YOUR ANSWERS": "پاسخ‌های شما",
-  "READING COMPLETE": "پایان تمرین خواندن",
-  "correct": "درست",
   "A FRESH START": "شروعی تازه",
   "Make space to grow.": "برای رشد جا باز کنید.",
   "Create your personal learning space. Use a strong password you do not use elsewhere.": "فضای یادگیری شخصی خود را بسازید. از رمز عبوری قوی و غیرتکراری استفاده کنید.",
@@ -212,11 +172,58 @@ const fa: Record<string, string> = {
   "Sign in to continue your English learning journey.": "برای ادامهٔ مسیر یادگیری انگلیسی وارد شوید.",
   "WELCOME BACK": "خوش برگشتید",
   "Make today count.": "امروز را پربار کنید.",
-  "YOUR DRAFT": "متن شما",
-  "Writing practice": "تمرین نوشتن",
-  "Analyze writing": "تحلیل نوشته",
-  "Your personal word collection is private.": "مجموعهٔ واژه‌های شما خصوصی است.",
-  "YOUR READING SESSION": "جلسهٔ خواندن شما",
+  "Your secure registration service is unavailable.": "سامانهٔ ثبت‌نام امن در دسترس نیست.",
+  "ACCOUNT CREATED": "حساب ساخته شد",
+  "Vocabulary overview": "نمای کلی واژگان",
+  "to continue.": "برای ادامه.",
+  "Scheduling uses a deterministic SM-2-inspired rule set. It is a learning aid, not a guarantee of long-term retention.": "زمان‌بندی مرور از الگوریتم قطعی الهام‌گرفته از SM-2 استفاده می‌کند؛ این ابزار آموزشی است و ماندگاری بلندمدت را تضمین نمی‌کند.",
+  "Available reading passages": "متن‌های موجود برای خواندن",
+  "available": "موجود",
+  "questions": "پرسش",
+  "VERSION": "نسخه",
+  "Reading comprehension questions": "پرسش‌های درک مطلب",
+  "of": "از",
+  "answered": "پاسخ داده‌شده",
+  "Your answers are scored on the server.": "پاسخ‌های شما در سرور نمره‌دهی می‌شوند.",
+  "Correct": "درست",
+  "Review": "مرور",
+  "YOUR LEARNING JOURNEY STARTS HERE": "مسیر یادگیری شما از اینجا شروع می‌شود",
+  "Find your starting point.": "نقطهٔ شروع خود را پیدا کنید.",
+  "Answer a few short questions to get a first estimate of your English level. Take your time; this is a guide, not a test to fear.": "به چند پرسش کوتاه پاسخ دهید تا تخمینی اولیه از سطح انگلیسی شما به دست آید. با آرامش پیش بروید؛ این راهنماست، نه آزمونی برای نگرانی.",
+  "About 3 minutes": "حدود ۳ دقیقه",
+  "Placement questions": "پرسش‌های تعیین سطح",
+  "YOUR PROGRESS": "پیشرفت شما",
+  "Your score is calculated and stored securely by the server.": "امتیاز شما به‌صورت امن در سرور محاسبه و ذخیره می‌شود.",
+  "Submit answers": "ارسال پاسخ‌ها",
+  "Put your thoughts into words.": "افکارتان را به واژه تبدیل کنید.",
+  "Write a few sentences in English and save them to your personal practice history. The current demo mode checks the integration only; it does not yet evaluate grammar.": "چند جمله به انگلیسی بنویسید و در سابقهٔ تمرین خود ذخیره کنید. حالت نمایشی فعلی فقط اتصال سامانه را بررسی می‌کند و هنوز دستور زبان را ارزیابی نمی‌کند.",
+  "Your English writing": "نوشتهٔ انگلیسی شما",
+  "Your writing is saved to your account when you submit it.": "با ارسال نوشته، آن را در حساب خود ذخیره می‌کنید.",
+  "Saving draft…": "در حال ذخیرهٔ پیش‌نویس…",
+  "Save and review": "ذخیره و مرور",
+  "SAVED SUBMISSION": "ارسال ذخیره‌شده",
+  "Your writing is saved.": "نوشتهٔ شما ذخیره شد.",
+  "Demo mode limitations": "محدودیت‌های حالت نمایشی",
+  "YOUR PRACTICE": "تمرین‌های شما",
+  "Recent writing": "نوشته‌های اخیر",
+  "shown": "نمایش داده‌شده",
+  "Your saved writing will appear here after your first submission.": "پس از نخستین ارسال، نوشته‌های ذخیره‌شده در اینجا نمایش داده می‌شوند.",
+  "Due": "موعد",
+  "new": "جدید",
+  "learning": "در حال یادگیری",
+  "review": "نیازمند مرور",
+  "mastered": "مسلط‌شده",
+  "Saving word…": "در حال ذخیرهٔ واژه…",
+  "You are all caught up. Add a word or show your full collection.": "همهٔ واژه‌های موعددار مرور شده‌اند. واژه‌ای اضافه کنید یا کل مجموعه را ببینید.",
+  "Your word collection is empty. Add your first word above.": "مجموعهٔ واژگان شما خالی است. نخستین واژه را در بالا اضافه کنید.",
+  "Saving your result…": "در حال ذخیرهٔ نتیجه…",
+  "Your writing will be saved when you submit it.": "نوشتهٔ شما پس از ارسال ذخیره می‌شود.",
+  "No published placement assessment is available yet.": "هنوز آزمون تعیین سطحی منتشر نشده است.",
+  "Loading your vocabulary…": "در حال بارگذاری واژگان…",
+  "Your personal word collection is private.": "مجموعهٔ واژگان شما خصوصی است.",
+  "View": "مشاهده",
+  "A SMALL NEXT STEP": "یک قدم کوچک بعدی",
+  "NEXT STEP": "قدم بعدی"
 };
 
 type LocaleContextValue = {
@@ -258,7 +265,7 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
           window.localStorage.setItem("wordwise-locale", data.profile.locale);
         }
       } catch {
-        // The saved local preference remains usable while the API is unavailable.
+        // Keep the local preference usable while the profile API is unavailable.
       } finally {
         if (active) setReady(true);
       }
@@ -269,7 +276,6 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     document.documentElement.dir = locale === "fa" ? "rtl" : "ltr";
-    // The instructional content remains English; translated UI controls receive Persian language tags.
     document.documentElement.lang = locale;
   }, [locale]);
 
