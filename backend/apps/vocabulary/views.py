@@ -1,3 +1,4 @@
+from django.db import transaction
 from django.utils import timezone
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
@@ -41,8 +42,9 @@ class VocabularyReviewView(APIView):
         serializer = VocabularyReviewSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         try:
-            card = VocabularyCard.objects.get(pk=pk, user=request.user)
+            with transaction.atomic():
+                card = VocabularyCard.objects.select_for_update().get(pk=pk, user=request.user)
+                card = apply_review(card, serializer.validated_data["quality"])
         except VocabularyCard.DoesNotExist:
             return Response({"detail": "Vocabulary card not found."}, status=status.HTTP_404_NOT_FOUND)
-        card = apply_review(card, serializer.validated_data["quality"])
         return Response(VocabularyCardSerializer(card).data, status=status.HTTP_200_OK)
