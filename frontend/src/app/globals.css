@@ -436,3 +436,31 @@ a:focus-visible { outline: 3px solid #b4cdb5; outline-offset: 3px; }
   .reading-passage-meta { flex-direction: column; }
   .reading-passage { padding: 18px; }
 }
+
+
+/* Persisted learning progress */
+.progress-overview { display: block; }
+.progress-note { margin: 14px 0; padding: 12px 14px; border: 1px solid #e5ebe1; border-radius: 9px; color: #718075; background: #fff; font-size: .76rem; line-height: 1.6; }
+.progress-note a { color: var(--accent-dark); font-weight: 700; }
+.progress-details { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 9px; margin: 0 0 25px; }
+.progress-details article { display: grid; gap: 8px; padding: 14px; border: 1px solid #e5ebe1; border-radius: 10px; background: #fff; }
+.progress-details article span { color: #819080; font-size: .66rem; line-height: 1.4; }
+.progress-details article strong { color: #3f6343; font-size: 1.4rem; font-weight: 650; }
+.progress-recent { margin: 24px 0 30px; padding: 20px; border: 1px solid #e5ebe1; border-radius: 12px; background: #fff; }
+.progress-activity-list { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; }
+.progress-activity-list li { display: grid; grid-template-columns: 9px minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 12px 0; border-top: 1px solid #edf0e9; }
+.progress-activity-dot { width: 8px; height: 8px; border-radius: 50%; background: #9fb99b; }
+.progress-activity-reading { background: #8ba5bf; }
+.progress-activity-writing { background: #c4a0c7; }
+.progress-activity-placement { background: #d5b477; }
+.progress-activity-list strong { color: #526458; font-size: .76rem; font-weight: 600; }
+.progress-activity-list time { color: #98a197; font-size: .63rem; text-align: right; }
+@media (max-width: 900px) {
+  .progress-details { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 600px) {
+  .progress-details { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .progress-recent { padding: 15px; }
+  .progress-activity-list li { grid-template-columns: 8px minmax(0, 1fr); }
+  .progress-activity-list time { grid-column: 2; text-align: left; }
+}
