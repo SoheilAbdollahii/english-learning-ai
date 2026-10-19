@@ -488,3 +488,26 @@ a:focus-visible { outline: 3px solid #b4cdb5; outline-offset: 3px; }
 .register-success { padding-top: 14px; }
 .register-login-link { display: block; text-align: center; text-decoration: none; }
 .login-form label span { color: #879487; font-weight: 400; }
+
+
+/* Global locale direction preference; English learning passages remain LTR. */
+.locale-switcher { position: fixed; z-index: 1000; right: 16px; bottom: 14px; display: flex; align-items: center; gap: 4px; padding: 4px; border: 1px solid #dbe4d7; border-radius: 999px; background: rgba(255,255,255,.96); box-shadow: 0 4px 18px rgba(35,60,42,.1); }
+.locale-switcher button { padding: 7px 9px; border: 0; border-radius: 999px; background: transparent; color: #617365; font: inherit; font-size: .65rem; cursor: pointer; }
+.locale-switcher button[aria-pressed="true"] { background: #e8f1e8; color: #2d7059; font-weight: 750; }
+.locale-switcher button:disabled { opacity: .55; cursor: wait; }
+.locale-switcher [role="status"] { max-width: 180px; padding: 0 6px; color: #925a3d; font-size: .62rem; }
+html[dir="rtl"] body { text-align: right; }
+html[dir="rtl"] .sidebar { inset: 0 0 0 auto; border-right: 0; border-left: 1px solid var(--line); }
+html[dir="rtl"] .main-panel { margin-left: 0; margin-right: 246px; }
+html[dir="rtl"] .nav-label { margin-left: 0; margin-right: 12px; }
+html[dir="rtl"] .sidebar-foot { margin-left: 0; margin-right: 4px; }
+html[dir="rtl"] .welcome { text-align: right; }
+html[dir="rtl"] .reading-passage-body, html[dir="rtl"] .reading-source { direction: ltr; text-align: left; }
+html[dir="rtl"] .placement-options { direction: rtl; }
+html[dir="rtl"] .placement-back, html[dir="rtl"] .writing-topline { direction: rtl; }
+html[dir="rtl"] .locale-switcher { right: auto; left: 16px; }
+html[dir="rtl"] .login-form, html[dir="rtl"] .vocabulary-form { text-align: right; }
+@media (max-width: 900px) {
+  html[dir="rtl"] .main-panel { margin-right: 0; }
+  html[dir="rtl"] .sidebar { inset: 0 0 auto 0; border-left: 0; border-bottom: 1px solid var(--line); }
+}
