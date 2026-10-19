@@ -5,7 +5,7 @@ from django.utils import timezone
 
 from apps.progress.models import LearningActivity
 from apps.progress.services import record_activity
-from .models import VocabularyCard
+from .models import VocabularyCard, VocabularyReviewEvent
 
 
 @transaction.atomic
@@ -17,6 +17,10 @@ def apply_review(card: VocabularyCard, quality: int) -> VocabularyCard:
     never merely on displaying a card.
     """
     now = timezone.now()
+    repetitions_before = card.repetitions
+    interval_days_before = card.interval_days
+    ease_factor_before = card.ease_factor
+    status_before = card.status
     ease = float(card.ease_factor)
     if quality < 3:
         card.repetitions = 0
@@ -44,5 +48,20 @@ def apply_review(card: VocabularyCard, quality: int) -> VocabularyCard:
         "repetitions", "interval_days", "ease_factor", "status",
         "last_reviewed_at", "due_at", "updated_at",
     ))
+    VocabularyReviewEvent.objects.create(
+        user=card.user,
+        card=card,
+        word_snapshot=card.word,
+        quality=quality,
+        repetitions_before=repetitions_before,
+        repetitions_after=card.repetitions,
+        interval_days_before=interval_days_before,
+        interval_days_after=card.interval_days,
+        ease_factor_before=ease_factor_before,
+        ease_factor_after=card.ease_factor,
+        status_before=status_before,
+        status_after=card.status,
+        reviewed_at=now,
+    )
     record_activity(card.user, LearningActivity.Type.VOCABULARY, card.pk, {"quality": quality})
     return card
