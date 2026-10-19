@@ -224,6 +224,29 @@ const fa: Record<string, string> = {
   "View": "مشاهده",
   "A SMALL NEXT STEP": "یک قدم کوچک بعدی",
   "NEXT STEP": "قدم بعدی"
+
+  "Hi": "سلام",
+  "REMEMBER MORE, WITH LESS CRAMMING": "با حفظ کردن کمتر، بیشتر به خاطر بسپارید",
+  "Words that stay with you.": "واژه‌هایی که در ذهن می‌مانند.",
+  "Build your own word collection and review each card when it is due. Your next review date changes only after you record how well you remembered the word.": "مجموعهٔ واژه‌های خودتان را بسازید و هر کارت را در موعدش مرور کنید. زمان مرور بعدی فقط پس از ثبت میزان یادآوری شما تغییر می‌کند.",
+  "Ready for a review": "آمادهٔ مرور",
+  "In your collection": "در مجموعهٔ شما",
+  "Words saved to your account": "واژه‌های ذخیره‌شده در حساب",
+  "Mastered": "مسلط‌شده",
+  "Based on review history": "بر اساس سابقهٔ مرور",
+  "GROW YOUR WORD BANK": "گسترش واژگان",
+  "Meaning in English": "معنی به انگلیسی",
+  "Example sentence": "جملهٔ نمونه",
+  "Translation": "ترجمه",
+  "YOUR STUDY SESSION": "جلسهٔ مطالعهٔ شما",
+  "READ A LITTLE, UNDERSTAND A LOT": "کمی بخوانید، بسیار بیاموزید",
+  "Stories for curious minds.": "متن‌هایی برای ذهن‌های کنجکاو.",
+  "Read an original short passage, answer a few questions, and get a score with explanations. Correct answers stay hidden until you submit.": "یک متن کوتاه تألیفی بخوانید، به چند پرسش پاسخ دهید و نتیجه را همراه توضیحات ببینید. پاسخ‌های درست تا زمان ارسال پاسخ‌ها پنهان می‌مانند.",
+  "YOUR ANSWERS": "پاسخ‌های شما",
+  "READING COMPLETE": "پایان تمرین خواندن",
+  "correct": "درست",
+  "YOUR DRAFT": "پیش‌نویس شما",
+  "Loading your saved writing…": "در حال بارگذاری نوشته‌های ذخیره‌شده…",
 };
 
 type LocaleContextValue = {
