@@ -175,7 +175,7 @@ def test_gemini_provider_reports_unreadable_output_safely(monkeypatch):
         def __exit__(self, *_args):
             return False
 
-        def read(self):
+        def read(self, size=-1):
             payload = b'{"candidates": []}'
             return payload if size < 0 else payload[:size]
 
