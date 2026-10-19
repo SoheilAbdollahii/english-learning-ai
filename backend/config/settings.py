@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "apps.vocabulary.apps.VocabularyConfig",
     "apps.reading.apps.ReadingConfig",
     "apps.progress.apps.ProgressConfig",
+    "apps.usage.apps.UsageConfig",
 ]
 
 MIDDLEWARE = [
