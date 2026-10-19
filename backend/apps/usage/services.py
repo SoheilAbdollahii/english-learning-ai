@@ -1,4 +1,3 @@
-import math
 import os
 from datetime import timedelta
 
@@ -43,7 +42,8 @@ def estimate_writing_cost_microunits(input_tokens, output_tokens):
         return None
     if type(output_tokens) is not int or output_tokens < 0:
         return None
-    return math.ceil((input_tokens * input_rate + output_tokens * output_rate) / 1_000_000)
+    numerator = input_tokens * input_rate + output_tokens * output_rate
+    return (numerator + 999_999) // 1_000_000
 
 
 @transaction.atomic
