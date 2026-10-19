@@ -128,6 +128,7 @@ def test_gemini_provider_sends_key_in_header_and_parses_json(monkeypatch):
 
         def read(self, size=-1):
             payload = json.dumps({
+                "usageMetadata": {"promptTokenCount": 12, "candidatesTokenCount": 7, "totalTokenCount": 19},
                 "candidates": [{
                     "content": {
                         "parts": [{
@@ -160,6 +161,9 @@ def test_gemini_provider_sends_key_in_header_and_parses_json(monkeypatch):
     provider = GeminiWritingProvider(api_key="test-secret", timeout=9)
     result = provider.analyze("I go to school.")
     assert result["schema_version"] == 1
+    assert provider.usage_metadata == {"promptTokenCount": 12, "candidatesTokenCount": 7, "totalTokenCount": 19}
+    payload = json.loads(captured["request"].data.decode("utf-8"))
+    assert payload["generationConfig"]["maxOutputTokens"] == 2048
     assert captured["request"].get_header("X-goog-api-key") == "test-secret"
     assert captured["timeout"] == 9
     assert "test-secret" not in captured["request"].full_url
