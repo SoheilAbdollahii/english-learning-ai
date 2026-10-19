@@ -17,9 +17,9 @@ test("all literal translation keys used by core screens have Persian entries", a
   const provider = await readFile(new URL("./locale-provider.tsx", import.meta.url), "utf8");
   const files = [
     "../../page.tsx",
-    "../progress-overview.tsx",
-    "../recommendations.tsx",
-    "../auth-status.tsx",
+    "./progress-overview.tsx",
+    "./recommendations.tsx",
+    "./auth-status.tsx",
     "../vocabulary/page.tsx",
     "../reading/page.tsx",
     "../placement/page.tsx",
