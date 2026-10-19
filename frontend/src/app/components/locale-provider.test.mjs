@@ -16,7 +16,7 @@ test("locale provider synchronizes persisted profile preference and direction", 
 test("all literal translation keys used by core screens have Persian entries", async () => {
   const provider = await readFile(new URL("./locale-provider.tsx", import.meta.url), "utf8");
   const files = [
-    "../../page.tsx",
+    "../page.tsx",
     "./progress-overview.tsx",
     "./recommendations.tsx",
     "./auth-status.tsx",
