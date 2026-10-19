@@ -86,7 +86,7 @@ export default function LoginPage() {
             {busy ? "Signing in…" : "Sign in"}
           </button>
         </form>
-        <p className="login-footnote">Use an account created in the Django admin. Public registration is not available yet.</p>
+        <p className="login-footnote">New to Wordwise? <Link href="/register">Create an account</Link></p>
       </section>
     </main>
   );
