@@ -524,3 +524,19 @@ html[dir="rtl"] .login-form, html[dir="rtl"] .vocabulary-form { text-align: righ
   .reading-history { padding: 15px; }
   .reading-history-item { align-items: flex-start; }
 }
+
+
+/* Accessible seven-day activity chart */
+.progress-weekly { margin: 24px 0; padding: 20px; border: 1px solid #e5ebe1; border-radius: 12px; background: #fff; }
+.weekly-activity-list { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 12px; margin: 18px 0 0; padding: 0; list-style: none; }
+.weekly-activity-list li { display: flex; min-width: 0; flex-direction: column; align-items: center; gap: 8px; }
+.weekly-activity-day { color: #718075; font-size: .72rem; }
+.weekly-activity-track { display: flex; width: min(100%, 38px); height: 76px; align-items: flex-end; overflow: hidden; border-radius: 999px; background: #f0f3ed; }
+.weekly-activity-track span { display: block; width: 100%; min-height: 0; border-radius: 999px 999px 0 0; background: var(--accent); transition: height .2s ease; }
+.weekly-activity-count { color: #3f6343; font-size: .75rem; font-variant-numeric: tabular-nums; }
+@media (max-width: 600px) {
+  .progress-weekly { padding: 15px; }
+  .weekly-activity-list { gap: 5px; }
+  .weekly-activity-track { height: 60px; width: min(100%, 28px); }
+  .weekly-activity-day { font-size: .65rem; }
+}
