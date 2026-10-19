@@ -15,33 +15,34 @@ Status: initial estimate. Schedule depends on weekly availability, AI budget, ho
 Create backend/frontend skeletons, environment configuration, PostgreSQL local setup, lint/tests/CI, and repeatable developer documentation.
 
 ### Phase 3 — Accounts and placement
-Custom user model, profile, authentication, cross-user authorization tests, versioned placement assessment, server-side scoring.
+
+Status: **Core authentication and placement flow implemented; registration MVP added in the current branch.** Session auth, profile preferences, owner-scoped placement attempts, and server-side scoring have automated tests. Public registration now has CSRF protection, normalized usernames, Django password validation (12-character minimum), and an anonymous throttle. Email verification, password reset/recovery, and production abuse controls remain outstanding.
 
 ### Phase 4 — Writing MVP
 Provider-neutral adapter, fake provider for tests, versioned result schema, span validation, history, timeout/failure handling, usage accounting, evaluation baseline.
 
-Current status: **In progress — provider integration and initial security/usage controls implemented; verification and evaluation work remain.** The branch includes a server-side Gemini Developer API adapter (default model `gemini-2.5-flash`), bounded request timeout, schema/span validation, owner-scoped submissions/history, safe failure responses, and the Writing Studio UI. Without `GEMINI_API_KEY`, the clearly-labelled demo adapter remains active. Free-tier quota monitoring, usage accounting, and an evaluation baseline remain outstanding.
+Current status: **In progress — provider integration and initial security/usage controls implemented; verification and evaluation work remain.** The branch includes a server-side Gemini Developer API adapter (default model `gemini-2.5-flash`), bounded request timeout, schema/span validation, owner-scoped submissions/history, safe failure responses, and the Writing Studio UI. Without `GEMINI_API_KEY`, the clearly-labelled demo adapter remains active. Basic durable rolling-24-hour usage reservation and usage summaries are implemented on the current stack; actual provider token/cost accounting and a measured writing evaluation baseline remain outstanding.
 
 ### Phase 5 — Reading and Vocabulary
 
-Vocabulary status: **Implemented — CI verification pending.** The initial vocabulary MVP includes owner-scoped cards, case-insensitive duplicate prevention, due-card filtering, a deterministic SM-2-inspired schedule, review grades, and a responsive review UI. Backend and frontend regression tests were added. Remaining vocabulary work includes immutable review-event history, curated licensed word packs, and richer progress analytics.
+Vocabulary status: **Verified in CI on PR #6** ([run](https://github.com/SoheilAbdollahii/english-learning-ai/actions/runs/39221335506)). The initial vocabulary MVP includes owner-scoped cards, case-insensitive duplicate prevention, due-card filtering, a deterministic SM-2-inspired schedule, review grades, and a responsive review UI. Backend and frontend regression tests were added. Remaining vocabulary work includes immutable review-event history, curated licensed word packs, and richer progress analytics.
 
-Reading status: **Implemented — CI verification pending.** The initial flow includes two original A2/B1 passages, published-only public endpoints, hidden answer keys before submission, exact-answer validation, server-side scoring, owner-scoped saved attempts, feedback explanations, and a responsive learner page. Remaining work includes immutable question-version snapshots, authoring/content review, more passages, and attempt-history UI.
+Reading status: **Verified in CI on PR #7** ([run](https://github.com/SoheilAbdollahii/english-learning-ai/actions/runs/39221772403)). The initial flow includes two original A2/B1 passages, published-only public endpoints, hidden answer keys before submission, exact-answer validation, server-side scoring, owner-scoped saved attempts, feedback explanations, and a responsive learner page. Remaining work includes immutable question-version snapshots, authoring/content review, more passages, and attempt-history UI.
 
 ### Phase 6 — Progress and personalization
 
-Progress status: **Implemented — CI verification pending.** The dashboard reads persisted session counts, vocabulary review outcomes, due/mastered word counts, reading/writing/placement totals, current streak, and recent activity from an authenticated API. Learning activity events are written by the corresponding backend flows. Study duration remains intentionally unreported until reliable duration tracking is designed.
+Progress status: **Verified in CI on PR #8** ([run](https://github.com/SoheilAbdollahii/english-learning-ai/actions/runs/39222238189)). The dashboard reads persisted session counts, vocabulary review outcomes, due/mastered word counts, reading/writing/placement totals, current streak, and recent activity from an authenticated API. Learning activity events are written by the corresponding backend flows. Study duration remains intentionally unreported until reliable duration tracking is designed.
 
-Rule-based recommendations: **Implemented — CI verification pending.** Up to three next steps are selected from persisted due-word and module-history evidence, with a human-readable reason and direct route. This is a deterministic heuristic, not an AI-generated claim.
+Rule-based recommendations: **Verified in CI on PR #9** ([run](https://github.com/SoheilAbdollahii/english-learning-ai/actions/runs/39222517527)). Up to three next steps are selected from persisted due-word and module-history evidence, with a human-readable reason and direct route. This is a deterministic heuristic, not an AI-generated claim.
 
-Remaining: additional timezone/history edge-case coverage and a provider usage-cost ledger.
+Remaining: additional timezone/history edge-case coverage and actual provider usage-cost accounting.
 
 ### Phase 7 — Frontend integration
 Complete learner flows, RTL/LTR and accessibility checks, E2E scenarios, production build checks.
 
 ### Phase 8 — Usage controls
 
-Usage status: **Basic durable quota implemented — CI verification pending.** Writing requests reserve a database-backed slot before provider work; the rolling 24-hour default is 30 submissions per learner and provider failures consume a slot. A private usage summary exposes used/remaining slots and character volume. A per-hour DRF throttle remains as an additional guard.
+Usage status: **Basic durable quota verified in CI on PR #10** ([run](https://github.com/SoheilAbdollahii/english-learning-ai/actions/runs/39222991351)). Writing requests reserve a database-backed slot before provider work; the rolling 24-hour default is 30 submissions per learner and provider failures consume a slot. A private usage summary exposes used/remaining slots and character volume. A per-hour DRF throttle remains as an additional guard.
 
 Remaining: persist actual provider token metadata where available, configure a validated pricing table before calculating monetary cost, add alerting, and test concurrent quota reservations against production PostgreSQL. Do not use this MVP ledger for billing.
 
