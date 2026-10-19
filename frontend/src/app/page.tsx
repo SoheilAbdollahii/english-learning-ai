@@ -1,3 +1,4 @@
+import Link from "next/link";
 import AuthStatus from "./components/auth-status";
 
 const learningAreas = [
@@ -51,6 +52,7 @@ export default function HomePage() {
           <a className="nav-link nav-link-active" href="#home" aria-current="page">
             <span aria-hidden="true">⌂</span> Overview
           </a>
+          <Link className="nav-link" href="/placement"><span aria-hidden="true">✦</span> Level check</Link>
           <a className="nav-link" href="#writing"><span aria-hidden="true">✎</span> Writing</a>
           <a className="nav-link" href="#reading"><span aria-hidden="true">▤</span> Reading</a>
           <a className="nav-link" href="#vocabulary"><span aria-hidden="true">Aa</span> Vocabulary</a>
@@ -159,6 +161,7 @@ export default function HomePage() {
               <h2>Progress, not<br /><em>perfection.</em></h2>
               <p>Ten thoughtful minutes can be more useful than an hour of distracted studying.</p>
               <span className="focus-label">YOUR PACE IS THE RIGHT PACE</span>
+              <Link className="placement-cta" href="/placement">Take the level check <span aria-hidden="true">↗</span></Link>
             </article>
           </section>
           <footer className="page-footer">
