@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useLocale } from "../components/locale-provider";
 import { useState } from "react";
 import type { FormEvent } from "react";
 
@@ -12,6 +13,7 @@ async function getCsrfToken(): Promise<string> {
 }
 
 export default function RegisterPage() {
+  const { t } = useLocale();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -57,7 +59,7 @@ export default function RegisterPage() {
 
   return (
     <main className="login-shell">
-      <Link className="login-back" href="/" aria-label="Back to dashboard">← Back to dashboard</Link>
+      <Link className="login-back" href="/" aria-label="Back to dashboard">← {t("Back to dashboard")}</Link>
       <section className="login-card" aria-labelledby="register-title">
         <Link className="brand login-brand" href="/">
           <span className="brand-mark" aria-hidden="true">e.</span>
@@ -66,27 +68,27 @@ export default function RegisterPage() {
         {createdUsername ? (
           <div className="register-success" role="status">
             <p className="eyebrow login-eyebrow">ACCOUNT CREATED</p>
-            <h1 id="register-title">Welcome, <em>{createdUsername}.</em></h1>
-            <p className="login-description">Your account is ready. Sign in to start saving your English practice.</p>
-            <Link className="login-submit register-login-link" href="/login">Continue to sign in</Link>
+            <h1 id="register-title">{t("Welcome")}, <em>{createdUsername}.</em></h1>
+            <p className="login-description">{t("Your account is ready. Sign in to start saving your English practice.")}</p>
+            <Link className="login-submit register-login-link" href="/login">{t("Continue to sign in")}</Link>
           </div>
         ) : (
           <>
-            <p className="eyebrow login-eyebrow">A FRESH START</p>
-            <h1 id="register-title">Make space<br /><em>to grow.</em></h1>
-            <p className="login-description">Create your personal learning space. Use a strong password you do not use elsewhere.</p>
+            <p className="eyebrow login-eyebrow">{t("A FRESH START")}</p>
+            <h1 id="register-title">{t("Make space to grow.")}</h1>
+            <p className="login-description">{t("Create your personal learning space. Use a strong password you do not use elsewhere.")}</p>
             <form className="login-form" onSubmit={handleSubmit}>
-              <label htmlFor="register-username">Username</label>
-              <input id="register-username" name="username" autoComplete="username" value={username} onChange={(event) => setUsername(event.target.value)} required maxLength={150} minLength={1} />
-              <label htmlFor="register-password">Password <span>(at least 12 characters)</span></label>
-              <input id="register-password" name="password" type="password" autoComplete="new-password" value={password} onChange={(event) => setPassword(event.target.value)} required minLength={12} />
-              <label htmlFor="register-confirm-password">Confirm password</label>
-              <input id="register-confirm-password" name="confirmPassword" type="password" autoComplete="new-password" value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} required minLength={12} />
+              <label htmlFor="register-username">{t("Username")}</label>
+              <input id="register-username" lang="en" dir="ltr" name="username" autoComplete="username" value={username} onChange={(event) => setUsername(event.target.value)} required maxLength={150} minLength={1} />
+              <label htmlFor="register-password">{t("Password")} <span>({t("at least 12 characters")})</span></label>
+              <input id="register-password" dir="ltr" name="password" type="password" autoComplete="new-password" value={password} onChange={(event) => setPassword(event.target.value)} required minLength={12} />
+              <label htmlFor="register-confirm-password">{t("Confirm password")}</label>
+              <input id="register-confirm-password" dir="ltr" name="confirmPassword" type="password" autoComplete="new-password" value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} required minLength={12} />
               {error && <p className="login-error" role="alert">{error}</p>}
-              <button className="login-submit" type="submit" disabled={busy}>{busy ? "Creating account…" : "Create account"}</button>
+              <button className="login-submit" type="submit" disabled={busy}>{busy ? "Creating account…" : t("Create account")}</button>
             </form>
-            <p className="login-footnote">Registration is rate-limited. Email verification and account recovery are not available yet.</p>
-            <p className="register-switch">Already have an account? <Link href="/login">Sign in</Link></p>
+            <p className="login-footnote">Registration is rate-limited. {t("Email verification and account recovery are not available yet.")}</p>
+            <p className="register-switch">{t("Already have an account?")} <Link href="/login">Sign in</Link></p>
           </>
         )}
       </section>

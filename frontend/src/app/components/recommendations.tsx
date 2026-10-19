@@ -1,18 +1,21 @@
 "use client";
 
 import Link from "next/link";
+import { useLocale } from "./locale-provider";
 import { useEffect, useState } from "react";
 
 type Recommendation = {
   code: string;
   title: string;
   reason: string;
+  reason_fa: string;
   href: string;
   action_label: string;
   priority: number;
 };
 
 export default function Recommendations() {
+  const { t, locale } = useLocale();
   const [items, setItems] = useState<Recommendation[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -42,16 +45,16 @@ export default function Recommendations() {
   return (
     <section className="recommendations-section" aria-labelledby="recommendations-title">
       <div className="section-heading">
-        <div><p className="eyebrow">A SMALL NEXT STEP</p><h2 id="recommendations-title">Recommended for you</h2></div>
-        <span className="section-caption">Based on your saved activity</span>
+        <div><p className="eyebrow">{t("A SMALL NEXT STEP")}</p><h2 id="recommendations-title">{t("Recommended for you")}</h2></div>
+        <span className="section-caption">{t("Based on your saved activity")}</span>
       </div>
       <div className="recommendations-grid">
         {items.map((item) => (
           <article className="recommendation-card" key={item.code}>
-            <span className="recommendation-priority">NEXT STEP {item.priority}</span>
-            <h3>{item.title}</h3>
-            <p>{item.reason}</p>
-            <Link href={item.href}>{item.action_label} <span aria-hidden="true">↗</span></Link>
+            <span className="recommendation-priority">{t("NEXT STEP")} {item.priority}</span>
+            <h3>{t(item.title)}</h3>
+            <p>{locale === "fa" ? item.reason_fa : item.reason}</p>
+            <Link href={item.href}>{t(item.action_label)} <span aria-hidden="true">↗</span></Link>
           </article>
         ))}
       </div>

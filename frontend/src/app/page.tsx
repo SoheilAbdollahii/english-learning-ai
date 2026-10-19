@@ -1,6 +1,9 @@
+"use client";
+
 import Link from "next/link";
 import AuthStatus from "./components/auth-status";
 import ProgressOverview from "./components/progress-overview";
+import { useLocale } from "./components/locale-provider";
 
 const learningAreas = [
   {
@@ -40,46 +43,47 @@ const weeklyPlan = [
 ];
 
 export default function HomePage() {
+  const { t } = useLocale();
   return (
     <main className="app-shell">
       <aside className="sidebar" aria-label="Main navigation">
         <a className="brand" href="#home" aria-label="English Learning home">
           <span className="brand-mark" aria-hidden="true">e.</span>
-          <span className="brand-name">wordwise<span>LEARNING STUDIO</span></span>
+          <span className="brand-name">wordwise<span>{t("LEARNING STUDIO")}</span></span>
         </a>
 
-        <p className="nav-label">WORKSPACE</p>
+        <p className="nav-label">{t("WORKSPACE")}</p>
         <nav className="main-nav">
           <a className="nav-link nav-link-active" href="#home" aria-current="page">
-            <span aria-hidden="true">⌂</span> Overview
+            <span aria-hidden="true">⌂</span> {t("Overview")}
           </a>
-          <Link className="nav-link" href="/placement"><span aria-hidden="true">✦</span> Level check</Link>
-          <Link className="nav-link" href="/writing"><span aria-hidden="true">✎</span> Writing</Link>
-          <Link className="nav-link" href="/reading"><span aria-hidden="true">▤</span> Reading</Link>
-          <Link className="nav-link" href="/vocabulary"><span aria-hidden="true">Aa</span> Vocabulary</Link>
+          <Link className="nav-link" href="/placement"><span aria-hidden="true">✦</span> {t("Level check")}</Link>
+          <Link className="nav-link" href="/writing"><span aria-hidden="true">✎</span> {t("Writing")}</Link>
+          <Link className="nav-link" href="/reading"><span aria-hidden="true">▤</span> {t("Reading")}</Link>
+          <Link className="nav-link" href="/vocabulary"><span aria-hidden="true">Aa</span> {t("Vocabulary")}</Link>
         </nav>
 
         <div className="sidebar-note">
           <span className="note-icon" aria-hidden="true">✦</span>
-          <p className="note-title">Small steps add up.</p>
-          <p className="note-copy">A little practice today makes tomorrow easier.</p>
+          <p className="note-title">{t("Small steps add up.")}</p>
+          <p className="note-copy">{t("A little practice today makes tomorrow easier.")}</p>
         </div>
-        <p className="sidebar-foot">EARLY ACCESS · PREVIEW</p>
+        <p className="sidebar-foot">{t("EARLY ACCESS · PREVIEW")}</p>
       </aside>
 
       <section className="main-panel" id="home">
         <header className="topbar">
-          <p><span className="topbar-dot" /> YOUR PERSONAL LEARNING SPACE</p>
-          <div className="topbar-actions"><span className="preview-pill">UI PREVIEW</span><AuthStatus /></div>
+          <p><span className="topbar-dot" /> {t("YOUR PERSONAL LEARNING SPACE")}</p>
+          <div className="topbar-actions"><span className="preview-pill">{t("UI PREVIEW")}</span><AuthStatus /></div>
         </header>
 
         <div className="content-wrap">
           <section className="welcome" aria-labelledby="page-title">
             <div>
-              <p className="eyebrow">MAKE ROOM FOR PROGRESS</p>
-              <h1 id="page-title">Your English journey,<br /><em>one day at a time.</em></h1>
+              <p className="eyebrow">{t("MAKE ROOM FOR PROGRESS")}</p>
+              <h1 id="page-title">{t("Your English journey,")}<br /><em>{t("one day at a time.")}</em></h1>
               <p className="welcome-copy">
-                A calmer place to practice, build confidence, and make English part of your routine.
+                {t("A calmer place to practice, build confidence, and make English part of your routine.")}
               </p>
             </div>
             <div className="welcome-art" aria-hidden="true">
@@ -96,21 +100,21 @@ export default function HomePage() {
           <section className="section-block" aria-labelledby="areas-title">
             <div className="section-heading">
               <div>
-                <p className="eyebrow">YOUR TOOLKIT</p>
-                <h2 id="areas-title">Choose your next step</h2>
+                <p className="eyebrow">{t("YOUR TOOLKIT")}</p>
+                <h2 id="areas-title">{t("Choose your next step")}</h2>
               </div>
-              <span className="section-caption">3 learning areas</span>
+              <span className="section-caption">{t("3 learning areas")}</span>
             </div>
             <div className="area-grid">
               {learningAreas.map((area) => (
                 <article className="area-card" id={area.title.toLowerCase()} key={area.number}>
                   <div className={`area-symbol area-symbol-${area.number}`} aria-hidden="true">{area.symbol}</div>
                   <p className="area-number">AREA {area.number}</p>
-                  <h3>{area.title}</h3>
-                  <p className="area-description">{area.description}</p>
+                  <h3>{t(area.title)}</h3>
+                  <p className="area-description">{t(area.description)}</p>
                   <div className="area-card-bottom">
-                    <span className="area-level">{area.level}</span>
-                    <Link href={area.href} aria-label={`Open ${area.title}`} className="area-arrow">↗</Link>
+                    <span className="area-level">{t(area.level)}</span>
+                    <Link href={area.href} aria-label={`${t("Open")} ${t(area.title)}`} className="area-arrow">↗</Link>
                   </div>
                 </article>
               ))}
@@ -121,12 +125,12 @@ export default function HomePage() {
             <article className="week-card">
               <div className="section-heading compact-heading">
                 <div>
-                  <p className="eyebrow">BUILD A ROUTINE</p>
-                  <h2>Your week</h2>
+                  <p className="eyebrow">{t("BUILD A ROUTINE")}</p>
+                  <h2>{t("Your week")}</h2>
                 </div>
-                <span className="week-tag">A fresh start</span>
+                <span className="week-tag">{t("A fresh start")}</span>
               </div>
-              <p className="week-copy">Consistency matters more than a perfect streak. Pick a small goal and keep it kind.</p>
+              <p className="week-copy">{t("Consistency matters more than a perfect streak. Pick a small goal and keep it kind.")}</p>
               <div className="week-days" aria-label="Illustrative weekly schedule">
                 {weeklyPlan.map((day, index) => (
                   <div className="week-day" key={`${day.label}-${index}`}>
@@ -135,20 +139,20 @@ export default function HomePage() {
                   </div>
                 ))}
               </div>
-              <p className="demo-note">Sample layout only — activity tracking is not connected yet.</p>
+              <p className="demo-note">{t("Sample layout only — activity tracking is not connected yet.")}</p>
             </article>
             <article className="focus-card" id="coming-soon">
               <div className="focus-decoration" aria-hidden="true">✦</div>
-              <p className="eyebrow">A GENTLE REMINDER</p>
-              <h2>Progress, not<br /><em>perfection.</em></h2>
-              <p>Ten thoughtful minutes can be more useful than an hour of distracted studying.</p>
-              <span className="focus-label">YOUR PACE IS THE RIGHT PACE</span>
-              <Link className="placement-cta" href="/placement">Take the level check <span aria-hidden="true">↗</span></Link>
+              <p className="eyebrow">{t("A GENTLE REMINDER")}</p>
+              <h2>{t("Progress, not")}<br /><em>{t("perfection.")}</em></h2>
+              <p>{t("Ten thoughtful minutes can be more useful than an hour of distracted studying.")}</p>
+              <span className="focus-label">{t("YOUR PACE IS THE RIGHT PACE")}</span>
+              <Link className="placement-cta" href="/placement">{t("Take the level check")} <span aria-hidden="true">↗</span></Link>
             </article>
           </section>
           <footer className="page-footer">
-            <span>WORDWISE · ENGLISH LEARNING STUDIO</span>
-            <span>Built for steady progress <span aria-hidden="true">✦</span></span>
+            <span>{t("WORDWISE · ENGLISH LEARNING STUDIO")}</span>
+            <span>{t("Built for steady progress")} <span aria-hidden="true">✦</span></span>
           </footer>
         </div>
       </section>

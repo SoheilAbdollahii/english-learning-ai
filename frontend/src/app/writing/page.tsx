@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useLocale } from "../components/locale-provider";
 import { useEffect, useState } from "react";
 
 type WritingError = {
@@ -54,6 +55,7 @@ async function getCsrfToken(): Promise<string> {
 }
 
 export default function WritingPage() {
+  const { t, locale } = useLocale();
   const [text, setText] = useState("");
   const [history, setHistory] = useState<WritingSubmission[]>([]);
   const [current, setCurrent] = useState<WritingSubmission | null>(null);
@@ -136,28 +138,30 @@ export default function WritingPage() {
   return (
     <main className="writing-shell">
       <div className="writing-topline">
-        <Link href="/" className="placement-back">← Dashboard</Link>
-        <span className="placement-kicker">WORDWISE · WRITING STUDIO</span>
+        <Link href="/" className="placement-back">← {t("Back to dashboard")}</Link>
+        <span className="placement-kicker">{t("WORDWISE · WRITING STUDIO")}</span>
       </div>
 
       <section className="writing-intro" aria-labelledby="writing-title">
-        <p className="placement-eyebrow">PRACTICE MAKES PROGRESS</p>
-        <h1 id="writing-title">Put your thoughts <em>into words.</em></h1>
-        <p>Write a few sentences in English and save them to your personal practice history. The current demo mode checks the integration only; it does not yet evaluate grammar.</p>
+        <p className="placement-eyebrow">{t("PRACTICE MAKES PROGRESS")}</p>
+        <h1 id="writing-title">{t("Put your thoughts into words.")}</h1>
+        <p>{t("Write a few sentences in English and save them to your personal practice history. The current demo mode checks the integration only; it does not yet evaluate grammar.")}</p>
       </section>
 
       <section className="writing-composer" aria-labelledby="composer-title">
         <div className="writing-composer-heading">
           <div>
-            <p className="placement-eyebrow">YOUR DRAFT</p>
-            <h2 id="composer-title">What would you like to say?</h2>
+            <p className="placement-eyebrow">{t("YOUR DRAFT")}</p>
+            <h2 id="composer-title">{t("What would you like to say?")}</h2>
           </div>
           <span className="writing-character-count">{text.length} / 5,000</span>
         </div>
-        {usage && <p className="writing-usage-note">Rolling 24-hour allowance: <strong>{usage.remaining} of {usage.limit}</strong> submissions remaining. Failed provider attempts count toward the limit; provider costs are not yet available.</p>}
-        <label className="writing-sr-only" htmlFor="writing-text">Your English writing</label>
+        {usage && <p className="writing-usage-note">{locale === "fa" ? `سهمیهٔ ۲۴ ساعته: ${usage.remaining} از ${usage.limit} ارسال باقی مانده است. تلاش‌های ناموفق نیز در سهمیه حساب می‌شوند.` : `Rolling 24-hour allowance: ${usage.remaining} of ${usage.limit} submissions remaining. Failed provider attempts count toward the limit; provider costs are not yet available.`}</p>}
+        <label className="writing-sr-only" htmlFor="writing-text">{t("Your English writing")}</label>
         <textarea
           id="writing-text"
+          lang="en"
+          dir="ltr"
           value={text}
           onChange={(event) => { setText(event.target.value); setError(""); }}
           placeholder="Today I learned something new about…"
@@ -166,27 +170,27 @@ export default function WritingPage() {
           rows={8}
         />
         <div className="writing-composer-footer">
-          <p>Your writing is saved to your account when you submit it.</p>
+          <p>{t("Your writing is saved to your account when you submit it.")}</p>
           <button className="placement-submit" type="button" onClick={submitWriting} disabled={submitting || text.trim().length < 3 || text.length > 5000}>
-            {submitting ? "Saving draft…" : "Save and review"} <span aria-hidden="true">↗</span>
+            {submitting ? t("Saving draft…") : t("Save and review")} <span aria-hidden="true">↗</span>
           </button>
         </div>
-        {error && <p className="placement-error" role="alert">{error} {needsSignIn && <Link href="/login">Sign in</Link>}</p>}
+        {error && <p className="placement-error" role="alert">{t(error)} {needsSignIn && <Link href="/login">{t("Sign in")}</Link>}</p>}
       </section>
 
       {current?.result && (
         <section className="writing-result" aria-labelledby="writing-result-title" aria-live="polite">
           <div className="writing-result-header">
             <div>
-              <p className="placement-eyebrow">SAVED SUBMISSION #{current.id}</p>
-              <h2 id="writing-result-title">Your writing is saved.</h2>
+              <p className="placement-eyebrow">{t("SAVED SUBMISSION")} #{current.id}</p>
+              <h2 id="writing-result-title">{t("Your writing is saved.")}</h2>
             </div>
             <span className="writing-status">{current.status}</span>
           </div>
-          <blockquote className="writing-original">{current.original_text}</blockquote>
-          <p className="writing-feedback">{current.result.general_feedback}</p>
+          <blockquote className="writing-original" lang="en" dir="ltr">{current.original_text}</blockquote>
+          <p className="writing-feedback" lang="en" dir="ltr">{current.result.general_feedback}</p>
           <div className="writing-limitations">
-            <strong>Demo mode limitations</strong>
+            <strong>{t("Demo mode limitations")}</strong>
             <ul>{current.result.limitations.map((limitation) => <li key={limitation}>{limitation}</li>)}</ul>
           </div>
         </section>
@@ -195,19 +199,19 @@ export default function WritingPage() {
       <section className="writing-history" aria-labelledby="writing-history-title">
         <div className="writing-history-heading">
           <div>
-            <p className="placement-eyebrow">YOUR PRACTICE</p>
-            <h2 id="writing-history-title">Recent writing</h2>
+            <p className="placement-eyebrow">{t("YOUR PRACTICE")}</p>
+            <h2 id="writing-history-title">{t("Recent writing")}</h2>
           </div>
-          <span>{history.length} shown</span>
+          <span>{history.length} {t("shown")}</span>
         </div>
-        {loadingHistory ? <p className="writing-empty" role="status">Loading your saved writing…</p> : history.length === 0 ? (
-          <p className="writing-empty">Your saved writing will appear here after your first submission.</p>
+        {loadingHistory ? <p className="writing-empty" role="status">{t("Loading your saved writing…")}</p> : history.length === 0 ? (
+          <p className="writing-empty">{t("Your saved writing will appear here after your first submission.")}</p>
         ) : (
           <div className="writing-history-list">
             {history.map((item) => (
               <article className="writing-history-item" key={item.id}>
                 <div className="writing-history-item-copy">
-                  <p>{item.original_text}</p>
+                  <p lang="en" dir="ltr">{item.original_text}</p>
                   <span>{new Date(item.created_at).toLocaleString()} · {item.status}</span>
                 </div>
                 <button type="button" className="writing-view-button" onClick={() => setCurrent(item)} disabled={!item.result}>

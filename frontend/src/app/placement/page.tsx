@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useLocale } from "../components/locale-provider";
 import { useEffect, useMemo, useState } from "react";
 
 type AssessmentSummary = {
@@ -41,6 +42,7 @@ async function readError(response: Response): Promise<string> {
 }
 
 export default function PlacementPage() {
+  const { t } = useLocale();
   const [assessment, setAssessment] = useState<AssessmentDetail | null>(null);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [result, setResult] = useState<AttemptResult | null>(null);
@@ -143,24 +145,24 @@ export default function PlacementPage() {
     return (
       <main className="placement-shell">
         <div className="placement-topline">
-          <Link href="/" className="placement-back">← Dashboard</Link>
-          <span className="placement-kicker">YOUR STARTING POINT</span>
+          <Link href="/" className="placement-back">← {t("Back to dashboard")}</Link>
+          <span className="placement-kicker">{t("YOUR STARTING POINT")}</span>
         </div>
         <section className="placement-result" aria-labelledby="result-title">
           <span className="placement-result-mark" aria-hidden="true">✦</span>
-          <p className="placement-eyebrow">ASSESSMENT COMPLETE</p>
-          <h1 id="result-title">A place to <em>begin.</em></h1>
-          <p className="placement-result-copy">Your answers have been scored and saved to your account.</p>
+          <p className="placement-eyebrow">{t("ASSESSMENT COMPLETE")}</p>
+          <h1 id="result-title">{t("A place to begin.")}</h1>
+          <p className="placement-result-copy">{t("Your answers have been scored and saved to your account.")}</p>
           <div className="placement-result-grid">
-            <div className="placement-result-stat"><span>Estimated level</span><strong>{result.estimated_level}</strong></div>
-            <div className="placement-result-stat"><span>Your score</span><strong>{result.score}<small> / {result.max_score}</small></strong></div>
-            <div className="placement-result-stat"><span>Correct percentage</span><strong>{percentage}%</strong></div>
+            <div className="placement-result-stat"><span>{t("Estimated level")}</span><strong>{result.estimated_level}</strong></div>
+            <div className="placement-result-stat"><span>{t("Your score")}</span><strong>{result.score}<small> / {result.max_score}</small></strong></div>
+            <div className="placement-result-stat"><span>{t("Correct percentage")}</span><strong>{percentage}%</strong></div>
           </div>
-          <p className="placement-caveat">This is a provisional estimate based on a short starter quiz, not a certified or adaptive CEFR assessment.</p>
+          <p className="placement-caveat">{t("This is a provisional estimate based on a short starter quiz, not a certified or adaptive CEFR assessment.")}</p>
           <div className="placement-result-actions">
-            <Link href="/" className="placement-primary-link">Back to dashboard</Link>
+            <Link href="/" className="placement-primary-link">{t("Back to dashboard")}</Link>
             <button className="placement-secondary-button" type="button" onClick={() => { setAnswers({}); setResult(null); setError(""); }}>
-              Try again
+              {t("Try again")}
             </button>
           </div>
         </section>
@@ -171,28 +173,28 @@ export default function PlacementPage() {
   return (
     <main className="placement-shell">
       <div className="placement-topline">
-        <Link href="/" className="placement-back">← Dashboard</Link>
-        <span className="placement-kicker">WORDWISE · LEVEL CHECK</span>
+        <Link href="/" className="placement-back">← {t("Back to dashboard")}</Link>
+        <span className="placement-kicker">{t("WORDWISE · LEVEL CHECK")}</span>
       </div>
       <section className="placement-intro" aria-labelledby="placement-title">
-        <p className="placement-eyebrow">YOUR LEARNING JOURNEY STARTS HERE</p>
-        <h1 id="placement-title">Find your <em>starting point.</em></h1>
-        <p>Answer a few short questions to get a first estimate of your English level. Take your time; this is a guide, not a test to fear.</p>
-        {assessment && <div className="placement-meta"><span>{assessment.title}</span><span>{questionCount} questions</span><span>About 3 minutes</span></div>}
+        <p className="placement-eyebrow">{t("YOUR LEARNING JOURNEY STARTS HERE")}</p>
+        <h1 id="placement-title">{t("Find your starting point.")}</h1>
+        <p>{t("Answer a few short questions to get a first estimate of your English level. Take your time; this is a guide, not a test to fear.")}</p>
+        {assessment && <div className="placement-meta"><span>{assessment.title}</span><span>{questionCount} {t("questions")}</span><span>{t("About 3 minutes")}</span></div>}
       </section>
 
       {assessment && (
-        <section className="placement-quiz" aria-label="Placement questions">
+        <section className="placement-quiz" aria-label={t("Placement questions")}>
           <div className="placement-progress-heading">
-            <span>YOUR PROGRESS</span>
-            <strong>{answeredCount} of {questionCount} answered</strong>
+            <span>{t("YOUR PROGRESS")}</span>
+            <strong>{answeredCount} {t("of")} {questionCount} {t("answered")}</strong>
           </div>
           <div className="placement-progress-track" role="progressbar" aria-label="Questions answered" aria-valuemin={0} aria-valuemax={questionCount} aria-valuenow={answeredCount}>
             <div className="placement-progress-fill" style={{ width: `${progress}%` }} />
           </div>
           <div className="placement-question-list">
             {assessment.questions.map((question, index) => (
-              <fieldset className="placement-question" key={question.id}>
+              <fieldset className="placement-question" key={question.id} lang="en" dir="ltr">
                 <legend>
                   <span className="placement-question-number">{String(index + 1).padStart(2, "0")}</span>
                   <span>{question.prompt}</span>
@@ -219,11 +221,11 @@ export default function PlacementPage() {
               </fieldset>
             ))}
           </div>
-          {error && <p className="placement-error" role="alert">{error} {needsSignIn && <Link href="/login">Sign in</Link>}</p>}
+          {error && <p className="placement-error" role="alert">{t(error)} {needsSignIn && <Link href="/login">{t("Sign in")}</Link>}</p>}
           <div className="placement-submit-row">
-            <p>Your score is calculated and stored securely by the server.</p>
+            <p>{t("Your score is calculated and stored securely by the server.")}</p>
             <button className="placement-submit" type="button" onClick={submitAssessment} disabled={submitting || answeredCount !== questionCount}>
-              {submitting ? "Saving your result…" : "Submit answers"} <span aria-hidden="true">↗</span>
+              {submitting ? t("Saving your result…") : t("Submit answers")} <span aria-hidden="true">↗</span>
             </button>
           </div>
         </section>
