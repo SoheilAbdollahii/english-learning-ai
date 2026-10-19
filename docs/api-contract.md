@@ -1,6 +1,6 @@
 # Initial REST API Contract
 
-Status: partially implemented. Session CSRF/login/logout and the current-user profile endpoint are implemented and covered by tests. Reading, Writing, Vocabulary, progress, and usage endpoints below remain proposals until implemented and tested.
+Status: partially implemented. Session CSRF/login/logout and the current-user profile endpoint are implemented and covered by tests. Reading, Vocabulary, progress, and usage endpoints below remain proposals until implemented and tested. The Writing API and frontend Writing Studio are implemented on the `feat/writing-mvp-api` branch. Gemini Developer API integration is optional and enabled only when the backend environment has a configured `GEMINI_API_KEY`; without it, the clearly labelled demo provider remains active. CI for the latest hardening changes is pending.
 
 ## Conventions
 - Prefix routes with /api/v1/.
@@ -37,17 +37,17 @@ Status: partially implemented. Session CSRF/login/logout and the current-user pr
 - GET /api/v1/placement/assessments/{assessment_id}/ — public question fields only; answer keys and explanations are withheld.
 - POST /api/v1/placement/attempts/ — authenticated; validates complete answer sets and calculates score on the server.
 - GET /api/v1/placement/attempts/{attempt_id}/ — authenticated owner-only result.
-- A six-question starter assessment is seeded by the initial migration. The Next.js /placement page fetches the public question set, validates that all answers are selected client-side, retrieves a CSRF token, and submits the answers through the same-origin API proxy. The server scores and persists the attempt; the result screen displays the returned score and provisional level.
+- A six-question starter assessment is seeded by the initial migration. The Next.js /placement page fetches the public question set, validates that all answers are selected, retrieves a CSRF token, and submits the answers through the same-origin API proxy. The server scores and persists the attempt; the result screen displays the returned score and provisional level.
 - CEFR estimates use a documented-in-code percentage threshold heuristic and are provisional, not a validated adaptive placement instrument. The browser never receives answer keys or calculates the official score.
 
+### Writing (MVP API; demo provider only)
+- POST /api/v1/writing/submissions/ — authenticated; accepts `{ "text": "..." }` with 3–5000 characters, persists the submission, and returns a versioned result from the configured adapter.
+- GET /api/v1/writing/submissions/ — authenticated, paginated owner-only history (`limit`/`offset`).
+- GET /api/v1/writing/submissions/{submission_id}/ — authenticated owner-only submission and result.
+- Result schema v1 includes `corrected_text`, `errors`, `general_feedback`, and `limitations`. Error offsets use Python Unicode code points; `start` is inclusive and `end` exclusive, and the original span must match the submitted text.
+- The current demo provider deliberately performs no grammar evaluation and makes this limitation explicit. It is an integration/test scaffold, not an AI writing tutor. Provider failures and invalid result schemas are not reported as successful analyses. Provider-backed submissions are rate-limited per authenticated learner (default 10/hour, configurable with `WRITING_SUBMISSIONS_PER_HOUR`). This throttle limits request frequency but is not a billing-grade usage ledger; durable quota accounting, provider evaluation data, and deployment-specific HTTPS/proxy configuration remain follow-up work.
+
 ## Planned endpoint inventory
-
-### Writing
-- POST /api/v1/writing/submissions/
-- GET /api/v1/writing/submissions/ — paginated owner-only history
-- GET /api/v1/writing/submissions/{submission_id}/ — validated result/status
-
-Start with synchronous processing and a strict timeout. Add background jobs only if latency or retry requirements justify them. A failed or malformed AI response must never be represented as a successful analysis.
 
 ### Reading
 - GET /api/v1/reading/passages/
@@ -68,13 +68,8 @@ Start with synchronous processing and a strict timeout. Add background jobs only
 ## Error response example
 The consistent error envelope should include a stable code, safe user-facing message, field details where relevant, and an opaque request ID. Internal exception details belong in protected logs with sensitive values redacted.
 
-## Writing result logical schema
-A validated result should contain schema version, status, corrected text, a list of errors (category, original span, correction, explanation), general feedback, and limitations. This is a logical contract, not a production schema yet.
-
-Offsets require a documented convention (Unicode code points vs UTF-16, exclusive vs inclusive end). Validate that each span maps to the submitted text. Define behavior when corrected text and error list disagree.
-
 ## Contract acceptance checklist
-- OpenAPI generated from actual implementation.
+- OpenAPI generated from actual serializers and views.
 - Auth and object permissions tested.
 - Request size, pagination, and validation bounded.
 - Consistent error codes and status codes.
