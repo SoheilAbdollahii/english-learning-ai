@@ -1,5 +1,6 @@
 from datetime import timedelta
 
+from django.db import transaction
 from django.utils import timezone
 
 from apps.progress.models import LearningActivity
@@ -7,6 +8,7 @@ from apps.progress.services import record_activity
 from .models import VocabularyCard
 
 
+@transaction.atomic
 def apply_review(card: VocabularyCard, quality: int) -> VocabularyCard:
     """Apply a deterministic SM-2-inspired schedule for a single review outcome.
 
