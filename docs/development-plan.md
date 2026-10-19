@@ -51,7 +51,7 @@ Proceed only with a concrete use case; evaluate source rights, retrieval quality
 
 ### Phase 10 — Release
 
-Release tooling status: **Implemented — CI verification pending.** Added backend/frontend Dockerfiles, a local PostgreSQL Docker Compose setup, a database/migration readiness endpoint, and a release checklist that separates local smoke tests from production requirements.
+Release tooling status: **Verified in CI on PR #13** ([run](https://github.com/SoheilAbdollahii/english-learning-ai/actions/runs/39224375843)). Added backend/frontend Dockerfiles, a local PostgreSQL Docker Compose setup, a database/migration readiness endpoint, and a release checklist that separates local smoke tests from production requirements.
 
 Remaining before production: execute the container smoke test in a Docker-capable environment; validate PostgreSQL quota concurrency; configure real HTTPS/proxy/cache/secrets; complete privacy and backup/restore drills; review and merge the stacked PRs in dependency order; run the final release regression.
 
