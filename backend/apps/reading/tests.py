@@ -98,3 +98,50 @@ def test_reading_attempt_history_is_paginated_and_owner_scoped():
     assert len(response.data["results"]) == 2
     client.force_authenticate(user=other)
     assert client.get("/api/v1/reading/attempts/").data["count"] == 0
+
+
+
+@pytest.mark.django_db
+def test_reading_attempt_keeps_question_snapshot_after_content_is_edited():
+    user = User.objects.create_user(username="reader-snapshot", password="Strong-test-pass-123")
+    passage = Passage.objects.create(
+        slug="snapshot-passage", title="Snapshot Passage", body="Original passage text.",
+        level="A2", content_version=1, is_published=True,
+    )
+    question = ReadingQuestion.objects.create(
+        passage=passage, prompt="Original question?", options={"a": "First", "b": "Second"},
+        correct_option="a", explanation="Original explanation.", points=2, order=1,
+    )
+    client = APIClient()
+    client.force_authenticate(user=user)
+    response = client.post(
+        "/api/v1/reading/attempts/",
+        {"passage_id": passage.pk, "answers": {str(question.pk): "a"}},
+        format="json",
+    )
+    assert response.status_code == 201
+    snapshot = response.data["question_snapshots"][0]
+    assert snapshot == {
+        "question_id": question.pk,
+        "prompt": "Original question?",
+        "options": {"a": "First", "b": "Second"},
+        "correct_option": "a",
+        "explanation": "Original explanation.",
+        "points": 2,
+        "order": 1,
+        "selected_option": "a",
+        "correct": True,
+    }
+
+    question.prompt = "Edited question?"
+    question.options = {"a": "Changed", "c": "New option"}
+    question.correct_option = "c"
+    question.explanation = "Edited explanation."
+    question.save()
+    passage.content_version = 2
+    passage.save(update_fields=("content_version",))
+
+    history = client.get(f"/api/v1/reading/attempts/{response.data['id']}/")
+    assert history.status_code == 200
+    assert history.data["passage_version"] == 1
+    assert history.data["question_snapshots"][0] == snapshot
