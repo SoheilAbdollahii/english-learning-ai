@@ -76,3 +76,25 @@ def test_unpublished_passages_are_not_listed_or_retrievable():
     client = APIClient()
     assert passage.id not in [item["id"] for item in client.get("/api/v1/reading/passages/").data]
     assert client.get(f"/api/v1/reading/passages/{passage.pk}/").status_code == 404
+
+
+@pytest.mark.django_db
+def test_reading_attempt_history_is_paginated_and_owner_scoped():
+    owner = User.objects.create_user(username="history-owner", password="Strong-test-pass-123")
+    other = User.objects.create_user(username="history-other", password="Strong-test-pass-123")
+    passage = Passage.objects.create(slug="history-passage", title="History Passage", body="Text.", level="A2", is_published=True)
+    for index in range(12):
+        ReadingAttempt.objects.create(
+            user=owner, passage=passage, passage_version=1,
+            submitted_answers={}, result_details=[], score=index % 2,
+            max_score=1, percentage=(index % 2) * 100,
+        )
+    client = APIClient()
+    assert client.get("/api/v1/reading/attempts/").status_code == 403
+    client.force_authenticate(user=owner)
+    response = client.get("/api/v1/reading/attempts/?limit=2")
+    assert response.status_code == 200
+    assert response.data["count"] == 12
+    assert len(response.data["results"]) == 2
+    client.force_authenticate(user=other)
+    assert client.get("/api/v1/reading/attempts/").data["count"] == 0
