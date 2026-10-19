@@ -362,3 +362,45 @@ a:focus-visible { outline: 3px solid #b4cdb5; outline-offset: 3px; }
   .writing-composer-footer { align-items: stretch; flex-direction: column; }
   .writing-composer-footer .placement-submit { width: 100%; }
 }
+
+
+/* Vocabulary spaced-repetition flow */
+.vocabulary-summary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 0 0 18px; }
+.vocabulary-summary article { display: grid; gap: 6px; padding: 18px; border: 1px solid #e5ebe1; border-radius: 12px; background: #fff; }
+.vocabulary-summary article span { color: #718075; font-size: .72rem; }
+.vocabulary-summary article strong { color: var(--accent-dark); font-size: 1.8rem; font-weight: 650; letter-spacing: -.04em; }
+.vocabulary-summary article small { color: #98a197; font-size: .66rem; }
+.vocabulary-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.vocabulary-form label { display: grid; gap: 7px; color: #53645a; font-size: .74rem; font-weight: 650; }
+.vocabulary-form label span { color: #98a197; font-weight: 400; }
+.vocabulary-form input { width: 100%; min-width: 0; padding: 12px 13px; border: 1px solid #dfe6dc; border-radius: 9px; background: #fcfdfb; color: #283c30; font: inherit; font-size: .8rem; outline: none; }
+.vocabulary-form input:focus { border-color: #7d9c7c; box-shadow: 0 0 0 3px #eaf1e7; }
+.vocabulary-form .placement-submit { justify-self: start; grid-column: 1 / -1; }
+.vocabulary-notice { padding: 12px 14px; border: 1px solid #dce8d7; border-radius: 9px; background: #f4f8f1; color: #426344; font-size: .78rem; }
+.vocabulary-card-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.vocabulary-card { min-width: 0; padding: 18px; border: 1px solid #e5ebe1; border-radius: 12px; background: #fff; }
+.vocabulary-card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.vocabulary-card-head h3 { margin: 7px 0 0; color: #2d4535; font-size: 1.25rem; letter-spacing: -.025em; overflow-wrap: anywhere; }
+.vocabulary-status { display: inline-flex; padding: 4px 7px; border-radius: 5px; background: #f1f4ee; color: #697a69; font-size: .6rem; text-transform: uppercase; letter-spacing: .06em; }
+.vocabulary-status-mastered { background: #e8f3e6; color: #426d42; }
+.vocabulary-due { color: #879487; font-size: .64rem; text-align: right; }
+.vocabulary-reveal { width: 100%; margin-top: 18px; padding: 13px; border: 1px dashed #cdd9c8; border-radius: 9px; background: #f8faf6; color: #536d54; font: inherit; font-size: .78rem; cursor: pointer; }
+.vocabulary-definition { margin-top: 16px; color: #53645a; font-size: .82rem; line-height: 1.65; overflow-wrap: anywhere; }
+.vocabulary-definition > p { margin: 0 0 8px; }
+.vocabulary-translation { color: #547a52; font-weight: 650; }
+.vocabulary-definition blockquote { margin: 12px 0 0; padding: 10px 12px; border-left: 2px solid #b7cbb0; background: #f7f9f4; color: #718075; font-size: .76rem; }
+.vocabulary-grades { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin-top: 14px; }
+.vocabulary-grades button { padding: 9px 5px; border: 1px solid #dfe6dc; border-radius: 7px; background: #fff; color: #4b614e; font: inherit; font-size: .7rem; cursor: pointer; }
+.vocabulary-grades button:hover:not(:disabled) { background: #eff5eb; border-color: #b9cdb3; }
+.vocabulary-grades button:disabled { opacity: .5; cursor: wait; }
+.vocabulary-card-meta { margin: 12px 0 0; color: #98a197; font-size: .64rem; }
+.vocabulary-footnote { margin: 18px 0 30px; color: #8a968c; font-size: .68rem; line-height: 1.6; }
+@media (max-width: 600px) {
+  .vocabulary-summary { grid-template-columns: 1fr; }
+  .vocabulary-summary article { grid-template-columns: 1fr auto; align-items: center; }
+  .vocabulary-summary article small { grid-column: 1 / -1; }
+  .vocabulary-form, .vocabulary-card-list { grid-template-columns: 1fr; }
+  .vocabulary-form .placement-submit { width: 100%; }
+  .vocabulary-card-head { flex-direction: column; }
+  .vocabulary-due { text-align: left; }
+}

@@ -1,6 +1,6 @@
 # Initial REST API Contract
 
-Status: partially implemented. Session CSRF/login/logout and the current-user profile endpoint are implemented and covered by tests. Reading, Vocabulary, progress, and usage endpoints below remain proposals until implemented and tested. The Writing API and frontend Writing Studio are implemented on the `feat/writing-mvp-api` branch. Gemini Developer API integration is optional and enabled only when the backend environment has a configured `GEMINI_API_KEY`; without it, the clearly labelled demo provider remains active. CI for the latest hardening changes is pending.
+Status: partially implemented. Session CSRF/login/logout, profile, placement, writing, and the first Vocabulary review flow are implemented with automated tests. Reading, progress, and usage-summary endpoints remain proposals. Gemini Developer API integration is optional and enabled only when the backend environment has a configured `GEMINI_API_KEY`; without it, the clearly labelled demo provider remains active.
 
 ## Conventions
 - Prefix routes with /api/v1/.
@@ -47,6 +47,13 @@ Status: partially implemented. Session CSRF/login/logout and the current-user pr
 - Result schema v1 includes `corrected_text`, `errors`, `general_feedback`, and `limitations`. Error offsets use Python Unicode code points; `start` is inclusive and `end` exclusive, and the original span must match the submitted text.
 - The current demo provider deliberately performs no grammar evaluation and makes this limitation explicit. It is an integration/test scaffold, not an AI writing tutor. Provider failures and invalid result schemas are not reported as successful analyses. Provider-backed submissions are rate-limited per authenticated learner (default 10/hour, configurable with `WRITING_SUBMISSIONS_PER_HOUR`). This throttle limits request frequency but is not a billing-grade usage ledger; durable quota accounting, provider evaluation data, and deployment-specific HTTPS/proxy configuration remain follow-up work.
 
+### Vocabulary (initial review MVP)
+- GET /api/v1/vocabulary/cards/ — authenticated; returns only the current learner's cards ordered by due date. Add `?due=true` to return cards due now.
+- POST /api/v1/vocabulary/cards/ — authenticated; creates a card with word, English definition, optional example and translation. A learner cannot save the same word twice, ignoring case.
+- POST /api/v1/vocabulary/cards/{card_id}/review/ — authenticated owner-only; accepts `quality` from 0 to 5 and returns the updated schedule.
+- Review scheduling is a deterministic SM-2-inspired rule set: grades below 3 reset the interval to one day; successful reviews progress through 1 day, 6 days, then ease-adjusted intervals. Five successful repetitions and a minimum 21-day interval mark a card mastered. Displaying a card alone does not change mastery.
+- The current card model stores a single owner-scoped card and its scheduling state; separate immutable review-event history and curated licensed vocabulary content are future work.
+
 ## Planned endpoint inventory
 
 ### Reading
@@ -54,11 +61,6 @@ Status: partially implemented. Session CSRF/login/logout and the current-user pr
 - GET /api/v1/reading/passages/{passage_id}/
 - POST /api/v1/reading/attempts/ — server calculates score
 - GET /api/v1/reading/attempts/{attempt_id}/ — owner-only result
-
-### Vocabulary
-- GET /api/v1/vocabulary/review/
-- POST /api/v1/vocabulary/reviews/
-- GET /api/v1/vocabulary/progress/
 
 ### Progress and usage
 - GET /api/v1/progress/summary/

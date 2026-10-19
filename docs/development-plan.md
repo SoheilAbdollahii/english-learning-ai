@@ -20,10 +20,13 @@ Custom user model, profile, authentication, cross-user authorization tests, vers
 ### Phase 4 — Writing MVP
 Provider-neutral adapter, fake provider for tests, versioned result schema, span validation, history, timeout/failure handling, usage accounting, evaluation baseline.
 
-Current status: **In progress — Gemini integration added; latest CI pending.** The branch includes a server-side Gemini Developer API adapter (default model `gemini-2.5-flash`), bounded request timeout, schema/span validation, owner-scoped submissions/history, safe failure responses, and the Writing Studio UI. Without `GEMINI_API_KEY`, the clearly-labelled demo adapter remains active. Free-tier quota monitoring, usage accounting, and an evaluation baseline remain outstanding.
+Current status: **In progress — provider integration and initial security/usage controls implemented; verification and evaluation work remain.** The branch includes a server-side Gemini Developer API adapter (default model `gemini-2.5-flash`), bounded request timeout, schema/span validation, owner-scoped submissions/history, safe failure responses, and the Writing Studio UI. Without `GEMINI_API_KEY`, the clearly-labelled demo adapter remains active. Free-tier quota monitoring, usage accounting, and an evaluation baseline remain outstanding.
 
 ### Phase 5 — Reading and Vocabulary
-Curated licensed/versioned content, server-side Reading scoring, vocabulary review state and tested spaced-repetition rules.
+
+Vocabulary status: **Implemented — CI verification pending.** The initial vocabulary MVP includes owner-scoped cards, case-insensitive duplicate prevention, due-card filtering, a deterministic SM-2-inspired schedule, review grades, and a responsive review UI. Backend and frontend regression tests were added. Remaining vocabulary work includes immutable review-event history, curated licensed word packs, and richer progress analytics.
+
+Reading status: **Not started.** Next work is curated/versioned passages, server-side question scoring, owner-scoped attempts/history, and frontend flow.
 
 ### Phase 6 — Progress and personalization
 Defined metrics from persisted records and transparent rule-based recommendations.
