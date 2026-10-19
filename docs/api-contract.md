@@ -1,6 +1,6 @@
 # Initial REST API Contract
 
-Status: partially implemented. Session CSRF/login/logout, profile, placement, writing, and the first Vocabulary review flow are implemented with automated tests. Reading, progress, and usage-summary endpoints remain proposals. Gemini Developer API integration is optional and enabled only when the backend environment has a configured `GEMINI_API_KEY`; without it, the clearly labelled demo provider remains active.
+Status: partially implemented. Session CSRF/login/logout, profile, placement, writing, vocabulary review, and the initial Reading comprehension flow are implemented with automated tests. Progress and usage-summary endpoints remain proposals. Gemini Developer API integration is optional and enabled only when the backend environment has a configured `GEMINI_API_KEY`; without it, the clearly labelled demo provider remains active.
 
 ## Conventions
 - Prefix routes with /api/v1/.
@@ -54,13 +54,14 @@ Status: partially implemented. Session CSRF/login/logout, profile, placement, wr
 - Review scheduling is a deterministic SM-2-inspired rule set: grades below 3 reset the interval to one day; successful reviews progress through 1 day, 6 days, then ease-adjusted intervals. Five successful repetitions and a minimum 21-day interval mark a card mastered. Displaying a card alone does not change mastery.
 - The current card model stores a single owner-scoped card and its scheduling state; separate immutable review-event history and curated licensed vocabulary content are future work.
 
-## Planned endpoint inventory
+### Reading (initial comprehension MVP)
+- GET /api/v1/reading/passages/ — public list of published original passages with level, content version, and question count.
+- GET /api/v1/reading/passages/{passage_id}/ — published passage and public question options. Correct options and explanations are omitted before submission.
+- POST /api/v1/reading/attempts/ — authenticated; accepts a passage ID and exactly one valid option per question; server calculates weighted score and percentage.
+- GET /api/v1/reading/attempts/{attempt_id}/ — authenticated owner-only result including answer feedback and explanation snapshots.
+- Two original sample passages (A2 and B1) are seeded by migration. Content is original starter content, not externally licensed material. The current MVP does not yet include passage authoring workflows, immutable question version snapshots, or attempt history UI.
 
-### Reading
-- GET /api/v1/reading/passages/
-- GET /api/v1/reading/passages/{passage_id}/
-- POST /api/v1/reading/attempts/ — server calculates score
-- GET /api/v1/reading/attempts/{attempt_id}/ — owner-only result
+## Planned endpoint inventory
 
 ### Progress and usage
 - GET /api/v1/progress/summary/
