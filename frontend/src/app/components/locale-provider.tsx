@@ -223,8 +223,7 @@ const fa: Record<string, string> = {
   "Your personal word collection is private.": "مجموعهٔ واژگان شما خصوصی است.",
   "View": "مشاهده",
   "A SMALL NEXT STEP": "یک قدم کوچک بعدی",
-  "NEXT STEP": "قدم بعدی"
-
+  "NEXT STEP": "قدم بعدی",
   "Hi": "سلام",
   "REMEMBER MORE, WITH LESS CRAMMING": "با حفظ کردن کمتر، بیشتر به خاطر بسپارید",
   "Words that stay with you.": "واژه‌هایی که در ذهن می‌مانند.",
