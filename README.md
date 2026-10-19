@@ -61,7 +61,7 @@ npm ci
 npm run dev
 ```
 
-Open `http://localhost:3000`. Create a learner account at `http://localhost:3000/register` or sign in at `http://localhost:3000/login`. The frontend proxies `/api/*` to `http://127.0.0.1:8000` by default; set `BACKEND_API_URL` if your backend runs elsewhere. The dashboard's progress summary is derived from saved activities; study duration is intentionally not shown because reliable session-duration tracking is not yet implemented. For a different frontend origin, set `DJANGO_CSRF_TRUSTED_ORIGINS` to comma-separated origins including `https://` in production. Registration is CSRF-protected and throttled, with a 12-character minimum password policy. Email verification and password recovery are not yet available; add them before a broad public launch.
+Open `http://localhost:3000`. Create a learner account at `http://localhost:3000/register` or sign in at `http://localhost:3000/login`. The frontend proxies `/api/*` to `http://127.0.0.1:8000` by default; set `BACKEND_API_URL` if your backend runs elsewhere. The dashboard's progress summary is derived from saved activities; study duration is intentionally not shown because reliable session-duration tracking is not yet implemented. For a different frontend origin, set `DJANGO_CSRF_TRUSTED_ORIGINS` to comma-separated origins including `https://` in production. Registration is CSRF-protected and throttled, requires a unique email address, and keeps the account inactive until the email verification link is used. Sign-in is available at `/login`; request a reset at `/password-reset`; resend verification at `/verify-email/resend`. For local development, email is printed to the backend console. Set `FRONTEND_BASE_URL` to the public frontend origin and configure SMTP (`DJANGO_EMAIL_BACKEND`, `EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD`, TLS/SSL options, and `DEFAULT_FROM_EMAIL`) before production use.
 
 ### Containerized local run
 
@@ -101,9 +101,9 @@ The checks above are configured in CI. A green CI run verifies build and automat
 
 - Do not commit `.env` or provider API keys.
 - `/api/v1/health/` is liveness only; `/api/v1/ready/` checks database connectivity and unapplied migrations without exposing internals.
-- Session login/logout, profile, owner-scoped learning records, server-side placement/reading scoring, vocabulary review scheduling, Writing result validation, production-mode secret enforcement, and basic AI request throttling and a database-backed rolling-24-hour Writing quota are implemented in the current codebase. For multi-worker deployments, configure `REDIS_URL` for shared throttling state.
+- Session login/logout, email verification, password reset, profile, owner-scoped learning records, server-side placement/reading scoring, vocabulary review scheduling, Writing result validation, production-mode secret enforcement, and basic AI request throttling and a database-backed rolling-24-hour Writing quota are implemented in the current codebase. For multi-worker deployments, configure `REDIS_URL` for shared throttling state.
 - Writing uses a demo provider unless a Gemini API key is configured; the demo provider is not a tutor and must not be presented as real grammar feedback.
-- Before production: complete and merge the stacked PRs in dependency order; configure HTTPS/proxy settings and secure cookies for the actual deployment; add account recovery/registration policy, immutable content/version controls, provider token/cost accounting, privacy/retention policy, backup/restore drills, and an evaluated writing dataset. Run the full release checklist and CI on the final merge commit.
+- Before production: configure and test real SMTP delivery, HTTPS/proxy settings and secure cookies for the actual deployment; review immutable content/version controls, provider token/cost accounting, privacy/retention policy, backup/restore drills, and an educator-reviewed Writing evaluation dataset. Run the full release checklist and CI on the final merge commit.
 
 ## Development status
 

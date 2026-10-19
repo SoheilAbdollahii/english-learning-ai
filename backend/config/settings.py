@@ -119,6 +119,22 @@ else:
         }
     }
 
+
+# Account emails: use console delivery in DEBUG; production must configure SMTP explicitly.
+EMAIL_BACKEND = os.environ.get(
+    "DJANGO_EMAIL_BACKEND",
+    "django.core.mail.backends.console.EmailBackend" if DEBUG else "django.core.mail.backends.smtp.EmailBackend",
+)
+EMAIL_HOST = os.environ.get("EMAIL_HOST", "localhost")
+EMAIL_PORT = int(os.environ.get("EMAIL_PORT", "25"))
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
+EMAIL_USE_TLS = _env_bool("EMAIL_USE_TLS", False)
+EMAIL_USE_SSL = _env_bool("EMAIL_USE_SSL", False)
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "Wordwise <no-reply@example.com>")
+FRONTEND_BASE_URL = os.environ.get("FRONTEND_BASE_URL", "http://localhost:3000").rstrip("/")
+PASSWORD_RESET_TIMEOUT = _env_non_negative_int("PASSWORD_RESET_TIMEOUT", 60 * 60)
+
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator", "OPTIONS": {"min_length": 12}},
@@ -161,6 +177,8 @@ REST_FRAMEWORK = {
         # Provider-backed writing calls can incur third-party costs.
         "writing_submission": os.environ.get("WRITING_SUBMISSIONS_PER_HOUR", "10/hour"),
         "registration": os.environ.get("REGISTRATION_RATE_LIMIT", "5/hour"),
+        "password_reset": os.environ.get("PASSWORD_RESET_RATE_LIMIT", "5/hour"),
+        "email_verification": os.environ.get("EMAIL_VERIFICATION_RATE_LIMIT", "5/hour"),
     },
     "DEFAULT_RENDERER_CLASSES": [
         "rest_framework.renderers.JSONRenderer",

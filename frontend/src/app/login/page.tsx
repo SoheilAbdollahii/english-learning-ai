@@ -91,6 +91,8 @@ export default function LoginPage() {
             {busy ? "Signing in…" : t("Sign in")}
           </button>
         </form>
+        <p className="login-footnote"><Link href="/password-reset">{t("Forgot your password?")}</Link></p>
+        <p className="login-footnote"><Link href="/verify-email/resend">{t("Resend verification email")}</Link></p>
         <p className="login-footnote">{t("New to Wordwise?")} <Link href="/register">{t("Create an account")}</Link></p>
       </section>
     </main>
