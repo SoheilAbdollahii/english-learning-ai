@@ -57,7 +57,7 @@ class WritingSubmissionCollectionView(APIView):
             status=WritingSubmission.Status.PENDING,
         )
         try:
-            provider_name, result = analyze_writing(submission.original_text)
+            provider_name, result, usage_metadata = analyze_writing(submission.original_text)
         except WritingProviderError:
             finish_usage(usage_record, provider_hint, AIUsageRecord.Status.FAILED, "analysis_unavailable")
             submission.status = WritingSubmission.Status.FAILED
@@ -77,7 +77,7 @@ class WritingSubmissionCollectionView(APIView):
         submission.provider = provider_name
         submission.result = result
         submission.save(update_fields=("status", "provider", "result", "updated_at"))
-        finish_usage(usage_record, provider_name, AIUsageRecord.Status.SUCCEEDED)
+        finish_usage(usage_record, provider_name, AIUsageRecord.Status.SUCCEEDED, usage_metadata=usage_metadata)
         record_activity(request.user, LearningActivity.Type.WRITING, submission.pk)
         return Response(WritingSubmissionSerializer(submission).data, status=status.HTTP_201_CREATED)
 
