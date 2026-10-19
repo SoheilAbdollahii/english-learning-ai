@@ -44,7 +44,7 @@ Complete learner flows, RTL/LTR and accessibility checks, E2E scenarios, product
 
 Usage status: **Basic durable quota verified in CI on PR #10** ([run](https://github.com/SoheilAbdollahii/english-learning-ai/actions/runs/39222991351)). Writing requests reserve a database-backed slot before provider work; the rolling 24-hour default is 30 submissions per learner and provider failures consume a slot. A private usage summary exposes used/remaining slots and character volume. A per-hour DRF throttle remains as an additional guard.
 
-Provider-reported token metadata and optional rate-configured cost estimates are implemented in PR #18. Remaining: add operational alerting and test concurrent quota reservations against production PostgreSQL. Do not use this MVP ledger for billing.
+Provider-reported token metadata and optional rate-configured cost estimates are implemented in PR #18. A PostgreSQL-only concurrent-reservation regression test and PostgreSQL-backed backend CI service are added in PR #34 and await CI verification. Remaining: operational alerting and verification against the actual production topology. Do not use this MVP ledger for billing.
 
 ### Phase 9 — Optional RAG
 Proceed only with a concrete use case; evaluate source rights, retrieval quality, answer quality, and evidence attribution separately.
