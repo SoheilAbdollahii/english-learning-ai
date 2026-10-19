@@ -40,7 +40,10 @@ Remaining: additional timezone/history edge-case coverage and a provider usage-c
 Complete learner flows, RTL/LTR and accessibility checks, E2E scenarios, production build checks.
 
 ### Phase 8 — Usage controls
-Server-enforced quotas and clear limit behavior. Defer payment integration until provider, market, and compliance needs are known.
+
+Usage status: **Basic durable quota implemented — CI verification pending.** Writing requests reserve a database-backed slot before provider work; the rolling 24-hour default is 30 submissions per learner and provider failures consume a slot. A private usage summary exposes used/remaining slots and character volume. A per-hour DRF throttle remains as an additional guard.
+
+Remaining: persist actual provider token metadata where available, configure a validated pricing table before calculating monetary cost, add alerting, and test concurrent quota reservations against production PostgreSQL. Do not use this MVP ledger for billing.
 
 ### Phase 9 — Optional RAG
 Proceed only with a concrete use case; evaluate source rights, retrieval quality, answer quality, and evidence attribution separately.

@@ -35,6 +35,14 @@ type WritingHistoryResponse = {
   results: WritingSubmission[];
 };
 
+type UsageSummary = {
+  limit: number;
+  used: number;
+  remaining: number;
+  window: string;
+  cost_tracking: string;
+};
+
 async function getCsrfToken(): Promise<string> {
   const response = await fetch("/api/v1/auth/csrf/", {
     credentials: "same-origin",
@@ -53,9 +61,19 @@ export default function WritingPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [needsSignIn, setNeedsSignIn] = useState(false);
+  const [usage, setUsage] = useState<UsageSummary | null>(null);
 
   useEffect(() => {
     let active = true;
+    async function loadUsage() {
+      try {
+        const response = await fetch("/api/v1/usage/", { credentials: "same-origin", cache: "no-store" });
+        if (response.ok && active) setUsage(await response.json() as UsageSummary);
+      } catch {
+        // Usage visibility is supplementary; the server still enforces the quota.
+      }
+    }
+    void loadUsage();
     async function loadHistory() {
       try {
         const response = await fetch("/api/v1/writing/submissions/?limit=10", {
@@ -105,6 +123,12 @@ export default function WritingPage() {
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "We couldn't reach the writing service.");
     } finally {
+      try {
+        const usageResponse = await fetch("/api/v1/usage/", { credentials: "same-origin", cache: "no-store" });
+        if (usageResponse.ok) setUsage(await usageResponse.json() as UsageSummary);
+      } catch {
+        // The usage display is supplementary; quota enforcement remains server-side.
+      }
       setSubmitting(false);
     }
   }
@@ -130,6 +154,7 @@ export default function WritingPage() {
           </div>
           <span className="writing-character-count">{text.length} / 5,000</span>
         </div>
+        {usage && <p className="writing-usage-note">Rolling 24-hour allowance: <strong>{usage.remaining} of {usage.limit}</strong> submissions remaining. Failed provider attempts count toward the limit; provider costs are not yet available.</p>}
         <label className="writing-sr-only" htmlFor="writing-text">Your English writing</label>
         <textarea
           id="writing-text"

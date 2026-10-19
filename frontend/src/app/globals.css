@@ -478,3 +478,6 @@ a:focus-visible { outline: 3px solid #b4cdb5; outline-offset: 3px; }
 @media (max-width: 760px) {
   .recommendations-grid { grid-template-columns: 1fr; }
 }
+
+.writing-usage-note { margin: 0 0 14px; padding: 10px 12px; border: 1px solid #e2e9de; border-radius: 8px; background: #f7faf4; color: #718075; font-size: .68rem; line-height: 1.6; }
+.writing-usage-note strong { color: #456849; font-weight: 750; }

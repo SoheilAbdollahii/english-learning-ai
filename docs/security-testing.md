@@ -17,12 +17,12 @@
 - Use HTTPS in deployed environments and secure database credentials.
 
 ### AI-specific controls
-- Enforce input limits, timeouts, and server-side quotas.
+- Enforce input limits, timeouts, and server-side quotas. The current Writing flow uses a per-hour DRF throttle plus a database-backed rolling-24-hour reservation quota; concurrent quota reservations must be validated against production PostgreSQL.
 - Treat user text and model output as untrusted.
 - Validate model responses against a versioned schema.
 - Never use AI output to decide permissions, account state, billing, or trusted scoring.
 - Send only necessary personal data to providers.
-- Record safe failure and usage metadata without sensitive payloads.
+- Record safe failure and usage metadata without sensitive payloads. The initial ledger stores provider/status and input character volume; it does not yet calculate money or persist actual provider token usage.
 - Do not claim calibrated confidence without empirical evaluation.
 
 ## Testing strategy
