@@ -19,7 +19,7 @@ type ProgressSummaryData = {
 };
 
 export default function ProgressOverview() {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
   const [summary, setSummary] = useState<ProgressSummaryData | null>(null);
   const [loading, setLoading] = useState(true);
   const [needsSignIn, setNeedsSignIn] = useState(false);
@@ -102,7 +102,7 @@ export default function ProgressOverview() {
                   <li key={`${item.type}-${item.created_at}-${index}`}>
                     <span className={`progress-activity-dot progress-activity-${item.type}`} aria-hidden="true" />
                     <strong>{t(item.label)}</strong>
-                    <time dateTime={item.created_at}>{new Date(item.created_at).toLocaleString()}</time>
+                    <time dateTime={item.created_at}>{new Date(item.created_at).toLocaleString(locale === "fa" ? "fa-IR" : "en-US")}</time>
                   </li>
                 ))}
               </ul>
