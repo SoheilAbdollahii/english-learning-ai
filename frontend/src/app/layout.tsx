@@ -2,12 +2,13 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "English Learning AI",
-  description: "An AI-powered English learning workspace"
+  title: "Wordwise — English Learning Studio",
+  description:
+    "A calm, structured space for English writing, reading, vocabulary practice, and steady learning progress.",
 };
 
 export default function RootLayout({
-  children
+  children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
