@@ -81,3 +81,13 @@ jobs:
         run: docker build --file backend/Dockerfile --tag english-learning-backend:ci backend
       - name: Build frontend image
         run: docker build --file frontend/Dockerfile --build-arg BACKEND_API_URL=http://backend:8000 --tag english-learning-frontend:ci frontend
+      - name: Start Compose stack and smoke-test services
+        run: |
+          cp .env.example .env
+          sed -i 's/^DJANGO_SECRET_KEY=.*/DJANGO_SECRET_KEY=ci-smoke-test-secret-with-enough-entropy-0123456789/' .env
+          docker compose up --detach --build --wait --wait-timeout 240
+          curl --fail --silent --show-error --retry 10 --retry-delay 3 --retry-connrefused http://127.0.0.1:8000/api/v1/ready/
+          curl --fail --silent --show-error --retry 10 --retry-delay 3 --retry-connrefused http://127.0.0.1:3000/
+      - name: Stop Compose stack
+        if: always()
+        run: docker compose down --volumes --remove-orphans
