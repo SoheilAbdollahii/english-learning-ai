@@ -21,6 +21,7 @@ def main(argv=None):
         help="Path to the synthetic evaluation cases JSON.",
     )
     parser.add_argument("--predictions", required=True, help="JSON object keyed by case id.")
+    parser.add_argument("--require-reviewed", action="store_true", help="Exit non-zero unless every case has reviewed annotations.")
     args = parser.parse_args(argv)
 
     with open(args.dataset, encoding="utf-8") as handle:
@@ -29,6 +30,8 @@ def main(argv=None):
         predictions = json.load(handle)
     metrics = evaluate_predictions(cases, predictions)
     print(json.dumps(metrics, ensure_ascii=False, indent=2))
+    if args.require_reviewed and not metrics["quality_gate_passed"]:
+        parser.exit(2, "Evaluation blocked: the dataset has unreviewed annotations.\\n")
     return metrics
 
 

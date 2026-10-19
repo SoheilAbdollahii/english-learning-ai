@@ -145,7 +145,7 @@ export default function WritingPage() {
       <section className="writing-intro" aria-labelledby="writing-title">
         <p className="placement-eyebrow">{t("PRACTICE MAKES PROGRESS")}</p>
         <h1 id="writing-title">{t("Put your thoughts into words.")}</h1>
-        <p>{t("Write a few sentences in English and save them to your personal practice history. The current demo mode checks the integration only; it does not yet evaluate grammar.")}</p>
+        <p>{t("Write a few sentences in English and save them to your personal practice history. When no AI provider is configured, demo mode only checks the integration and does not evaluate grammar.")}</p>
       </section>
 
       <section className="writing-composer" aria-labelledby="composer-title">
@@ -187,12 +187,31 @@ export default function WritingPage() {
             </div>
             <span className="writing-status">{current.status}</span>
           </div>
+          <p className="writing-provider-note">{current.provider === "demo" ? t("Demo provider — no grammar evaluation") : t("AI provider analysis")} · {current.result.errors.length} {t("suggestions")}</p>
           <blockquote className="writing-original" lang="en" dir="ltr">{current.original_text}</blockquote>
           <p className="writing-feedback" lang="en" dir="ltr">{current.result.general_feedback}</p>
-          <div className="writing-limitations">
-            <strong>{t("Demo mode limitations")}</strong>
-            <ul>{current.result.limitations.map((limitation) => <li key={limitation}>{limitation}</li>)}</ul>
-          </div>
+          <section className="writing-corrections" aria-labelledby="writing-corrected-title">
+            <h3 id="writing-corrected-title">{t("Suggested revision")}</h3>
+            <blockquote lang="en" dir="ltr">{current.result.corrected_text}</blockquote>
+            {current.result.errors.length === 0 ? (
+              <p>{current.provider === "demo" ? t("No grammar corrections are generated in demo mode.") : t("No specific corrections were returned.")}</p>
+            ) : (
+              <ol>
+                {current.result.errors.map((item, index) => (
+                  <li key={`${item.start}-${item.end}-${index}`}>
+                    <strong>{t(item.category)}</strong>: <span lang="en" dir="ltr">{item.original}</span> → <span lang="en" dir="ltr">{item.correction}</span>
+                    <p>{item.explanation}</p>
+                  </li>
+                ))}
+              </ol>
+            )}
+          </section>
+          {current.result.limitations.length > 0 && (
+            <div className="writing-limitations">
+              <strong>{current.provider === "demo" ? t("Demo mode limitations") : t("Analysis notes")}</strong>
+              <ul>{current.result.limitations.map((limitation) => <li key={limitation}>{limitation}</li>)}</ul>
+            </div>
+          )}
         </section>
       )}
 

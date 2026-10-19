@@ -7,7 +7,7 @@
 - Configure exact allowed hosts, CSRF trusted origins, HTTPS termination, and any trusted proxy headers for the real deployment topology.
 - Enforce ownership on the server; frontend hiding is not authorization.
 - Test unauthenticated requests and cross-user read/update attempts.
-- Public registration has CSRF protection, password validators, normalized unique usernames, and an anonymous request throttle. Email verification, account recovery, and production-grade abuse prevention remain outstanding.
+- Public registration has CSRF protection, password validators, normalized unique usernames, unique email addresses, and an anonymous request throttle. Email verification and password recovery endpoints are implemented and tested; production SMTP delivery and abuse monitoring remain deployment tasks.
 
 ### Secrets and data handling
 - Commit only `.env.example` with placeholders; ignore real environment files.
@@ -23,7 +23,7 @@
 - Never use AI output to decide permissions, account state, billing, or trusted scoring.
 - Send only necessary personal data to providers and document the provider's data processing before public launch.
 - The usage ledger can persist actual provider token counts when returned and can calculate an optional estimate from configured rates. It avoids storing raw provider payloads or learner text. Estimates are operational approximations, not invoices.
-- The offline Writing evaluation harness rejects mismatched/malformed prediction inputs, but the synthetic cases remain draft-only until reviewed by qualified educators. No educational-effectiveness claim is currently justified.
+- The offline Writing evaluation harness validates source spans, categories, overlap, missing/unexpected prediction IDs, and malformed predictions. It explicitly marks draft annotations as diagnostic-only and can enforce a reviewed-dataset gate. The synthetic cases remain draft-only until reviewed by qualified educators; no educational-effectiveness claim is currently justified.
 - Without a configured Gemini API key, Writing uses a demo adapter; it does not provide genuine grammar analysis and must be labelled accordingly.
 
 ## Testing strategy

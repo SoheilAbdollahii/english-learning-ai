@@ -40,7 +40,7 @@ def test_offline_evaluation_metrics_report_false_positives_and_span_scores():
 
 def test_evaluation_rejects_missing_predictions():
     with pytest.raises(ValueError, match="Missing predictions"):
-        evaluate_predictions([{"id": "required"}], {})
+        evaluate_predictions([{"id": "required", "original_text": "Hi.", "should_change": False, "acceptable_corrected_texts": ["Hi."], "reference_errors": []}], {})
 
 
 def test_evaluation_rejects_unexpected_predictions():
@@ -95,3 +95,111 @@ def test_gemini_provider_rejects_oversized_http_response(monkeypatch):
     monkeypatch.setattr("apps.writing.services.urlopen", lambda *_args, **_kwargs: FakeResponse())
     with pytest.raises(WritingProviderError, match="maximum allowed size"):
         GeminiWritingProvider(api_key="test-secret").analyze("A sample sentence.")
+
+
+
+def test_draft_dataset_metrics_never_claim_quality_gate_passed():
+    cases = json.loads(DATASET_PATH.read_text(encoding="utf-8"))
+    predictions = {
+        case["id"]: {
+            "corrected_text": case["acceptable_corrected_texts"][0],
+            "errors": case["reference_errors"],
+        }
+        for case in cases
+    }
+    metrics = evaluate_predictions(cases, predictions)
+    assert metrics["case_count"] == len(cases)
+    assert metrics["quality_gate_passed"] is False
+    assert metrics["annotation_statuses"] == ["draft_requires_human_review"]
+    assert "diagnostics only" in metrics["note"]
+
+
+def test_evaluation_rejects_prediction_span_that_does_not_match_source():
+    case = {
+        "id": "case",
+        "original_text": "She go.",
+        "should_change": True,
+        "acceptable_corrected_texts": ["She goes."],
+        "reference_errors": [{"category": "grammar", "start": 4, "end": 6, "original": "go"}],
+    }
+    predictions = {
+        "case": {
+            "corrected_text": "She goes.",
+            "errors": [{"category": "grammar", "start": 4, "end": 6, "original": "XX"}],
+        }
+    }
+    with pytest.raises(ValueError, match="does not match"):
+        evaluate_predictions([case], predictions)
+
+
+def test_evaluation_rejects_overlapping_predicted_spans():
+    case = {
+        "id": "case",
+        "original_text": "She goes.",
+        "should_change": True,
+        "acceptable_corrected_texts": ["She goes."],
+        "reference_errors": [{"category": "grammar", "start": 4, "end": 8, "original": "goes"}],
+    }
+    predictions = {
+        "case": {
+            "corrected_text": "She goes.",
+            "errors": [
+                {"category": "grammar", "start": 4, "end": 6, "original": "go"},
+                {"category": "grammar", "start": 5, "end": 8, "original": "oes"},
+            ],
+        }
+    }
+    with pytest.raises(ValueError, match="overlap"):
+        evaluate_predictions([case], predictions)
+
+
+def test_evaluation_rejects_invalid_reference_spans():
+    case = {
+        "id": "case",
+        "original_text": "Hello.",
+        "should_change": True,
+        "acceptable_corrected_texts": ["Hello!"],
+        "reference_errors": [{"category": "grammar", "start": 0, "end": 1, "original": "X"}],
+    }
+    with pytest.raises(ValueError, match="does not match"):
+        evaluate_predictions([case], {"case": {"corrected_text": "Hello!", "errors": []}})
+
+
+def test_result_validation_rejects_overlapping_error_spans():
+    result = {
+        "schema_version": 1,
+        "corrected_text": "She goes.",
+        "errors": [
+            {"category": "grammar", "start": 4, "end": 6, "original": "go", "correction": "goes", "explanation": "Verb agreement."},
+            {"category": "style", "start": 5, "end": 8, "original": "oes", "correction": "goes", "explanation": "Duplicate overlap."},
+        ],
+        "general_feedback": "Feedback.",
+        "limitations": [],
+    }
+    with pytest.raises(WritingProviderError, match="overlapping"):
+        validate_result("She goes.", result)
+
+
+def test_live_evaluation_requires_explicit_confirmation(monkeypatch, tmp_path):
+    from . import evaluate_provider_cli
+
+    monkeypatch.setattr("sys.argv", ["evaluate_provider_cli", "--output", str(tmp_path / "predictions.json")])
+    monkeypatch.setenv("GEMINI_API_KEY", "fake-key")
+    with pytest.raises(SystemExit) as exc:
+        evaluate_provider_cli.main()
+    assert exc.value.code == 2
+    assert not (tmp_path / "predictions.json").exists()
+
+
+def test_live_evaluation_refuses_demo_or_missing_provider_key(monkeypatch, tmp_path):
+    from . import evaluate_provider_cli
+
+    monkeypatch.setattr(
+        "sys.argv",
+        ["evaluate_provider_cli", "--output", str(tmp_path / "predictions.json"), "--confirm-live-provider-calls"],
+    )
+    monkeypatch.delenv("GEMINI_API_KEY", raising=False)
+    with pytest.raises(SystemExit) as exc:
+        evaluate_provider_cli.main()
+    assert exc.value.code == 2
+    assert not (tmp_path / "predictions.json").exists()

@@ -16,12 +16,12 @@ Create backend/frontend skeletons, environment configuration, PostgreSQL local s
 
 ### Phase 3 — Accounts and placement
 
-Status: **Core authentication and placement flow implemented; registration MVP added in the current branch.** Session auth, profile preferences, owner-scoped placement attempts, and server-side scoring have automated tests. Public registration now has CSRF protection, normalized usernames, Django password validation (12-character minimum), and an anonymous throttle. Email verification, password reset/recovery, and production abuse controls remain outstanding.
+Status: **Core account lifecycle implemented and verified in CI.** Session auth, profile preferences, owner-scoped placement attempts, server-side scoring, email verification, verification resend, and password reset/recovery have automated tests. New accounts remain inactive until the learner explicitly confirms the verification action. Production SMTP delivery, abuse monitoring, and deployment-specific security checks remain external release gates.
 
 ### Phase 4 — Writing MVP
 Provider-neutral adapter, fake provider for tests, versioned result schema, span validation, history, timeout/failure handling, usage accounting, evaluation baseline.
 
-Current status: **Provider usage accounting and CI verification implemented; educational quality evaluation remains open.** The server-side Gemini adapter uses a bounded timeout and a 2,048-token output ceiling, captures provider-reported prompt/output token counts, and persists aggregate usage without storing the provider payload or learner text in the usage ledger. Optional estimated cost is calculated only when the deployment explicitly configures both input/output rates from its active price sheet; no vendor rate is assumed. Without `GEMINI_API_KEY`, the clearly-labelled demo adapter remains active and has no token/cost usage. The synthetic writing evaluation dataset remains draft and needs human review plus a measured run against the configured provider.
+Current status: **Writing application flow and quality tooling are implemented; release-quality evaluation is intentionally gated.** The server-side Gemini adapter uses a bounded timeout and output ceiling, captures provider-reported token counts, validates the versioned result schema and non-overlapping source spans, and persists aggregate usage without storing raw provider payloads in the usage ledger. Optional cost estimates require explicitly configured active price-sheet rates. The Writing Studio displays corrected text, individual correction spans, explanations, provider status, and limitations. The evaluation harness validates dataset/prediction shapes and source offsets, reports correction/span metrics and false positives, and refuses to mark draft annotations as a passed quality gate. The nine synthetic cases remain `draft_requires_human_review`; a qualified educator must review them and a measured run must be performed against the configured live provider before making educational-quality claims.
 
 ### Phase 5 — Reading and Vocabulary
 
@@ -53,7 +53,7 @@ Proceed only with a concrete use case; evaluate source rights, retrieval quality
 
 Release tooling status: **Verified in CI on PR #13** ([run](https://github.com/SoheilAbdollahii/english-learning-ai/actions/runs/39224375843)). Added backend/frontend Dockerfiles, a local PostgreSQL Docker Compose setup, a database/migration readiness endpoint, and a release checklist that separates local smoke tests from production requirements.
 
-Remaining before production: execute the container smoke test in a Docker-capable environment; validate PostgreSQL quota concurrency; configure real HTTPS/proxy/cache/secrets; complete privacy and backup/restore drills; complete educator review and live-provider Writing evaluation; add email verification/account recovery; review and merge the stacked PRs in dependency order; run the final release regression.
+Remaining before production: execute the container smoke test in a Docker-capable environment; validate PostgreSQL quota concurrency; configure real HTTPS/proxy/cache/secrets and SMTP; complete privacy and backup/restore drills; complete educator review and live-provider Writing evaluation; and run the final release regression.
 
 ## MVP acceptance criteria
 - AC-01 Accounts: users authenticate and access only their own private records.
