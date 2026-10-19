@@ -181,7 +181,7 @@ def validate_result(original_text: str, result: Any) -> dict[str, Any]:
     }
 
 
-def analyze_writing(text: str) -> tuple[str, dict[str, Any]]:
+def analyze_writing(text: str) -> tuple[str, dict[str, Any], dict[str, int]]:
     provider = get_provider()
     try:
         raw_result = provider.analyze(text)
