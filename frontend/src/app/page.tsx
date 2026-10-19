@@ -16,7 +16,7 @@ const learningAreas = [
     description: "Read short passages and check what you understood.",
     level: "Reading practice",
     symbol: "▤",
-    href: "#reading",
+    href: "/reading",
   },
   {
     number: "03",
@@ -54,7 +54,7 @@ export default function HomePage() {
           </a>
           <Link className="nav-link" href="/placement"><span aria-hidden="true">✦</span> Level check</Link>
           <Link className="nav-link" href="/writing"><span aria-hidden="true">✎</span> Writing</Link>
-          <a className="nav-link" href="#reading"><span aria-hidden="true">▤</span> Reading</a>
+          <Link className="nav-link" href="/reading"><span aria-hidden="true">▤</span> Reading</Link>
           <Link className="nav-link" href="/vocabulary"><span aria-hidden="true">Aa</span> Vocabulary</Link>
         </nav>
 
