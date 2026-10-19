@@ -2,7 +2,7 @@
 
 An AI-powered English learning web application.
 
-> **Project status:** active MVP development. Session authentication/profile, placement assessment, Writing Studio, Vocabulary spaced repetition, Reading comprehension, persisted progress metrics, and transparent rule-based recommendations are implemented on a stacked set of open pull requests. The dashboard and learning flows are under automated CI verification; they are not yet a production release. Without `GEMINI_API_KEY`, Writing uses an explicitly labelled demo adapter and does not evaluate grammar.
+> **Project status:** MVP feature stack is integrated into `main` and passes the repository CI suite. It is not yet a production release: real deployment, operational security checks, and human-reviewed Writing evaluation remain outstanding. Without `GEMINI_API_KEY`, Writing uses an explicitly labelled demo adapter and does not evaluate grammar.
 
 ## Technology stack
 
@@ -95,7 +95,7 @@ npm test
 npm run build
 ```
 
-The checks above are configured in CI but must be observed running successfully before calling the branch verified.
+The checks above are configured in CI. A green CI run verifies build and automated tests for that commit, but does not replace production deployment checks or human review.
 
 ## Security notes
 

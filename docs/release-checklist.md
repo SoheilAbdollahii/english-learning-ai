@@ -3,7 +3,7 @@
 This checklist is a release gate, not a statement that deployment has already happened. Complete it against the final merged commit and record evidence in the release issue.
 
 ## 1. Source and CI
-- [ ] Merge stacked pull requests in dependency order only after review; verify each base/head relationship before merging.
+- [ ] Verify the exact release commit is on `main`, inspect its full diff, and confirm the associated CI run is green.
 - [ ] Run the complete GitHub Actions CI suite on the final merge commit (backend tests, frontend lint/typecheck/tests/build, Compose validation, image builds).
 - [ ] Review unresolved comments, security findings, dependency alerts, and migration diffs.
 - [ ] Tag the exact commit intended for release and retain the previous known-good image/tag for rollback.
@@ -51,6 +51,7 @@ This checklist is a release gate, not a statement that deployment has already ha
 
 ## Current known blockers before broad public launch
 - Human-reviewed Writing evaluation and a measured run against the configured live provider are not yet complete.
+- Shared Redis cache is available through `REDIS_URL` and Compose, but production topology, credentials, and cross-worker throttling still need verification.
 - Email verification and password recovery are not implemented.
 - Production infrastructure, HTTPS/proxy configuration, backup/restore, monitoring, privacy/retention policy, and a real deployment have not been verified by repository CI.
-- Stacked pull requests must be reviewed and merged in dependency order before their features are in the default branch.
+- Frontend dependency lockfile and `npm ci` are now in place; confirm CI continues using the lockfile on the release commit.
