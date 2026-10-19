@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError as DjangoValidationError
+from django.core.validators import validate_email
 from django.db import IntegrityError, transaction
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
@@ -8,6 +9,8 @@ from rest_framework import permissions, status
 from rest_framework.throttling import AnonRateThrottle
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
+from .recovery_views import _send_verification
 
 User = get_user_model()
 
@@ -28,12 +31,23 @@ class RegistrationView(APIView):
 
         username = payload.get("username")
         password = payload.get("password")
-        if not isinstance(username, str) or not isinstance(password, str):
-            return Response({"detail": "Username and password are required."}, status=status.HTTP_400_BAD_REQUEST)
+        email = payload.get("email")
+        if not isinstance(username, str) or not isinstance(password, str) or not isinstance(email, str):
+            return Response({"detail": "Username, email, and password are required."}, status=status.HTTP_400_BAD_REQUEST)
 
         username = username.strip().lower()
         if not username or len(username) > 150:
             return Response({"username": ["Enter a username of 1 to 150 characters."]}, status=status.HTTP_400_BAD_REQUEST)
+        email = email.strip().lower()
+        try:
+            validate_email(email)
+        except DjangoValidationError as exc:
+            return Response({"email": exc.messages}, status=status.HTTP_400_BAD_REQUEST)
+        if len(email) > 254:
+            return Response({"email": ["Enter an email address of at most 254 characters."]}, status=status.HTTP_400_BAD_REQUEST)
+        if User.objects.filter(email__iexact=email).exists():
+            return Response({"email": ["This email address is already in use."]}, status=status.HTTP_400_BAD_REQUEST)
+
         username_field = User._meta.get_field("username")
         try:
             username_field.run_validators(username)
@@ -50,11 +64,17 @@ class RegistrationView(APIView):
 
         try:
             with transaction.atomic():
-                user = User.objects.create_user(username=username, password=password)
+                user = User.objects.create_user(username=username, email=email, password=password, is_active=False)
         except IntegrityError:
             return Response({"username": ["This username is already taken."]}, status=status.HTTP_400_BAD_REQUEST)
 
+        if not _send_verification(user):
+            return Response(
+                {"detail": "Your account was created but the verification email could not be sent. Please use the resend verification option after email delivery is configured."},
+                status=status.HTTP_503_SERVICE_UNAVAILABLE,
+            )
+
         return Response(
-            {"id": user.pk, "username": user.get_username(), "status": "created"},
+            {"id": user.pk, "username": user.get_username(), "status": "verification_sent"},
             status=status.HTTP_201_CREATED,
         )
