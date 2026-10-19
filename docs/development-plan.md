@@ -38,7 +38,7 @@ Rule-based recommendations: **Verified in CI on PR #9** ([run](https://github.co
 Timezone-aware streak boundary and invalid-profile-timezone fallback tests are **verified in CI on PR #33** ([run](https://github.com/SoheilAbdollahii/english-learning-ai/actions/runs/39252572371)). Production timezone configuration and long-history performance remain deployment checks. Provider token/cost accounting is now implemented in PR #18; estimates require configured rates and are not billing records.
 
 ### Phase 7 — Frontend integration
-Source-level RTL/LTR, locale-control accessibility, named-landmark regression tests, lint/typecheck, and production build are **verified in CI on PR #31** ([run](https://github.com/SoheilAbdollahii/english-learning-ai/actions/runs/39251436800)). A Playwright browser journey covering Persian RTL/LTR, sign-in, reading submission, vocabulary review, and demo Writing submission is added in PR #38 and awaits CI verification. Manual keyboard/screen-reader review remains outstanding.
+Source-level RTL/LTR, locale-control accessibility, named-landmark regression tests, lint/typecheck, and production build are **verified in CI on PR #31** ([run](https://github.com/SoheilAbdollahii/english-learning-ai/actions/runs/39251436800)). A Playwright browser journey covering Persian RTL/LTR, sign-in, reading submission, vocabulary review, and demo Writing submission is **verified in CI on PR #38** ([run](https://github.com/SoheilAbdollahii/english-learning-ai/actions/runs/39256478926)). Manual keyboard/screen-reader review remains outstanding.
 
 ### Phase 8 — Usage controls
 
@@ -53,7 +53,7 @@ Proceed only with a concrete use case; evaluate source rights, retrieval quality
 
 Release tooling status: **Verified in CI on PR #13** ([run](https://github.com/SoheilAbdollahii/english-learning-ai/actions/runs/39224375843)). Added backend/frontend Dockerfiles, a local PostgreSQL Docker Compose setup, a database/migration readiness endpoint, and a release checklist that separates local smoke tests from production requirements.
 
-Remaining before production: execute the container smoke test in a Docker-capable environment; verify quota behavior in the actual multi-worker production topology; configure real HTTPS/proxy/cache/secrets and SMTP; complete privacy and backup/restore drills; complete educator review and live-provider Writing evaluation; run real-browser E2E/accessibility checks; and run the final release regression.
+Remaining before production: execute the container smoke test in a Docker-capable environment; verify quota behavior in the actual multi-worker production topology; configure real HTTPS/proxy/cache/secrets and SMTP; complete privacy and backup/restore drills; complete educator review and live-provider Writing evaluation; complete manual keyboard/screen-reader accessibility review; and run the final deployed release regression. External release gates are tracked in [issue #39](https://github.com/SoheilAbdollahii/english-learning-ai/issues/39).
 
 ## MVP acceptance criteria
 - AC-01 Accounts: users authenticate and access only their own private records.
