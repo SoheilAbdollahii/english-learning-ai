@@ -126,8 +126,8 @@ def test_gemini_provider_sends_key_in_header_and_parses_json(monkeypatch):
         def __exit__(self, *_args):
             return False
 
-        def read(self):
-            return json.dumps({
+        def read(self, size=-1):
+            payload = json.dumps({
                 "candidates": [{
                     "content": {
                         "parts": [{
@@ -149,6 +149,7 @@ def test_gemini_provider_sends_key_in_header_and_parses_json(monkeypatch):
                     }
                 }]
             }).encode("utf-8")
+            return payload if size < 0 else payload[:size]
 
     def fake_urlopen(request, timeout):
         captured["request"] = request
@@ -174,8 +175,9 @@ def test_gemini_provider_reports_unreadable_output_safely(monkeypatch):
         def __exit__(self, *_args):
             return False
 
-        def read(self):
-            return b'{"candidates": []}'
+        def read(self, size=-1):
+            payload = b'{"candidates": []}'
+            return payload if size < 0 else payload[:size]
 
     monkeypatch.setattr("apps.writing.services.urlopen", lambda *_args, **_kwargs: FakeResponse())
     with pytest.raises(WritingProviderError, match="unreadable"):

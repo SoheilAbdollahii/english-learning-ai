@@ -13,6 +13,18 @@ Create a small, versioned, manually reviewed dataset covering:
 
 Use consented or synthetic samples with appropriate rights. Do not commit identifiable student writing to a public repository. Document annotation guidance and reviewer disagreement.
 
+## Starter fixture and local metric runner
+
+A nine-case synthetic starter fixture lives at `backend/apps/writing/evaluation_cases.json`. It covers A2/B1 grammar, spelling, punctuation, word choice, correct sentences, ambiguity, informal register, and a run-on sentence. Its `annotation_status` is deliberately `draft_requires_human_review`: the spans and acceptable alternatives must be reviewed by qualified English educators before the fixture can be treated as a gold set or used for release claims.
+
+The offline metric helper and CLI are available in `backend/apps/writing/evaluation.py` and `backend/apps/writing/evaluate_cli.py`. From the `backend/` directory, pass a JSON object keyed by case ID:
+
+```bash
+python -m apps.writing.evaluate_cli --predictions /path/to/predictions.json
+```
+
+The runner reports acceptable-correction rate, false-positive correction rate on no-change cases, and exact span precision/recall. It does not score meaning preservation or explanation quality automatically; those require human review. Never include identifiable learner writing in a public fixture.
+
 ## Annotation
 For each sample record original text, intended meaning/context where available, reference error spans and categories, acceptable corrections, educational explanations, whether no correction is needed, ambiguity notes, and adjudication outcome.
 
