@@ -1,6 +1,6 @@
 # Initial REST API Contract
 
-Status: partially implemented. Session CSRF/login/logout and the current-user profile endpoint are implemented and covered by tests. Reading, Vocabulary, progress, and usage endpoints below remain proposals until implemented and tested. The Writing API and frontend Writing Studio are implemented on the `feat/writing-mvp-api` branch. Gemini Developer API integration is optional and enabled only when the backend environment has a configured `GEMINI_API_KEY`; without it, the clearly labelled demo provider remains active. CI status for the latest provider integration is being checked.
+Status: partially implemented. Session CSRF/login/logout and the current-user profile endpoint are implemented and covered by tests. Reading, Vocabulary, progress, and usage endpoints below remain proposals until implemented and tested. The Writing API and frontend Writing Studio are implemented on the `feat/writing-mvp-api` branch. Gemini Developer API integration is optional and enabled only when the backend environment has a configured `GEMINI_API_KEY`; without it, the clearly labelled demo provider remains active. CI for the latest hardening changes is pending.
 
 ## Conventions
 - Prefix routes with /api/v1/.
@@ -45,7 +45,7 @@ Status: partially implemented. Session CSRF/login/logout and the current-user pr
 - GET /api/v1/writing/submissions/ — authenticated, paginated owner-only history (`limit`/`offset`).
 - GET /api/v1/writing/submissions/{submission_id}/ — authenticated owner-only submission and result.
 - Result schema v1 includes `corrected_text`, `errors`, `general_feedback`, and `limitations`. Error offsets use Python Unicode code points; `start` is inclusive and `end` exclusive, and the original span must match the submitted text.
-- The current demo provider deliberately performs no grammar evaluation and makes this limitation explicit. It is an integration/test scaffold, not an AI writing tutor. Provider failures and invalid result schemas are not reported as successful analyses. Real-provider selection, provider timeout configuration, evaluation data, and usage accounting remain future work.
+- The current demo provider deliberately performs no grammar evaluation and makes this limitation explicit. It is an integration/test scaffold, not an AI writing tutor. Provider failures and invalid result schemas are not reported as successful analyses. Provider-backed submissions are rate-limited per authenticated learner (default 10/hour, configurable with `WRITING_SUBMISSIONS_PER_HOUR`). This throttle limits request frequency but is not a billing-grade usage ledger; durable quota accounting, provider evaluation data, and deployment-specific HTTPS/proxy configuration remain follow-up work.
 
 ## Planned endpoint inventory
 
