@@ -8,6 +8,7 @@
 - Configure allowed hosts, CORS, cookie flags, and CSRF trusted origins explicitly.
 - Enforce ownership on the server; frontend hiding is not authorization.
 - Test unauthenticated requests and cross-user read/update attempts.
+- Public registration requires CSRF, password validators, normalized unique usernames, and an anonymous request throttle. Email verification, recovery flows, and production-grade abuse prevention remain outstanding.
 
 ### Secrets and data handling
 - Commit only an .env.example with placeholders; ignore real environment files.
