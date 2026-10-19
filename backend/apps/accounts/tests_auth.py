@@ -74,7 +74,7 @@ def test_registration_requires_csrf_and_creates_normalized_username():
     token = client.get("/api/v1/auth/csrf/").json()["csrfToken"]
     response = client.post(
         "/api/v1/auth/register/",
-        data=json.dumps({"username": "NewLearner", "password": "Strong-test-pass-123"}),
+        data=json.dumps({"username": "NewLearner", "email": "newlearner@example.com", "password": "Strong-test-pass-123"}),
         content_type="application/json",
         HTTP_X_CSRFTOKEN=token,
     )
