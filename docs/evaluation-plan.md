@@ -24,7 +24,15 @@ The offline metric helper and CLI are available in `backend/apps/writing/evaluat
 python -m apps.writing.evaluate_cli --predictions /path/to/predictions.json
 ```
 
-The runner reports acceptable-correction rate, false-positive correction rate on no-change cases, and exact span precision/recall. It rejects missing or unexpected prediction IDs and malformed prediction shapes to reduce accidental evaluation of the wrong sample set. Exact span matching is intentionally strict; it may mark valid alternate spans as mismatches. The runner does not score meaning preservation or explanation quality automatically; those require human review. Never include identifiable learner writing in a public fixture.
+The runner reports acceptable-correction rate, false-positive correction rate on no-change cases, and exact span precision/recall. It validates dataset references and prediction spans, rejects missing/unexpected prediction IDs, malformed values, and overlapping spans. Exact span matching is intentionally strict; it may mark valid alternate spans as mismatches. Draft annotations always produce `quality_gate_passed: false`; use `--require-reviewed` to make the CLI exit non-zero until every case has an approved annotation status. The runner does not score meaning preservation or explanation quality automatically; those require human review. Never include identifiable learner writing in a public fixture.
+
+### Provider evaluation workflow
+
+1. Have qualified English educators review and adjudicate every case, including acceptable alternatives, register, source offsets, and no-change decisions. Update `annotation_status` to `reviewed`, `adjudicated`, or `approved` only after that work is actually complete.
+2. Set `GEMINI_API_KEY` in a private environment and verify the configured model and price/cost limits. The provider runner sends every synthetic case to the configured live provider and may incur API charges.
+3. From `backend/`, run `python -m apps.writing.evaluate_provider_cli --output /secure/path/predictions.json --confirm-live-provider-calls`. While annotations remain draft, `--allow-draft-dataset` permits diagnostic-only work and must not be treated as release evidence. The command refuses to run without an API key and explicit confirmation; it never uses learner history.
+4. Run `python -m apps.writing.evaluate_cli --predictions /secure/path/predictions.json --require-reviewed` and archive the dataset revision, model, prompt/code commit, metrics, and human review notes in a private release record.
+5. Human-review meaning preservation, correction acceptability, and explanation quality. Passing structural metrics alone is not a substitute for this review.
 
 ## Annotation
 
