@@ -3,35 +3,35 @@
 ## Security
 
 ### Authentication and authorization
-- Use a custom Django user model from the first migration.
-- Prefer session authentication with secure, HttpOnly cookies and CSRF when deployment topology permits.
-- Configure allowed hosts, CORS, cookie flags, and CSRF trusted origins explicitly.
+- Session authentication uses CSRF protection; secure-cookie flags are enabled when `DJANGO_DEBUG=false`.
+- Configure exact allowed hosts, CSRF trusted origins, HTTPS termination, and any trusted proxy headers for the real deployment topology.
 - Enforce ownership on the server; frontend hiding is not authorization.
 - Test unauthenticated requests and cross-user read/update attempts.
-- Public registration requires CSRF, password validators, normalized unique usernames, and an anonymous request throttle. Email verification, recovery flows, and production-grade abuse prevention remain outstanding.
+- Public registration has CSRF protection, password validators, normalized unique usernames, and an anonymous request throttle. Email verification, account recovery, and production-grade abuse prevention remain outstanding.
 
 ### Secrets and data handling
-- Commit only an .env.example with placeholders; ignore real environment files.
+- Commit only `.env.example` with placeholders; ignore real environment files.
 - Store AI and production credentials in deployment secrets.
 - Never log raw writing submissions, passwords, tokens, session IDs, or provider secrets.
-- Define retention and deletion policy before production.
-- Use HTTPS in deployed environments and secure database credentials.
+- Define retention, export, and deletion policy before production.
+- Use HTTPS in deployed environments, secure database credentials, private database networking, and tested backups.
+- Production deployment settings, proxy trust, HSTS policy, and cookie behavior must be verified at the actual edge; repository CI does not prove infrastructure security.
 
 ### AI-specific controls
-- Enforce input limits, timeouts, and server-side quotas. The current Writing flow uses a per-hour DRF throttle plus a database-backed rolling-24-hour reservation quota; concurrent quota reservations must be validated against production PostgreSQL.
-- Treat user text and model output as untrusted.
-- Validate model responses against a versioned schema.
+- Enforce input limits, timeouts, and server-side quotas. The Writing flow uses a per-hour DRF throttle plus a database-backed rolling-24-hour reservation quota; concurrency behavior still needs validation against production PostgreSQL.
+- Treat user text and model output as untrusted; validate model responses against a versioned schema.
 - Never use AI output to decide permissions, account state, billing, or trusted scoring.
-- Send only necessary personal data to providers.
-- Record safe failure and usage metadata without sensitive payloads. The initial ledger stores provider/status and input character volume; it does not yet calculate money or persist actual provider token usage.
-- Do not claim calibrated confidence without empirical evaluation.
+- Send only necessary personal data to providers and document the provider's data processing before public launch.
+- The usage ledger can persist actual provider token counts when returned and can calculate an optional estimate from configured rates. It avoids storing raw provider payloads or learner text. Estimates are operational approximations, not invoices.
+- The offline Writing evaluation harness rejects mismatched/malformed prediction inputs, but the synthetic cases remain draft-only until reviewed by qualified educators. No educational-effectiveness claim is currently justified.
+- Without a configured Gemini API key, Writing uses a demo adapter; it does not provide genuine grammar analysis and must be labelled accordingly.
 
 ## Testing strategy
 
 ### Backend
-- Unit tests: scoring, writing-result validation, vocabulary scheduling, quotas, recommendations.
+- Unit tests: scoring, writing-result validation, vocabulary scheduling, quotas, recommendations, usage/token-cost accounting, and offline evaluation input validation.
 - API tests: auth, ownership, validation, pagination, status and error behavior.
-- Integration tests: PostgreSQL constraints and transaction boundaries.
+- Integration tests: PostgreSQL constraints, transaction boundaries, and concurrent quota reservations.
 - AI adapter tests use a fake provider; regular CI must not call a paid live API.
 
 ### Frontend
@@ -45,9 +45,8 @@
 - Writing submission using deterministic fake provider.
 - Vocabulary review changes scheduling state.
 - A user cannot access another user's history.
+- Smoke-test the production origin, CSRF/session cookies, readiness endpoint, and provider failure state after deployment.
 
 ### CI baseline
-- Backend formatting/lint, tests, and type checks if adopted.
-- Frontend lint, TypeScript check, unit tests, and production build.
-- Pin dependency resolution and keep tests deterministic.
-- Do not claim CI passes until it has actually run successfully.
+- Backend checks/tests, frontend lint/TypeScript/tests/production build, Compose validation, and container image builds run in GitHub Actions.
+- Review the exact workflow run for the final merge commit before release; a successful CI run is not a substitute for human review or production smoke tests.
