@@ -78,7 +78,7 @@ DATABASES = {"default": dj_database_url.parse(DATABASE_URL, conn_max_age=60)}
 
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
-    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
+    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator", "OPTIONS": {"min_length": 12}},
     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
@@ -107,6 +107,7 @@ REST_FRAMEWORK = {
     "DEFAULT_THROTTLE_RATES": {
         # Provider-backed writing calls can incur third-party costs.
         "writing_submission": os.environ.get("WRITING_SUBMISSIONS_PER_HOUR", "10/hour"),
+        "registration": os.environ.get("REGISTRATION_RATE_LIMIT", "5/hour"),
     },
     "DEFAULT_RENDERER_CLASSES": [
         "rest_framework.renderers.JSONRenderer",
