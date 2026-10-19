@@ -22,3 +22,14 @@ test("writing page shows persisted history and accessible feedback", async () =>
   assert.match(page, /setHistory/);
   assert.match(page, /View/);
 });
+
+
+test("writing result renders corrected text and individual correction explanations", async () => {
+  const page = await readFile(new URL("./page.tsx", import.meta.url), "utf8");
+  assert.match(page, /current\.result\.corrected_text/);
+  assert.match(page, /current\.result\.errors\.map/);
+  assert.match(page, /item\.correction/);
+  assert.match(page, /item\.explanation/);
+  assert.match(page, /current\.provider === "demo"/);
+  assert.match(page, /Analysis notes/);
+});
