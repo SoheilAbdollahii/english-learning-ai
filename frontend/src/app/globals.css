@@ -464,3 +464,17 @@ a:focus-visible { outline: 3px solid #b4cdb5; outline-offset: 3px; }
   .progress-activity-list li { grid-template-columns: 8px minmax(0, 1fr); }
   .progress-activity-list time { grid-column: 2; text-align: left; }
 }
+
+
+/* Evidence-based learner recommendations */
+.recommendations-section { margin: 25px 0; }
+.recommendations-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 11px; margin-top: 14px; }
+.recommendation-card { display: flex; min-width: 0; flex-direction: column; align-items: flex-start; padding: 17px; border: 1px solid #e5ebe1; border-radius: 11px; background: #fff; }
+.recommendation-priority { color: #8a9a86; font-size: .58rem; letter-spacing: .08em; }
+.recommendation-card h3 { margin: 9px 0 7px; color: #344d39; font-size: .91rem; line-height: 1.4; }
+.recommendation-card p { flex: 1; margin: 0 0 15px; color: #7b887c; font-size: .73rem; line-height: 1.65; }
+.recommendation-card a { color: var(--accent-dark); font-size: .72rem; font-weight: 700; text-decoration: none; }
+.recommendation-card a:hover { text-decoration: underline; }
+@media (max-width: 760px) {
+  .recommendations-grid { grid-template-columns: 1fr; }
+}

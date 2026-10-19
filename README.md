@@ -2,7 +2,7 @@
 
 An AI-powered English learning web application.
 
-> **Project status:** early MVP. Architecture and delivery documentation, a Django API starter, a responsive learner dashboard, and a CSRF-protected frontend session login/logout flow are in place. The current-user profile API is integrated for session status. Progress values remain placeholders; public registration, persisted learner activity, Writing analysis, Reading exercises, Vocabulary review, and real dashboard metrics are not implemented yet.
+> **Project status:** active MVP development. Session authentication/profile, placement assessment, Writing Studio, Vocabulary spaced repetition, Reading comprehension, persisted progress metrics, and transparent rule-based recommendations are implemented on a stacked set of open pull requests. The dashboard and learning flows are under automated CI verification; they are not yet a production release. Without `GEMINI_API_KEY`, Writing uses an explicitly labelled demo adapter and does not evaluate grammar.
 
 ## Technology stack
 
@@ -14,8 +14,8 @@ An AI-powered English learning web application.
 
 ## Repository map
 
-- `backend/` — Django API starter and health endpoint
-- `frontend/` — Next.js learner dashboard UI and session sign-in screen
+- `backend/` — Django REST API for accounts, placement, writing, vocabulary, reading, and progress
+- `frontend/` — Next.js learner dashboard, session sign-in, placement quiz, Writing Studio, Vocabulary review, and Reading Room
 - `frontend/tests/` — frontend dashboard smoke tests
 - `docs/architecture.md` — architecture decisions
 - `docs/data-model.md` — proposed learning data model
@@ -61,7 +61,7 @@ npm install
 npm run dev
 ```
 
-Open `http://localhost:3000`. Sign in at `http://localhost:3000/login` using the Django superuser you created. The frontend proxies `/api/*` to `http://127.0.0.1:8000` by default; set `BACKEND_API_URL` if your backend runs elsewhere. The dashboard progress values remain placeholders and its learning-area links do not yet launch working lessons. For a different frontend origin, set `DJANGO_CSRF_TRUSTED_ORIGINS` to comma-separated origins including `https://` in production.
+Open `http://localhost:3000`. Sign in at `http://localhost:3000/login` using the Django superuser you created. The frontend proxies `/api/*` to `http://127.0.0.1:8000` by default; set `BACKEND_API_URL` if your backend runs elsewhere. The dashboard's progress summary is derived from saved activities; study duration is intentionally not shown because reliable session-duration tracking is not yet implemented. For a different frontend origin, set `DJANGO_CSRF_TRUSTED_ORIGINS` to comma-separated origins including `https://` in production. Create a user through Django admin or `createsuperuser`; public registration is not yet available.
 
 ## Checks
 
@@ -90,8 +90,9 @@ The checks above are configured in CI but must be observed running successfully 
 
 - Do not commit `.env` or provider API keys.
 - The current health endpoint is a scaffold, not a production readiness check.
-- Session login/logout and the current-user profile endpoint are implemented and tested, but public registration, account recovery, production cookie/security settings, object-level permissions for future learning records, AI output validation, and quotas still need implementation before production use.
-- Dashboard metrics are intentionally shown as placeholders until they can be derived from persisted activity records.
+- Session login/logout, profile, owner-scoped learning records, server-side placement/reading scoring, vocabulary review scheduling, Writing result validation, production-mode secret enforcement, and basic AI request throttling are implemented in the current PR stack.
+- Writing uses a demo provider unless a Gemini API key is configured; the demo provider is not a tutor and must not be presented as real grammar feedback.
+- Before production: complete and merge the stacked PRs in dependency order; configure HTTPS/proxy settings and secure cookies for the actual deployment; add account recovery/registration policy, immutable content/version controls, durable provider usage/cost accounting, privacy/retention policy, backup/restore drills, and an evaluated writing dataset. Run the full release checklist and CI on the final merge commit.
 
 ## Development status
 

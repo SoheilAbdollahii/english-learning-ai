@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Recommendations from "./recommendations";
 import { useEffect, useState } from "react";
 
 type RecentActivity = { type: string; label: string; created_at: string };
@@ -85,6 +86,7 @@ export default function ProgressOverview() {
             <article><span>Words due</span><strong>{summary.due_words}</strong></article>
             <article><span>Mastered words</span><strong>{summary.mastered_words}</strong></article>
           </section>
+          <Recommendations />
           <section className="progress-recent" aria-labelledby="recent-activity-title">
             <div className="section-heading">
               <div><p className="eyebrow">YOUR LEARNING TRAIL</p><h2 id="recent-activity-title">Recent activity</h2></div>

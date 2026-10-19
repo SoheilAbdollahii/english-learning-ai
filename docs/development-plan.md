@@ -32,7 +32,9 @@ Reading status: **Implemented — CI verification pending.** The initial flow in
 
 Progress status: **Implemented — CI verification pending.** The dashboard reads persisted session counts, vocabulary review outcomes, due/mastered word counts, reading/writing/placement totals, current streak, and recent activity from an authenticated API. Learning activity events are written by the corresponding backend flows. Study duration remains intentionally unreported until reliable duration tracking is designed.
 
-Remaining: transparent rule-based recommendations and further timezone/history edge-case coverage.
+Rule-based recommendations: **Implemented — CI verification pending.** Up to three next steps are selected from persisted due-word and module-history evidence, with a human-readable reason and direct route. This is a deterministic heuristic, not an AI-generated claim.
+
+Remaining: additional timezone/history edge-case coverage and a provider usage-cost ledger.
 
 ### Phase 7 — Frontend integration
 Complete learner flows, RTL/LTR and accessibility checks, E2E scenarios, production build checks.
