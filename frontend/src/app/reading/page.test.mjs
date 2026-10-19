@@ -16,5 +16,8 @@ test("reading result explains server-scored answers and offers retry", async () 
   assert.match(page, /result\.result_details/);
   assert.match(page, /item\.explanation/);
   assert.match(page, /Try this passage again/);
+  assert.match(page, /\/api\/v1\/reading\/attempts\/\?limit=8/);
+  assert.match(page, /Your reading history/);
+  assert.match(page, /history\.map/);
   assert.match(page, /Sign in to save your reading result/);
 });
