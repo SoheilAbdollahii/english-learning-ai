@@ -163,5 +163,8 @@ def test_invalid_profile_timezone_falls_back_to_utc():
     from apps.accounts.models import Profile
 
     user = User.objects.create_user(username="progress-invalid-timezone", password="Strong-test-pass-123")
-    Profile.objects.update_or_create(user=user, defaults={"timezone": "Not/A_Real_Zone"})
+    profile, _ = Profile.objects.get_or_create(user=user)
+    profile.timezone = "Not/A_Real_Zone"
+    profile.save(update_fields=("timezone",))
+    user.profile = profile
     assert str(_learner_timezone(user)) == "UTC"
