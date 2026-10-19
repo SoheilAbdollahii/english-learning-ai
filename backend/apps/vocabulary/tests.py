@@ -89,3 +89,25 @@ def test_review_grade_is_validated_and_anonymous_access_is_denied():
     client.force_authenticate(user=user)
     assert client.post(f"/api/v1/vocabulary/cards/{card.pk}/review/", {"quality": 6}, format="json").status_code == 400
     assert client.post(f"/api/v1/vocabulary/cards/{card.pk}/review/", {"quality": -1}, format="json").status_code == 400
+
+
+@pytest.mark.django_db
+def test_review_and_activity_roll_back_together_when_activity_recording_fails(monkeypatch):
+    user = User.objects.create_user(username="vocab-atomic", password="Strong-test-pass-123")
+    card = VocabularyCard.objects.create(
+        user=user, word="atomicity", definition="A test word.", due_at=timezone.now(),
+        repetitions=0, interval_days=0,
+    )
+
+    def fail_recording(*args, **kwargs):
+        raise RuntimeError("activity store unavailable")
+
+    monkeypatch.setattr("apps.vocabulary.services.record_activity", fail_recording)
+    with pytest.raises(RuntimeError):
+        apply_review(card, 5)
+
+    card.refresh_from_db()
+    assert card.repetitions == 0
+    assert card.interval_days == 0
+    assert card.last_reviewed_at is None
+    assert not user.learning_activities.exists()
