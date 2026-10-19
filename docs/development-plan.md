@@ -25,7 +25,7 @@ Current status: **Writing application flow and quality tooling are implemented; 
 
 ### Phase 5 — Reading and Vocabulary
 
-Vocabulary status: **Verified in CI on PR #6** ([run](https://github.com/SoheilAbdollahii/english-learning-ai/actions/runs/39221335506)); cross-module acceptance coverage and atomic review persistence are **verified in CI on PR #17** ([run](https://github.com/SoheilAbdollahii/english-learning-ai/actions/runs/39229554954)). The MVP includes owner-scoped cards, case-insensitive duplicate prevention, due-card filtering, a deterministic SM-2-inspired schedule, review grades, and a responsive review UI. Review-state changes and activity events now share a transaction, and the view locks the owned card while applying a review. Immutable vocabulary review-event snapshots and an owner-scoped paginated history endpoint are implemented in the current branch; pending CI verification. Remaining vocabulary work includes curated licensed word packs and richer progress analytics.
+Vocabulary status: **Verified in CI on PR #6** ([run](https://github.com/SoheilAbdollahii/english-learning-ai/actions/runs/39221335506)); cross-module acceptance coverage and atomic review persistence are **verified in CI on PR #17** ([run](https://github.com/SoheilAbdollahii/english-learning-ai/actions/runs/39229554954)). The MVP includes owner-scoped cards, case-insensitive duplicate prevention, due-card filtering, a deterministic SM-2-inspired schedule, review grades, and a responsive review UI. Review-state changes and activity events now share a transaction, and the view locks the owned card while applying a review. Immutable vocabulary review-event snapshots and an owner-scoped paginated history endpoint are **verified in CI on PR #32** ([run](https://github.com/SoheilAbdollahii/english-learning-ai/actions/runs/39252120822)). Remaining vocabulary work includes curated licensed word packs and richer progress analytics.
 
 Reading core flow: **Verified in CI on PR #7** ([run](https://github.com/SoheilAbdollahii/english-learning-ai/actions/runs/39221772403)). Attempt-history UI and paginated history endpoint are covered by PR #16, with CI passing for backend, frontend, and container build. The initial flow includes two original A2/B1 passages, published-only public endpoints, hidden answer keys before submission, exact-answer validation, server-side scoring, owner-scoped saved attempts, feedback explanations, and a responsive learner page. Remaining work includes immutable question-version snapshots, authoring/content review, and more reviewed passages.
 
@@ -35,16 +35,16 @@ Progress status: **Verified in CI on PR #8** ([run](https://github.com/SoheilAbd
 
 Rule-based recommendations: **Verified in CI on PR #9** ([run](https://github.com/SoheilAbdollahii/english-learning-ai/actions/runs/39222517527)). Up to three next steps are selected from persisted due-word and module-history evidence, with a human-readable reason and direct route. This is a deterministic heuristic, not an AI-generated claim.
 
-Timezone-aware streak boundary and invalid-profile-timezone fallback tests have been added in PR #33 and await CI verification. Remaining: validation of quota concurrency against production PostgreSQL. Provider token/cost accounting is now implemented in PR #18; estimates require configured rates and are not billing records.
+Timezone-aware streak boundary and invalid-profile-timezone fallback tests are **verified in CI on PR #33** ([run](https://github.com/SoheilAbdollahii/english-learning-ai/actions/runs/39252572371)). Production timezone configuration and long-history performance remain deployment checks. Provider token/cost accounting is now implemented in PR #18; estimates require configured rates and are not billing records.
 
 ### Phase 7 — Frontend integration
-Complete learner flows, RTL/LTR and accessibility checks, E2E scenarios, production build checks.
+Source-level RTL/LTR, locale-control accessibility, named-landmark regression tests, lint/typecheck, and production build are **verified in CI on PR #31** ([run](https://github.com/SoheilAbdollahii/english-learning-ai/actions/runs/39251436800)). Real-browser keyboard/screen-reader checks and full browser E2E journeys remain outstanding.
 
 ### Phase 8 — Usage controls
 
 Usage status: **Basic durable quota verified in CI on PR #10** ([run](https://github.com/SoheilAbdollahii/english-learning-ai/actions/runs/39222991351)). Writing requests reserve a database-backed slot before provider work; the rolling 24-hour default is 30 submissions per learner and provider failures consume a slot. A private usage summary exposes used/remaining slots and character volume. A per-hour DRF throttle remains as an additional guard.
 
-Provider-reported token metadata and optional rate-configured cost estimates are implemented in PR #18. A PostgreSQL-only concurrent-reservation regression test and PostgreSQL-backed backend CI service are added in PR #34 and await CI verification. Remaining: operational alerting and verification against the actual production topology. Do not use this MVP ledger for billing.
+Provider-reported token metadata and optional rate-configured cost estimates are implemented in PR #18. A PostgreSQL-only concurrent-reservation regression test and PostgreSQL-backed backend CI service are **verified in CI on PR #34** ([run](https://github.com/SoheilAbdollahii/english-learning-ai/actions/runs/39252829584)). Remaining: operational alerting and verification against the actual production topology. Do not use this MVP ledger for billing.
 
 ### Phase 9 — Optional RAG
 Proceed only with a concrete use case; evaluate source rights, retrieval quality, answer quality, and evidence attribution separately.
@@ -53,7 +53,7 @@ Proceed only with a concrete use case; evaluate source rights, retrieval quality
 
 Release tooling status: **Verified in CI on PR #13** ([run](https://github.com/SoheilAbdollahii/english-learning-ai/actions/runs/39224375843)). Added backend/frontend Dockerfiles, a local PostgreSQL Docker Compose setup, a database/migration readiness endpoint, and a release checklist that separates local smoke tests from production requirements.
 
-Remaining before production: execute the container smoke test in a Docker-capable environment; validate PostgreSQL quota concurrency; configure real HTTPS/proxy/cache/secrets and SMTP; complete privacy and backup/restore drills; complete educator review and live-provider Writing evaluation; and run the final release regression.
+Remaining before production: execute the container smoke test in a Docker-capable environment; verify quota behavior in the actual multi-worker production topology; configure real HTTPS/proxy/cache/secrets and SMTP; complete privacy and backup/restore drills; complete educator review and live-provider Writing evaluation; run real-browser E2E/accessibility checks; and run the final release regression.
 
 ## MVP acceptance criteria
 - AC-01 Accounts: users authenticate and access only their own private records.
