@@ -179,3 +179,12 @@ def test_gemini_provider_reports_unreadable_output_safely(monkeypatch):
     monkeypatch.setattr("apps.writing.services.urlopen", lambda *_args, **_kwargs: FakeResponse())
     with pytest.raises(WritingProviderError, match="unreadable"):
         GeminiWritingProvider(api_key="test-secret").analyze("I am learning English.")
+
+
+def test_production_security_defaults_do_not_use_insecure_cookie_settings():
+    from django.conf import settings
+
+    assert settings.SECRET_KEY != "unsafe-local-development-key-change-me"
+    assert settings.SESSION_COOKIE_SECURE is (not settings.DEBUG)
+    assert settings.CSRF_COOKIE_SECURE is (not settings.DEBUG)
+    assert settings.SECURE_CONTENT_TYPE_NOSNIFF is True
