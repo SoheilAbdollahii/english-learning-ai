@@ -253,6 +253,11 @@ const fa: Record<string, string> = {
   "times": "بار",
   "next interval": "فاصلهٔ بعدی",
   "day": "روز",
+
+  "Your reading history": "سابقهٔ خواندن شما",
+  "recent attempts": "تمرین‌های اخیر",
+  "Sign in to see your saved reading history.": "برای مشاهدهٔ سابقهٔ خواندن وارد شوید.",
+  "Your reading attempts will appear here after you finish a passage.": "پس از پایان نخستین متن، سابقهٔ تمرین‌های خواندن اینجا نمایش داده می‌شود.",
 };
 
 type LocaleContextValue = {
