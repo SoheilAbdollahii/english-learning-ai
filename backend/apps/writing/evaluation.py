@@ -31,7 +31,7 @@ def _validate_case(case, index):
         if not isinstance(error, dict):
             raise ValueError(f"Reference error for {case_id} must be an object")
         category, start, end, original = (error.get(key) for key in ("category", "start", "end", "original"))
-        if category not in ALLOWED_CATEGORIES:
+        if not isinstance(category, str) or category not in ALLOWED_CATEGORIES:
             raise ValueError(f"Reference error for {case_id} has an invalid category")
         if type(start) is not int or type(end) is not int or start < 0 or end <= start or end > len(case["original_text"]):
             raise ValueError(f"Reference error for {case_id} has invalid offsets")
@@ -109,7 +109,7 @@ def evaluate_predictions(cases, predictions):
             if not isinstance(item, dict):
                 raise ValueError(f"Predicted error for {case_id} must be an object")
             category, start, end, original = (item.get(key) for key in ("category", "start", "end", "original"))
-            if category not in ALLOWED_CATEGORIES:
+            if not isinstance(category, str) or category not in ALLOWED_CATEGORIES:
                 raise ValueError(f"Predicted error for {case_id} has an invalid category")
             if type(start) is not int or type(end) is not int or start < 0 or end <= start or end > len(case["original_text"]):
                 raise ValueError(f"Predicted error for {case_id} has invalid offsets")
