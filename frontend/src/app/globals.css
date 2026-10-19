@@ -481,3 +481,10 @@ a:focus-visible { outline: 3px solid #b4cdb5; outline-offset: 3px; }
 
 .writing-usage-note { margin: 0 0 14px; padding: 10px 12px; border: 1px solid #e2e9de; border-radius: 8px; background: #f7faf4; color: #718075; font-size: .68rem; line-height: 1.6; }
 .writing-usage-note strong { color: #456849; font-weight: 750; }
+
+.register-switch { margin: 18px 0 0; color: #7f8d80; font-size: .73rem; text-align: center; }
+.register-switch a, .login-footnote a { color: var(--accent-dark); font-weight: 700; text-decoration: none; }
+.register-switch a:hover, .login-footnote a:hover { text-decoration: underline; }
+.register-success { padding-top: 14px; }
+.register-login-link { display: block; text-align: center; text-decoration: none; }
+.login-form label span { color: #879487; font-weight: 400; }
