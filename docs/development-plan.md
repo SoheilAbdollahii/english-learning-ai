@@ -35,7 +35,7 @@ Progress status: **Verified in CI on PR #8** ([run](https://github.com/SoheilAbd
 
 Rule-based recommendations: **Verified in CI on PR #9** ([run](https://github.com/SoheilAbdollahii/english-learning-ai/actions/runs/39222517527)). Up to three next steps are selected from persisted due-word and module-history evidence, with a human-readable reason and direct route. This is a deterministic heuristic, not an AI-generated claim.
 
-Remaining: additional timezone/history edge-case coverage and validation of quota concurrency against production PostgreSQL. Provider token/cost accounting is now implemented in PR #18; estimates require configured rates and are not billing records.
+Timezone-aware streak boundary and invalid-profile-timezone fallback tests have been added in PR #33 and await CI verification. Remaining: validation of quota concurrency against production PostgreSQL. Provider token/cost accounting is now implemented in PR #18; estimates require configured rates and are not billing records.
 
 ### Phase 7 — Frontend integration
 Complete learner flows, RTL/LTR and accessibility checks, E2E scenarios, production build checks.
