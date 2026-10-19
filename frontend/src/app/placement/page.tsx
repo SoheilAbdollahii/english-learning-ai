@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useLocale } from "../components/locale-provider";
 import { useEffect, useMemo, useState } from "react";
 
 type AssessmentSummary = {
@@ -41,6 +42,7 @@ async function readError(response: Response): Promise<string> {
 }
 
 export default function PlacementPage() {
+  const { t } = useLocale();
   const [assessment, setAssessment] = useState<AssessmentDetail | null>(null);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [result, setResult] = useState<AttemptResult | null>(null);
@@ -143,7 +145,7 @@ export default function PlacementPage() {
     return (
       <main className="placement-shell">
         <div className="placement-topline">
-          <Link href="/" className="placement-back">← Dashboard</Link>
+          <Link href="/" className="placement-back">← {t("{t("Back to dashboard")}")}</Link>
           <span className="placement-kicker">YOUR STARTING POINT</span>
         </div>
         <section className="placement-result" aria-labelledby="result-title">
@@ -160,7 +162,7 @@ export default function PlacementPage() {
           <div className="placement-result-actions">
             <Link href="/" className="placement-primary-link">Back to dashboard</Link>
             <button className="placement-secondary-button" type="button" onClick={() => { setAnswers({}); setResult(null); setError(""); }}>
-              Try again
+              {t("Try again")}
             </button>
           </div>
         </section>
