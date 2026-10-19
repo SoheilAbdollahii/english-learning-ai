@@ -1,8 +1,12 @@
 import pytest
+from concurrent.futures import ThreadPoolExecutor
+from threading import Barrier
+from django.db import close_old_connections, connection
 from django.contrib.auth import get_user_model
 from rest_framework.test import APIClient
 
 from .models import AIUsageRecord
+from .services import reserve_writing_usage
 
 User = get_user_model()
 
@@ -136,3 +140,36 @@ def test_token_usage_is_reported_without_fabricating_cost_when_rates_missing(mon
     assert summary.data["output_tokens"] == 10
     assert summary.data["estimated_cost_microunits"] is None
     assert summary.data["cost_tracking"] == "token_usage_available_rates_not_configured"
+
+
+
+@pytest.mark.django_db(transaction=True)
+def test_concurrent_daily_quota_reservations_are_serialized_on_postgresql(monkeypatch):
+    if connection.vendor != "postgresql":
+        pytest.skip("Row-lock concurrency guarantee is verified on PostgreSQL only.")
+
+    monkeypatch.setenv("WRITING_SUBMISSIONS_PER_DAY", "1")
+    user = User.objects.create_user(
+        username="usage-concurrent", password="Strong-test-pass-123",
+    )
+    barrier = Barrier(2)
+
+    def reserve_slot():
+        close_old_connections()
+        try:
+            learner = User.objects.get(pk=user.pk)
+            barrier.wait(timeout=10)
+            record, _limit, _used = reserve_writing_usage(learner, input_characters=24)
+            return record is not None
+        finally:
+            close_old_connections()
+
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        outcomes = list(executor.map(lambda _index: reserve_slot(), range(2)))
+
+    assert sum(outcomes) == 1
+    assert AIUsageRecord.objects.filter(
+        user=user,
+        operation="writing_analysis",
+        status=AIUsageRecord.Status.RESERVED,
+    ).count() == 1
