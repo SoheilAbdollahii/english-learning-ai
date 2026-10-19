@@ -2,6 +2,8 @@ from datetime import timedelta
 
 from django.utils import timezone
 
+from apps.progress.models import LearningActivity
+from apps.progress.services import record_activity
 from .models import VocabularyCard
 
 
@@ -40,4 +42,5 @@ def apply_review(card: VocabularyCard, quality: int) -> VocabularyCard:
         "repetitions", "interval_days", "ease_factor", "status",
         "last_reviewed_at", "due_at", "updated_at",
     ))
+    record_activity(card.user, LearningActivity.Type.VOCABULARY, card.pk, {"quality": quality})
     return card
