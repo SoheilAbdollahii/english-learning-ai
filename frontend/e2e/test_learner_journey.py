@@ -38,8 +38,8 @@ def test_browser_learner_journey_and_persian_direction():
             expect(page.locator("#reading-result-title")).to_be_visible()
 
             page.goto(f"{BASE_URL}/vocabulary", wait_until="networkidle")
-            page.get_by_label("Word").fill("e2e-resilient")
-            page.get_by_label("Meaning in English").fill("Able to recover after difficulty.")
+            page.get_by_role("textbox", name="Word").fill("e2e-resilient")
+            page.get_by_role("textbox", name="Meaning in English").fill("Able to recover after difficulty.")
             page.get_by_role("button", name=re.compile("Add to vocabulary")).click()
             expect(page.get_by_role("heading", name="e2e-resilient")).to_be_visible()
             page.get_by_role("button", name="Reveal meaning").click()
