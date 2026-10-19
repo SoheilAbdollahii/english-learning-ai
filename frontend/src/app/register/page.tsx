@@ -36,17 +36,16 @@ export default function RegisterPage() {
         body: JSON.stringify({ username: username.trim(), password }),
       });
       const data = await response.json().catch(() => ({})) as {
-        username?: string[];
+        username?: string | string[];
         password?: string[];
         detail?: string;
-        username?: string;
         status?: string;
       };
       if (!response.ok) {
         const fieldError = Array.isArray(data.password) ? data.password[0] : Array.isArray(data.username) ? data.username[0] : undefined;
         throw new Error(fieldError ?? data.detail ?? "We couldn't create your account.");
       }
-      setCreatedUsername(data.username ?? username.trim().toLowerCase());
+      setCreatedUsername(typeof data.username === "string" ? data.username : username.trim().toLowerCase());
       setPassword("");
       setConfirmPassword("");
     } catch (cause) {
