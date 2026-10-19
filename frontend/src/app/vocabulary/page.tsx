@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useLocale } from "../components/locale-provider";
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 
 type VocabularyCard = {
@@ -32,6 +33,7 @@ async function csrfToken(): Promise<string> {
 }
 
 export default function VocabularyPage() {
+  const { t } = useLocale();
   const [cards, setCards] = useState<VocabularyCard[]>([]);
   const [draft, setDraft] = useState<CardDraft>({ word: "", definition: "", example_sentence: "", translation: "" });
   const [revealed, setRevealed] = useState<Record<number, boolean>>({});
@@ -130,32 +132,32 @@ export default function VocabularyPage() {
   return (
     <main className="writing-shell vocabulary-shell">
       <div className="writing-topline">
-        <Link href="/" className="placement-back">← Dashboard</Link>
-        <span className="placement-kicker">WORDWISE · VOCABULARY</span>
+        <Link href="/" className="placement-back">← {t("Back to dashboard")}</Link>
+        <span className="placement-kicker">{t("WORDWISE · VOCABULARY")}</span>
       </div>
 
       <section className="writing-intro" aria-labelledby="vocabulary-title">
-        <p className="placement-eyebrow">REMEMBER MORE, WITH LESS CRAMMING</p>
-        <h1 id="vocabulary-title">Words that <em>stay with you.</em></h1>
-        <p>Build your own word collection and review each card when it is due. Your next review date changes only after you record how well you remembered the word.</p>
+        <p className="placement-eyebrow">{t("REMEMBER MORE, WITH LESS CRAMMING")}</p>
+        <h1 id="vocabulary-title">{t("Words that stay with you.")}</h1>
+        <p>{t("Build your own word collection and review each card when it is due. Your next review date changes only after you record how well you remembered the word.")}</p>
       </section>
 
       <section className="vocabulary-summary" aria-label="Vocabulary overview">
-        <article><span>Due now</span><strong>{dueCards.length}</strong><small>Ready for a review</small></article>
-        <article><span>In your collection</span><strong>{cards.length}</strong><small>Words saved to your account</small></article>
-        <article><span>Mastered</span><strong>{cards.filter((card) => card.status === "mastered").length}</strong><small>Based on review history</small></article>
+        <article><span>{t("Due now")}</span><strong>{dueCards.length}</strong><small>{t("Ready for a review")}</small></article>
+        <article><span>{t("In your collection")}</span><strong>{cards.length}</strong><small>{t("Words saved to your account")}</small></article>
+        <article><span>{t("Mastered")}</span><strong>{cards.filter((card) => card.status === "mastered").length}</strong><small>{t("Based on review history")}</small></article>
       </section>
 
       <section className="writing-composer vocabulary-add" aria-labelledby="vocabulary-add-title">
         <div className="writing-composer-heading">
-          <div><p className="placement-eyebrow">GROW YOUR WORD BANK</p><h2 id="vocabulary-add-title">Add a word</h2></div>
+          <div><p className="placement-eyebrow">{t("GROW YOUR WORD BANK")}</p><h2 id="vocabulary-add-title">{t("Add a word")}</h2></div>
         </div>
         <form onSubmit={addCard} className="vocabulary-form">
-          <label>Word<input required minLength={1} maxLength={100} value={draft.word} onChange={(event) => setDraft({ ...draft, word: event.target.value })} placeholder="e.g. resilient" /></label>
-          <label>Meaning in English<input required maxLength={500} value={draft.definition} onChange={(event) => setDraft({ ...draft, definition: event.target.value })} placeholder="Able to recover after difficulty" /></label>
-          <label>Example sentence <span>(optional)</span><input maxLength={500} value={draft.example_sentence} onChange={(event) => setDraft({ ...draft, example_sentence: event.target.value })} placeholder="She stayed resilient during the challenge." /></label>
-          <label>Translation <span>(optional)</span><input maxLength={150} value={draft.translation} onChange={(event) => setDraft({ ...draft, translation: event.target.value })} placeholder="ترجمه" /></label>
-          <button className="placement-submit" type="submit" disabled={saving || !draft.word.trim() || !draft.definition.trim()}>{saving ? "Saving word…" : "Add to vocabulary"} <span aria-hidden="true">↗</span></button>
+          <label>{t("Word")}<input required minLength={1} maxLength={100} value={draft.word} onChange={(event) => setDraft({ ...draft, word: event.target.value })} placeholder="e.g. resilient" /></label>
+          <label>{t("Meaning in English")}<input required maxLength={500} value={draft.definition} onChange={(event) => setDraft({ ...draft, definition: event.target.value })} placeholder="Able to recover after difficulty" /></label>
+          <label>{t("Example sentence")} <span>(optional)</span><input maxLength={500} value={draft.example_sentence} onChange={(event) => setDraft({ ...draft, example_sentence: event.target.value })} placeholder="She stayed resilient during the challenge." /></label>
+          <label>{t("Translation")} <span>(optional)</span><input maxLength={150} value={draft.translation} onChange={(event) => setDraft({ ...draft, translation: event.target.value })} placeholder="ترجمه" /></label>
+          <button className="placement-submit" type="submit" disabled={saving || !draft.word.trim() || !draft.definition.trim()}>{saving ? "Saving word…" : "{t("Add to vocabulary")}"} <span aria-hidden="true">↗</span></button>
         </form>
       </section>
 
@@ -163,8 +165,8 @@ export default function VocabularyPage() {
 
       <section className="writing-history vocabulary-review" aria-labelledby="review-title">
         <div className="writing-history-heading">
-          <div><p className="placement-eyebrow">YOUR STUDY SESSION</p><h2 id="review-title">Review your words</h2></div>
-          <button type="button" className="writing-view-button" onClick={() => setDueOnly((previous) => !previous)}>{dueOnly ? "Show all words" : "Show due only"}</button>
+          <div><p className="placement-eyebrow">{t("YOUR STUDY SESSION")}</p><h2 id="review-title">{t("Review your words")}</h2></div>
+          <button type="button" className="writing-view-button" onClick={() => setDueOnly((previous) => !previous)}>{dueOnly ? t("Show all words") : t("Show due only")}</button>
         </div>
         {loading ? <p className="writing-empty" role="status">Loading your vocabulary…</p> : needsSignIn ? (
           <p className="writing-empty">Your personal word collection is private. <Link href="/login">Sign in</Link> to continue.</p>
