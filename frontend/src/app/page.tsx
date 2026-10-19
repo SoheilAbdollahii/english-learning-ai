@@ -24,7 +24,7 @@ const learningAreas = [
     description: "Keep useful words close with focused review sessions.",
     level: "Word review",
     symbol: "Aa",
-    href: "#vocabulary",
+    href: "/vocabulary",
   },
 ];
 
@@ -55,7 +55,7 @@ export default function HomePage() {
           <Link className="nav-link" href="/placement"><span aria-hidden="true">✦</span> Level check</Link>
           <Link className="nav-link" href="/writing"><span aria-hidden="true">✎</span> Writing</Link>
           <a className="nav-link" href="#reading"><span aria-hidden="true">▤</span> Reading</a>
-          <a className="nav-link" href="#vocabulary"><span aria-hidden="true">Aa</span> Vocabulary</a>
+          <Link className="nav-link" href="/vocabulary"><span aria-hidden="true">Aa</span> Vocabulary</Link>
         </nav>
 
         <div className="sidebar-note">
