@@ -1,11 +1,13 @@
 import pytest
-from datetime import timedelta
+from datetime import date, datetime, timedelta, timezone as dt_timezone
+from zoneinfo import ZoneInfo
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 from rest_framework.test import APIClient
 
 from apps.vocabulary.models import VocabularyCard
 from .models import LearningActivity
+from .views import _current_streak, _learner_timezone
 
 User = get_user_model()
 
@@ -128,3 +130,41 @@ def test_learner_journey_updates_all_learning_metrics(monkeypatch):
     assert {item["type"] for item in summary.data["recent_activity"]} == {
         "placement", "vocabulary", "reading", "writing",
     }
+
+
+
+def test_current_streak_uses_learner_local_day_boundaries(monkeypatch):
+    # 15:30 UTC is already the next calendar day in Tokyo.
+    timestamps = [
+        datetime(2026, 10, 17, 15, 30, tzinfo=dt_timezone.utc),
+        datetime(2026, 10, 18, 15, 30, tzinfo=dt_timezone.utc),
+    ]
+    monkeypatch.setattr(
+        "apps.progress.views.timezone.localdate",
+        lambda timezone=None: date(2026, 10, 20),
+    )
+    assert _current_streak(timestamps, ZoneInfo("Asia/Tokyo")) == 2
+
+
+def test_current_streak_counts_yesterday_when_today_has_no_activity(monkeypatch):
+    timestamps = [
+        datetime(2026, 10, 17, 12, 0, tzinfo=dt_timezone.utc),
+        datetime(2026, 10, 18, 12, 0, tzinfo=dt_timezone.utc),
+    ]
+    monkeypatch.setattr(
+        "apps.progress.views.timezone.localdate",
+        lambda timezone=None: date(2026, 10, 19),
+    )
+    assert _current_streak(timestamps, ZoneInfo("UTC")) == 2
+
+
+@pytest.mark.django_db
+def test_invalid_profile_timezone_falls_back_to_utc():
+    from apps.accounts.models import Profile
+
+    user = User.objects.create_user(username="progress-invalid-timezone", password="Strong-test-pass-123")
+    profile, _ = Profile.objects.get_or_create(user=user)
+    profile.timezone = "Not/A_Real_Zone"
+    profile.save(update_fields=("timezone",))
+    user.profile = profile
+    assert str(_learner_timezone(user)) == "UTC"
