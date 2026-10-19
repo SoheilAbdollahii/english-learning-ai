@@ -9,7 +9,7 @@ test("writing page submits through the CSRF-protected API and shows demo limitat
   assert.match(page, /X-CSRFToken/);
   assert.match(page, /Sign in/);
   assert.match(page, /Demo mode limitations/);
-  assert.match(page, /does not yet evaluate grammar/);
+  assert.match(page, /does not evaluate grammar/);
   assert.match(page, /maxLength=\{5000\}/);
   assert.match(page, /\/api\/v1\/usage\//);
   assert.match(page, /Rolling 24-hour allowance/);
