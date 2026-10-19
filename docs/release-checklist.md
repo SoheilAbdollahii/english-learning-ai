@@ -13,6 +13,8 @@ This checklist is a release gate, not a statement that deployment has already ha
 - [ ] Set `DJANGO_DEBUG=false`, exact `DJANGO_ALLOWED_HOSTS`, and production `DJANGO_CSRF_TRUSTED_ORIGINS` values.
 - [ ] Configure database credentials independently of the sample Compose defaults and restrict database network access.
 - [ ] Store `GEMINI_API_KEY` only in server-side secrets if provider-backed Writing is enabled. Rotate any key that may have been exposed.
+- [ ] Configure SMTP credentials and sender address; set `FRONTEND_BASE_URL` to the exact HTTPS frontend origin and verify email links point to it.
+- [ ] Test registration/verification, resend verification, reset request, valid reset, expired/invalid token, and password policy in the deployed environment without using real learner accounts.
 - [ ] Choose explicit per-hour and per-day Writing quotas. Configure input/output cost rates only from the active provider price sheet; estimates are not invoices.
 - [ ] Configure `REDIS_URL` to a shared, authenticated/private Redis service for multi-worker throttling; verify throttles across workers and failover behavior.
 - [ ] Confirm the deployed frontend's backend URL and that no provider key is bundled into client assets.
@@ -44,7 +46,7 @@ This checklist is a release gate, not a statement that deployment has already ha
 ## 6. Product acceptance and operations
 - [ ] Complete signup/login/logout, CSRF, profile, placement, Writing, vocabulary review, reading attempt, progress, and cross-user authorization smoke tests.
 - [ ] Verify Persian/English switching, RTL/LTR layout, keyboard navigation, accessible labels, and responsive layouts.
-- [ ] Add email verification, account recovery, abuse handling, and support/contact process before a broad public launch.
+- [ ] Verify email verification and password recovery in production-like conditions; establish abuse handling and a support/contact process before a broad public launch.
 - [ ] Confirm liveness and readiness endpoints, logs without secrets/raw learner text, error monitoring, latency/error dashboards, and provider-cost monitoring.
 - [ ] Verify a rollback procedure and rehearse it; document the person responsible for incident response.
 - [ ] Record the deployment URL, release commit, CI run, migration result, smoke-test evidence, and unresolved risks.
@@ -52,6 +54,6 @@ This checklist is a release gate, not a statement that deployment has already ha
 ## Current known blockers before broad public launch
 - Human-reviewed Writing evaluation and a measured run against the configured live provider are not yet complete.
 - Shared Redis cache is available through `REDIS_URL` and Compose, but production topology, credentials, and cross-worker throttling still need verification.
-- Email verification and password recovery are not implemented.
+- Email verification and password recovery endpoints and pages are implemented; production SMTP delivery, origin configuration, and end-to-end mail delivery still require environment-specific verification.
 - Production infrastructure, HTTPS/proxy configuration, backup/restore, monitoring, privacy/retention policy, and a real deployment have not been verified by repository CI.
 - Frontend dependency lockfile and `npm ci` are now in place; confirm CI continues using the lockfile on the release commit.
