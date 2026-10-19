@@ -47,6 +47,8 @@ services:
       EMAIL_VERIFICATION_RATE_LIMIT: ${EMAIL_VERIFICATION_RATE_LIMIT:-5/hour}
       DJANGO_EMAIL_BACKEND: ${DJANGO_EMAIL_BACKEND:-django.core.mail.backends.console.EmailBackend}
       EMAIL_HOST: ${EMAIL_HOST:-localhost}
+      EMAIL_HOST_USER: ${EMAIL_HOST_USER:-}
+      EMAIL_HOST_PASSWORD: ${EMAIL_HOST_PASSWORD:-}
       EMAIL_PORT: ${EMAIL_PORT:-25}
       EMAIL_USE_TLS: ${EMAIL_USE_TLS:-false}
       EMAIL_USE_SSL: ${EMAIL_USE_SSL:-false}
