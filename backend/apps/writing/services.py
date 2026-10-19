@@ -44,6 +44,7 @@ class GeminiWritingProvider:
         self.api_key = api_key
         self.model = model
         self.timeout = timeout
+        self.usage_metadata: dict[str, int] = {}
 
     def analyze(self, text: str) -> dict[str, Any]:
         prompt = (
@@ -65,6 +66,7 @@ class GeminiWritingProvider:
             "generationConfig": {
                 "temperature": 0.1,
                 "responseMimeType": "application/json",
+                "maxOutputTokens": 2048,
             },
         }
         endpoint = (
@@ -87,6 +89,13 @@ class GeminiWritingProvider:
                 if len(response_bytes) > MAX_PROVIDER_RESPONSE_BYTES:
                     raise WritingProviderError("Gemini response exceeded the maximum allowed size.")
                 response_payload = json.loads(response_bytes.decode("utf-8"))
+                usage = response_payload.get("usageMetadata", {})
+                if isinstance(usage, dict):
+                    self.usage_metadata = {
+                        key: usage[key]
+                        for key in ("promptTokenCount", "candidatesTokenCount", "totalTokenCount")
+                        if type(usage.get(key)) is int and usage[key] >= 0
+                    }
         except (HTTPError, URLError, TimeoutError, OSError, ValueError) as exc:
             raise WritingProviderError("Gemini writing analysis request failed.") from exc
 
@@ -180,4 +189,5 @@ def analyze_writing(text: str) -> tuple[str, dict[str, Any]]:
         if isinstance(exc, WritingProviderError):
             raise
         raise WritingProviderError("Writing analysis provider failed.") from exc
-    return provider.name, validate_result(text, raw_result)
+    usage_metadata = getattr(provider, "usage_metadata", {})
+    return provider.name, validate_result(text, raw_result), usage_metadata
