@@ -100,6 +100,10 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.SessionAuthentication",
     ],
+    "DEFAULT_THROTTLE_RATES": {
+        # Provider-backed writing calls can incur third-party costs.
+        "writing_submission": os.environ.get("WRITING_SUBMISSIONS_PER_HOUR", "10/hour"),
+    },
     "DEFAULT_RENDERER_CLASSES": [
         "rest_framework.renderers.JSONRenderer",
     ] + (
