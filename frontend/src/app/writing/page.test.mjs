@@ -11,6 +11,8 @@ test("writing page submits through the CSRF-protected API and shows demo limitat
   assert.match(page, /Demo mode limitations/);
   assert.match(page, /does not yet evaluate grammar/);
   assert.match(page, /maxLength=\{5000\}/);
+  assert.match(page, /\/api\/v1\/usage\//);
+  assert.match(page, /Rolling 24-hour allowance/);
 });
 
 test("writing page shows persisted history and accessible feedback", async () => {
