@@ -157,7 +157,7 @@ export default function VocabularyPage() {
           <label>{t("Meaning in English")}<input required maxLength={500} value={draft.definition} onChange={(event) => setDraft({ ...draft, definition: event.target.value })} placeholder="Able to recover after difficulty" /></label>
           <label>{t("Example sentence")} <span>(optional)</span><input maxLength={500} value={draft.example_sentence} onChange={(event) => setDraft({ ...draft, example_sentence: event.target.value })} placeholder="She stayed resilient during the challenge." /></label>
           <label>{t("Translation")} <span>(optional)</span><input maxLength={150} value={draft.translation} onChange={(event) => setDraft({ ...draft, translation: event.target.value })} placeholder="ترجمه" /></label>
-          <button className="placement-submit" type="submit" disabled={saving || !draft.word.trim() || !draft.definition.trim()}>{saving ? "Saving word…" : "{t("Add to vocabulary")}"} <span aria-hidden="true">↗</span></button>
+          <button className="placement-submit" type="submit" disabled={saving || !draft.word.trim() || !draft.definition.trim()}>{saving ? "Saving word…" : t("Add to vocabulary")} <span aria-hidden="true">↗</span></button>
         </form>
       </section>
 
