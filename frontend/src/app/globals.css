@@ -511,3 +511,16 @@ html[dir="rtl"] .login-form, html[dir="rtl"] .vocabulary-form { text-align: righ
   html[dir="rtl"] .main-panel { margin-right: 0; }
   html[dir="rtl"] .sidebar { inset: 0 0 auto 0; border-left: 0; border-bottom: 1px solid var(--line); }
 }
+
+
+.reading-history { margin: 22px 0 34px; padding: 20px; border: 1px solid #e5ebe1; border-radius: 12px; background: #fff; }
+.reading-history-list { display: grid; }
+.reading-history-item { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 13px 0; border-top: 1px solid #edf0e9; }
+.reading-history-item > div { display: grid; gap: 5px; min-width: 0; }
+.reading-history-item > div strong { color: #405646; font-size: .82rem; overflow-wrap: anywhere; }
+.reading-history-item > div span { color: #98a197; font-size: .64rem; }
+.reading-history-score { flex: 0 0 auto; color: #426d42; font-size: 1.1rem; }
+@media (max-width: 600px) {
+  .reading-history { padding: 15px; }
+  .reading-history-item { align-items: flex-start; }
+}
