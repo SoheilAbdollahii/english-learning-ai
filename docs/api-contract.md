@@ -1,6 +1,6 @@
 # Initial REST API Contract
 
-Status: partially implemented. Session CSRF/login/logout, profile, placement, writing, vocabulary review, initial Reading comprehension, and a persisted progress summary are implemented with automated tests. Usage accounting remains a follow-up. Gemini Developer API integration is optional and enabled only when the backend environment has a configured `GEMINI_API_KEY`; without it, the clearly labelled demo provider remains active.
+Status: partially implemented. Session CSRF/login/logout, profile, placement, writing, vocabulary review, initial Reading comprehension, and a persisted progress summary are implemented with automated tests. Basic durable Writing quota accounting is implemented; provider token and monetary cost accounting remain follow-up work. Gemini Developer API integration is optional and enabled only when the backend environment has a configured `GEMINI_API_KEY`; without it, the clearly labelled demo provider remains active.
 
 ## Conventions
 - Prefix routes with /api/v1/.
@@ -26,11 +26,12 @@ Status: partially implemented. Session CSRF/login/logout, profile, placement, wr
 ### Authentication
 - GET /api/v1/auth/csrf/ — implemented; returns a CSRF token and sets the CSRF cookie.
 - POST /api/v1/auth/login/ — implemented; accepts username/password and creates a Django session; CSRF header/cookie required.
+- POST /api/v1/auth/register/ — creates a username/password account; CSRF required, password validators enforced, usernames normalized to lowercase, and anonymous requests throttled (default 5/hour via `REGISTRATION_RATE_LIMIT`). Email verification and account recovery are not yet available.
 - POST /api/v1/auth/logout/ — implemented; ends the authenticated session; CSRF header/cookie required.
 - Login rotates the CSRF token; browser clients should obtain a fresh token after login before a subsequent unsafe request.
 - The Next.js frontend proxies `/api/*` to `BACKEND_API_URL` (default `http://127.0.0.1:8000`) so browser requests remain same-origin. Add the frontend origin to `DJANGO_CSRF_TRUSTED_ORIGINS`; production origins must be configured explicitly.
-- The frontend login form is available at `/login`. Public registration is intentionally not available yet; create users through the Django admin or `createsuperuser` for local testing.
-- Registration policy and endpoint remain to be designed before public launch.
+- The frontend login and registration forms are available at `/login` and `/register`. Registration does not automatically sign the learner in; it directs the learner to the login flow.
+- The current registration MVP does not verify email ownership and does not provide password reset/account recovery. Do not treat it as a complete public-account lifecycle for production.
 
 ### Placement (implemented backend and frontend flow)
 - GET /api/v1/placement/assessments/ — published assessments only.
