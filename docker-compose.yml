@@ -21,6 +21,10 @@ services:
     environment:
       DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:?Set DJANGO_SECRET_KEY in .env before starting containers}
       DJANGO_DEBUG: "false"
+      # Local Compose serves HTTP; production deployments should use HTTPS and keep redirect enabled.
+      DJANGO_SECURE_SSL_REDIRECT: "false"
+      DJANGO_SECURE_HSTS_SECONDS: "0"
+      DJANGO_TRUST_X_FORWARDED_PROTO: "false"
       DJANGO_ALLOWED_HOSTS: "localhost,127.0.0.1,backend"
       DJANGO_CSRF_TRUSTED_ORIGINS: "http://localhost:3000,http://127.0.0.1:3000"
       DATABASE_URL: "postgresql://${POSTGRES_USER:-english_learning}:${POSTGRES_PASSWORD:-local_password}@db:5432/${POSTGRES_DB:-english_learning}"
