@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.utils import timezone
 from rest_framework.test import APIClient
 
-from .models import VocabularyCard
+from .models import VocabularyCard, VocabularyReviewEvent
 from .services import apply_review
 
 User = get_user_model()
@@ -78,6 +78,11 @@ def test_review_updates_interval_and_bad_grade_restarts_learning():
     assert card.repetitions == 0
     assert card.interval_days == 1
     assert card.status == VocabularyCard.Status.LEARNING
+    events = list(VocabularyReviewEvent.objects.filter(card=card).order_by("reviewed_at", "id"))
+    assert [event.quality for event in events] == [5, 5, 2]
+    assert events[0].word_snapshot == "persistent"
+    assert events[0].repetitions_before == 0 and events[0].repetitions_after == 1
+    assert events[-1].interval_days_before == 6 and events[-1].interval_days_after == 1
 
 
 @pytest.mark.django_db
@@ -111,3 +116,32 @@ def test_review_and_activity_roll_back_together_when_activity_recording_fails(mo
     assert card.interval_days == 0
     assert card.last_reviewed_at is None
     assert not user.learning_activities.exists()
+    assert not VocabularyReviewEvent.objects.filter(card=card).exists()
+
+
+
+@pytest.mark.django_db
+def test_review_history_endpoint_is_private_and_preserves_word_snapshots():
+    owner = User.objects.create_user(username="vocab-history-owner", password="Strong-test-pass-123")
+    other = User.objects.create_user(username="vocab-history-other", password="Strong-test-pass-123")
+    card = VocabularyCard.objects.create(
+        user=owner, word="curious", definition="Eager to learn.", due_at=timezone.now(),
+    )
+    apply_review(card, 4)
+    card.word = "inquisitive"
+    card.save(update_fields=("word", "updated_at"))
+
+    owner_client = APIClient()
+    owner_client.force_authenticate(user=owner)
+    response = owner_client.get("/api/v1/vocabulary/reviews/")
+    assert response.status_code == 200
+    assert response.data["results"][0]["word_snapshot"] == "curious"
+    assert response.data["results"][0]["quality"] == 4
+    assert response.data["results"][0]["repetitions_before"] == 0
+    assert response.data["results"][0]["repetitions_after"] == 1
+
+    other_client = APIClient()
+    other_client.force_authenticate(user=other)
+    other_response = other_client.get("/api/v1/vocabulary/reviews/")
+    assert other_response.status_code == 200
+    assert other_response.data["results"] == []

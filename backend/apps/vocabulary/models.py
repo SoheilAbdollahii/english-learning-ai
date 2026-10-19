@@ -38,3 +38,35 @@ class VocabularyCard(models.Model):
 
     def __str__(self):
         return f"{self.word} (user_id={self.user_id})"
+
+
+class VocabularyReviewEvent(models.Model):
+    """Append-only record of one learner's vocabulary review outcome."""
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="vocabulary_review_events",
+    )
+    card = models.ForeignKey(
+        VocabularyCard,
+        on_delete=models.CASCADE,
+        related_name="review_events",
+    )
+    word_snapshot = models.CharField(max_length=100)
+    quality = models.PositiveSmallIntegerField()
+    repetitions_before = models.PositiveIntegerField()
+    repetitions_after = models.PositiveIntegerField()
+    interval_days_before = models.PositiveIntegerField()
+    interval_days_after = models.PositiveIntegerField()
+    ease_factor_before = models.DecimalField(max_digits=4, decimal_places=2)
+    ease_factor_after = models.DecimalField(max_digits=4, decimal_places=2)
+    status_before = models.CharField(max_length=10, choices=VocabularyCard.Status.choices)
+    status_after = models.CharField(max_length=10, choices=VocabularyCard.Status.choices)
+    reviewed_at = models.DateTimeField()
+
+    class Meta:
+        ordering = ("-reviewed_at", "-id")
+
+    def __str__(self):
+        return f"VocabularyReviewEvent(card_id={self.card_id}, quality={self.quality})"

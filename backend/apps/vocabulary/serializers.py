@@ -1,7 +1,7 @@
 from django.utils import timezone
 from rest_framework import serializers
 
-from .models import VocabularyCard
+from .models import VocabularyCard, VocabularyReviewEvent
 
 
 class VocabularyCardCreateSerializer(serializers.ModelSerializer):
@@ -41,3 +41,16 @@ class VocabularyCardSerializer(serializers.ModelSerializer):
 
 class VocabularyReviewSerializer(serializers.Serializer):
     quality = serializers.IntegerField(min_value=0, max_value=5)
+
+
+class VocabularyReviewEventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = VocabularyReviewEvent
+        fields = (
+            "id", "card", "word_snapshot", "quality",
+            "repetitions_before", "repetitions_after",
+            "interval_days_before", "interval_days_after",
+            "ease_factor_before", "ease_factor_after",
+            "status_before", "status_after", "reviewed_at",
+        )
+        read_only_fields = fields
