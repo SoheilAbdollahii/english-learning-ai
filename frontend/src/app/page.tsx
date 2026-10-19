@@ -49,7 +49,7 @@ export default function HomePage() {
       <aside className="sidebar" aria-label="Main navigation">
         <a className="brand" href="#home" aria-label="English Learning home">
           <span className="brand-mark" aria-hidden="true">e.</span>
-          <span className="brand-name">wordwise<span>LEARNING STUDIO</span></span>
+          <span className="brand-name">wordwise<span>{t("LEARNING STUDIO")}</span></span>
         </a>
 
         <p className="nav-label">{t("WORKSPACE")}</p>
@@ -58,23 +58,23 @@ export default function HomePage() {
             <span aria-hidden="true">⌂</span> {t("Overview")}
           </a>
           <Link className="nav-link" href="/placement"><span aria-hidden="true">✦</span> {t("Level check")}</Link>
-          <Link className="nav-link" href="/writing"><span aria-hidden="true">✎</span> Writing</Link>
-          <Link className="nav-link" href="/reading"><span aria-hidden="true">▤</span> Reading</Link>
-          <Link className="nav-link" href="/vocabulary"><span aria-hidden="true">Aa</span> Vocabulary</Link>
+          <Link className="nav-link" href="/writing"><span aria-hidden="true">✎</span> {t("Writing")}</Link>
+          <Link className="nav-link" href="/reading"><span aria-hidden="true">▤</span> {t("Reading")}</Link>
+          <Link className="nav-link" href="/vocabulary"><span aria-hidden="true">Aa</span> {t("Vocabulary")}</Link>
         </nav>
 
         <div className="sidebar-note">
           <span className="note-icon" aria-hidden="true">✦</span>
-          <p className="note-title">Small steps add up.</p>
-          <p className="note-copy">A little practice today makes tomorrow easier.</p>
+          <p className="note-title">{t("Small steps add up.")}</p>
+          <p className="note-copy">{t("A little practice today makes tomorrow easier.")}</p>
         </div>
-        <p className="sidebar-foot">EARLY ACCESS · PREVIEW</p>
+        <p className="sidebar-foot">{t("EARLY ACCESS · PREVIEW")}</p>
       </aside>
 
       <section className="main-panel" id="home">
         <header className="topbar">
-          <p><span className="topbar-dot" /> YOUR PERSONAL LEARNING SPACE</p>
-          <div className="topbar-actions"><span className="preview-pill">UI PREVIEW</span><AuthStatus /></div>
+          <p><span className="topbar-dot" /> {t("YOUR PERSONAL LEARNING SPACE")}</p>
+          <div className="topbar-actions"><span className="preview-pill">{t("UI PREVIEW")}</span><AuthStatus /></div>
         </header>
 
         <div className="content-wrap">
