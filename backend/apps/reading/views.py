@@ -1,6 +1,7 @@
 from django.db import transaction
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
+from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.views import APIView
 
 from apps.progress.models import LearningActivity
@@ -28,6 +29,14 @@ class PassageDetailView(generics.RetrieveAPIView):
 
 class ReadingAttemptCreateView(APIView):
     permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        queryset = ReadingAttempt.objects.filter(user=request.user).select_related("passage")
+        paginator = LimitOffsetPagination()
+        paginator.default_limit = 10
+        paginator.max_limit = 50
+        page = paginator.paginate_queryset(queryset, request, view=self)
+        return paginator.get_paginated_response(ReadingAttemptSerializer(page, many=True).data)
 
     def post(self, request):
         serializer = ReadingAttemptCreateSerializer(data=request.data)
