@@ -1,5 +1,6 @@
 import Link from "next/link";
 import AuthStatus from "./components/auth-status";
+import ProgressOverview from "./components/progress-overview";
 
 const learningAreas = [
   {
@@ -90,26 +91,7 @@ export default function HomePage() {
             </div>
           </section>
 
-          <section className="stats-grid" aria-label="Learning overview">
-            <article className="stat-card">
-              <span className="stat-icon stat-icon-green" aria-hidden="true">◷</span>
-              <p className="stat-label">Study time</p>
-              <p className="stat-value">— <span>min</span></p>
-              <p className="stat-hint">Your activity will appear here</p>
-            </article>
-            <article className="stat-card">
-              <span className="stat-icon stat-icon-yellow" aria-hidden="true">✦</span>
-              <p className="stat-label">Day streak</p>
-              <p className="stat-value">— <span>days</span></p>
-              <p className="stat-hint">One session at a time</p>
-            </article>
-            <article className="stat-card">
-              <span className="stat-icon stat-icon-lilac" aria-hidden="true">↗</span>
-              <p className="stat-label">Words reviewed</p>
-              <p className="stat-value">— <span>words</span></p>
-              <p className="stat-hint">Your vocabulary progress</p>
-            </article>
-          </section>
+          <ProgressOverview />
 
           <section className="section-block" aria-labelledby="areas-title">
             <div className="section-heading">

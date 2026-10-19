@@ -46,7 +46,7 @@ Keep a canonical validated analysis result. Add normalized error records only wh
 - Follow-up: immutable VocabularyReview event records and curated word content with source/license metadata.
 
 ### Progress and usage
-- LearningActivity: optional domain event for timeline and summary; do not build a generic event-sourcing platform.
+- LearningActivity (implemented): user, activity type, related object ID, minimal metadata, and timestamp. Events are written for successful writing submissions, reading attempts, placement attempts, and vocabulary reviews. Do not expand this into a generic event-sourcing platform.
 - Recommendation: compute on demand initially unless persistence is needed for history or reproducibility.
 - UsageRecord: user, operation, timestamp, outcome, and provider usage/cost metadata where available.
 - Plan/UsagePolicy: optional quota configuration; real payments remain out of initial MVP.

@@ -29,7 +29,10 @@ Vocabulary status: **Implemented — CI verification pending.** The initial voca
 Reading status: **Implemented — CI verification pending.** The initial flow includes two original A2/B1 passages, published-only public endpoints, hidden answer keys before submission, exact-answer validation, server-side scoring, owner-scoped saved attempts, feedback explanations, and a responsive learner page. Remaining work includes immutable question-version snapshots, authoring/content review, more passages, and attempt-history UI.
 
 ### Phase 6 — Progress and personalization
-Defined metrics from persisted records and transparent rule-based recommendations.
+
+Progress status: **Implemented — CI verification pending.** The dashboard reads persisted session counts, vocabulary review outcomes, due/mastered word counts, reading/writing/placement totals, current streak, and recent activity from an authenticated API. Learning activity events are written by the corresponding backend flows. Study duration remains intentionally unreported until reliable duration tracking is designed.
+
+Remaining: transparent rule-based recommendations and further timezone/history edge-case coverage.
 
 ### Phase 7 — Frontend integration
 Complete learner flows, RTL/LTR and accessibility checks, E2E scenarios, production build checks.

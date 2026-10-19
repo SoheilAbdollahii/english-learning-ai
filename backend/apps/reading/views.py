@@ -3,6 +3,8 @@ from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from apps.progress.models import LearningActivity
+from apps.progress.services import record_activity
 from .models import Passage, ReadingAttempt
 from .serializers import (
     PassageDetailSerializer,
@@ -57,6 +59,7 @@ class ReadingAttemptCreateView(APIView):
                 max_score=max_score,
                 percentage=round(score * 100 / max_score) if max_score else 0,
             )
+            record_activity(request.user, LearningActivity.Type.READING, attempt.pk)
         return Response(ReadingAttemptSerializer(attempt).data, status=status.HTTP_201_CREATED)
 
 

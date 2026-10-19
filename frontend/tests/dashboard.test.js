@@ -4,6 +4,7 @@ import { readFile } from "node:fs/promises";
 
 const pageUrl = new URL("../src/app/page.tsx", import.meta.url);
 const page = await readFile(pageUrl, "utf8");
+const progress = await readFile(new URL("../src/app/components/progress-overview.tsx", import.meta.url), "utf8");
 
 test("dashboard exposes the three planned learning areas", () => {
   for (const area of ["Writing", "Reading", "Vocabulary"]) {
@@ -25,7 +26,9 @@ test("dashboard navigation targets existing sections and learning routes", () =>
 });
 
 test("dashboard does not present sample progress as real learner data", () => {
-  assert.match(page, /Your activity will appear here/);
+  assert.match(page, /<ProgressOverview \/>/);
+  assert.match(progress, /\/api\/v1\/progress\/summary\//);
+  assert.match(progress, /sessions_completed/);
   assert.match(page, /activity tracking is not connected yet/);
   assert.match(page, /UI PREVIEW/);
 });
