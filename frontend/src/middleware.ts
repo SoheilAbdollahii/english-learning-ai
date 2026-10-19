@@ -13,7 +13,4 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: ["/api/:path*"],
-  // API paths are proxied to Django, whose routes require trailing slashes.
-  // Disable Next.js canonical slash redirects so the proxy receives the original path.
-  skipTrailingSlashRedirect: true,
 };
