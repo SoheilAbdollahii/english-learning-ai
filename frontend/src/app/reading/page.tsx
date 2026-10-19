@@ -154,7 +154,7 @@ export default function ReadingPage() {
                 ))}
               </div>
               {error && <p className="placement-error" role="alert">{error} {needsSignIn && <Link href="/login">Sign in</Link>}</p>}
-              <div className="placement-submit-row"><p>Your answers are scored on the server.</p><button className="placement-submit" type="button" onClick={submitAttempt} disabled={submitting || answeredCount !== passage.questions.length}>{submitting ? "Saving result…" : "{t("Check my answers")}"} <span aria-hidden="true">↗</span></button></div>
+              <div className="placement-submit-row"><p>Your answers are scored on the server.</p><button className="placement-submit" type="button" onClick={submitAttempt} disabled={submitting || answeredCount !== passage.questions.length}>{submitting ? "Saving result…" : t("Check my answers")} <span aria-hidden="true">↗</span></button></div>
             </section>
           ) : (
             <section className="reading-result" aria-labelledby="reading-result-title" aria-live="polite">
