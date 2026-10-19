@@ -120,11 +120,15 @@ export default function WritingPage() {
       if (!response.ok) throw new Error(data.detail ?? "We couldn't analyze this submission. Please try again.");
       setCurrent(data);
       setHistory((previous) => [data, ...previous.filter((item) => item.id !== data.id)].slice(0, 10));
-      const usageResponse = await fetch("/api/v1/usage/", { credentials: "same-origin", cache: "no-store" });
-      if (usageResponse.ok) setUsage(await usageResponse.json() as UsageSummary);
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "We couldn't reach the writing service.");
     } finally {
+      try {
+        const usageResponse = await fetch("/api/v1/usage/", { credentials: "same-origin", cache: "no-store" });
+        if (usageResponse.ok) setUsage(await usageResponse.json() as UsageSummary);
+      } catch {
+        // The usage display is supplementary; quota enforcement remains server-side.
+      }
       setSubmitting(false);
     }
   }
