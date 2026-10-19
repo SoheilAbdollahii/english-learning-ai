@@ -21,7 +21,7 @@ Status: **Core authentication and placement flow implemented; registration MVP a
 ### Phase 4 — Writing MVP
 Provider-neutral adapter, fake provider for tests, versioned result schema, span validation, history, timeout/failure handling, usage accounting, evaluation baseline.
 
-Current status: **In progress — provider integration and initial security/usage controls implemented; verification and evaluation work remain.** The branch includes a server-side Gemini Developer API adapter (default model `gemini-2.5-flash`), bounded request timeout, schema/span validation, owner-scoped submissions/history, safe failure responses, and the Writing Studio UI. Without `GEMINI_API_KEY`, the clearly-labelled demo adapter remains active. Basic durable rolling-24-hour usage reservation and usage summaries are implemented on the current stack; actual provider token/cost accounting and a measured writing evaluation baseline remain outstanding.
+Current status: **Provider usage accounting and CI verification implemented; educational quality evaluation remains open.** The server-side Gemini adapter uses a bounded timeout and a 2,048-token output ceiling, captures provider-reported prompt/output token counts, and persists aggregate usage without storing the provider payload or learner text in the usage ledger. Optional estimated cost is calculated only when the deployment explicitly configures both input/output rates from its active price sheet; no vendor rate is assumed. Without `GEMINI_API_KEY`, the clearly-labelled demo adapter remains active and has no token/cost usage. The synthetic writing evaluation dataset remains draft and needs human review plus a measured run against the configured provider.
 
 ### Phase 5 — Reading and Vocabulary
 
