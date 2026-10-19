@@ -62,7 +62,7 @@ Status: core MVP endpoints are implemented with automated tests. Session CSRF/lo
 - GET /api/v1/reading/passages/{passage_id}/ — published passage and public question options. Correct options and explanations are omitted before submission.
 - POST /api/v1/reading/attempts/ — authenticated; accepts a passage ID and exactly one valid option per question; server calculates weighted score and percentage.
 - GET /api/v1/reading/attempts/?limit=10&offset=0 — authenticated, paginated owner-only attempt history (maximum page size 50).
-- GET /api/v1/reading/attempts/{attempt_id}/ — authenticated owner-only result including answer feedback and explanation snapshots.
+- GET /api/v1/reading/attempts/{attempt_id}/ — authenticated owner-only result including answer feedback, explanation snapshots, and an immutable `question_snapshots` array (prompt, options, answer key, explanation, points, order, selected option, and correctness as recorded at submission). Existing attempts are backfilled with available feedback fields; historical option text cannot be reconstructed for attempts created before this snapshot field.
 - Two original sample passages (A2 and B1) are seeded by migration. Content is original starter content, not externally licensed material. The current MVP does not yet include passage authoring workflows or immutable question version snapshots; the learner-facing attempt-history UI is being added in PR #16 and remains subject to CI verification.
 
 ### Progress (initial persisted summary)
