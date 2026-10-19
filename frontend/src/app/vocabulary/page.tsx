@@ -153,10 +153,10 @@ export default function VocabularyPage() {
           <div><p className="placement-eyebrow">{t("GROW YOUR WORD BANK")}</p><h2 id="vocabulary-add-title">{t("Add a word")}</h2></div>
         </div>
         <form onSubmit={addCard} className="vocabulary-form">
-          <label>{t("Word")}<input required minLength={1} maxLength={100} value={draft.word} onChange={(event) => setDraft({ ...draft, word: event.target.value })} placeholder="e.g. resilient" /></label>
-          <label>{t("Meaning in English")}<input required maxLength={500} value={draft.definition} onChange={(event) => setDraft({ ...draft, definition: event.target.value })} placeholder="Able to recover after difficulty" /></label>
-          <label>{t("Example sentence")} <span>(optional)</span><input maxLength={500} value={draft.example_sentence} onChange={(event) => setDraft({ ...draft, example_sentence: event.target.value })} placeholder="She stayed resilient during the challenge." /></label>
-          <label>{t("Translation")} <span>(optional)</span><input maxLength={150} value={draft.translation} onChange={(event) => setDraft({ ...draft, translation: event.target.value })} placeholder="ترجمه" /></label>
+          <label>{t("Word")}<input lang="en" dir="ltr" required minLength={1} maxLength={100} value={draft.word} onChange={(event) => setDraft({ ...draft, word: event.target.value })} placeholder="e.g. resilient" /></label>
+          <label>{t("Meaning in English")}<input lang="en" dir="ltr" required maxLength={500} value={draft.definition} onChange={(event) => setDraft({ ...draft, definition: event.target.value })} placeholder="Able to recover after difficulty" /></label>
+          <label>{t("Example sentence")} <span>(optional)</span><input lang="en" dir="ltr" maxLength={500} value={draft.example_sentence} onChange={(event) => setDraft({ ...draft, example_sentence: event.target.value })} placeholder="She stayed resilient during the challenge." /></label>
+          <label>{t("Translation")} <span>(optional)</span><input lang={locale} dir="auto" maxLength={150} value={draft.translation} onChange={(event) => setDraft({ ...draft, translation: event.target.value })} placeholder="ترجمه" /></label>
           <button className="placement-submit" type="submit" disabled={saving || !draft.word.trim() || !draft.definition.trim()}>{saving ? "Saving word…" : t("Add to vocabulary")} <span aria-hidden="true">↗</span></button>
         </form>
       </section>
@@ -178,7 +178,7 @@ export default function VocabularyPage() {
               <article className="vocabulary-card" key={card.id}>
                 <div className="vocabulary-card-head">
                   <div><span className={`vocabulary-status vocabulary-status-${card.status}`}>{t(card.status)}</span><h3 lang="en" dir="ltr">{card.word}</h3></div>
-                  <span className="vocabulary-due">{new Date(card.due_at).getTime() <= Date.now() ? "Due now" : `Due ${new Date(card.due_at).toLocaleDateString()}`}</span>
+                  <span className="vocabulary-due">{new Date(card.due_at).getTime() <= Date.now() ? t("Due now") : `${t("Due")} ${new Date(card.due_at).toLocaleDateString(locale === "fa" ? "fa-IR" : "en-US")}`}</span>
                 </div>
                 {revealed[card.id] ? (
                   <div className="vocabulary-definition" dir="auto">
@@ -195,7 +195,7 @@ export default function VocabularyPage() {
                     <button type="button" disabled={reviewingId === card.id} onClick={() => void reviewCard(card, 5)}>{t("Easy")}</button>
                   </div>
                 )}
-                <p className="vocabulary-card-meta">Reviewed {card.repetitions} {card.repetitions === 1 ? "time" : "times"} · next interval {card.interval_days} {card.interval_days === 1 ? "day" : "days"}</p>
+                <p className="vocabulary-card-meta">{t("Reviewed")} {card.repetitions} {t(card.repetitions === 1 ? "time" : "times")} · {t("next interval")} {card.interval_days} {t(card.interval_days === 1 ? "day" : "days")}</p>
               </article>
             ))}
           </div>
