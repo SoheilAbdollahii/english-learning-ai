@@ -40,7 +40,7 @@ def test_offline_evaluation_metrics_report_false_positives_and_span_scores():
 
 def test_evaluation_rejects_missing_predictions():
     with pytest.raises(ValueError, match="Missing predictions"):
-        evaluate_predictions([{"id": "required"}], {})
+        evaluate_predictions([{"id": "required", "original_text": "Hi.", "should_change": False, "acceptable_corrected_texts": ["Hi."], "reference_errors": []}], {})
 
 
 def test_evaluation_rejects_unexpected_predictions():
