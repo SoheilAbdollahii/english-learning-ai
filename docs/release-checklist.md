@@ -14,6 +14,7 @@ This checklist is a release gate, not a statement that deployment has already ha
 - [ ] Configure database credentials independently of the sample Compose defaults and restrict database network access.
 - [ ] Store `GEMINI_API_KEY` only in server-side secrets if provider-backed Writing is enabled. Rotate any key that may have been exposed.
 - [ ] Choose explicit per-hour and per-day Writing quotas. Configure input/output cost rates only from the active provider price sheet; estimates are not invoices.
+- [ ] Configure `REDIS_URL` to a shared, authenticated/private Redis service for multi-worker throttling; verify throttles across workers and failover behavior.
 - [ ] Confirm the deployed frontend's backend URL and that no provider key is bundled into client assets.
 
 ## 3. HTTPS and edge configuration
