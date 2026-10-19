@@ -186,12 +186,12 @@ def test_weekly_activity_counts_follow_profile_timezone():
     profile.save(update_fields=("timezone",))
     tz = ZoneInfo("Asia/Tokyo")
     local_today = timezone.localdate(timezone=tz)
-    # This UTC timestamp is already tomorrow in Tokyo, so it belongs to the next local-day bucket.
+    # This UTC timestamp corresponds to local midnight in Tokyo.
     utc_timestamp = datetime.combine(local_today, datetime.min.time(), tzinfo=tz).astimezone(dt_timezone.utc)
-    LearningActivity.objects.create(
+    activity = LearningActivity.objects.create(
         user=user, activity_type=LearningActivity.Type.READING, object_id=1,
-        created_at=utc_timestamp,
     )
+    LearningActivity.objects.filter(pk=activity.pk).update(created_at=utc_timestamp)
     client = APIClient()
     client.force_authenticate(user=user)
     response = client.get("/api/v1/progress/summary/")
