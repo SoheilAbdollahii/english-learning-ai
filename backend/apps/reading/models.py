@@ -55,6 +55,7 @@ class ReadingAttempt(models.Model):
     passage_version = models.PositiveSmallIntegerField()
     submitted_answers = models.JSONField()
     result_details = models.JSONField(default=list)
+    question_snapshots = models.JSONField(default=list)
     score = models.PositiveSmallIntegerField()
     max_score = models.PositiveSmallIntegerField()
     percentage = models.PositiveSmallIntegerField()

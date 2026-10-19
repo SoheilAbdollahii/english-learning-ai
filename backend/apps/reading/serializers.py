@@ -55,7 +55,7 @@ class ReadingAttemptSerializer(serializers.ModelSerializer):
         model = ReadingAttempt
         fields = (
             "id", "passage", "passage_title", "passage_version",
-            "submitted_answers", "result_details", "score", "max_score",
+            "submitted_answers", "result_details", "question_snapshots", "score", "max_score",
             "percentage", "completed_at",
         )
         read_only_fields = fields
