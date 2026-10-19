@@ -70,7 +70,7 @@ def evaluate_predictions(cases, predictions):
     if missing:
         raise ValueError(f"Missing predictions for cases: {', '.join(sorted(missing))}")
     if unexpected:
-        raise ValueError(f"Unexpected predictions for cases: {', '.join(sorted(unexpected))")
+        raise ValueError(f"Unexpected predictions for cases: {', '.join(sorted(unexpected))}")
 
     accepted = 0
     unchanged_cases = 0
