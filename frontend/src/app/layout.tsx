@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { LocaleProvider, LocaleSwitcher } from "./components/locale-provider";
 
 export const metadata: Metadata = {
   title: "Wordwise — English Learning Studio",
@@ -14,7 +15,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" dir="ltr">
-      <body>{children}</body>
+      <body><LocaleProvider><LocaleSwitcher />{children}</LocaleProvider></body>
     </html>
   );
 }
