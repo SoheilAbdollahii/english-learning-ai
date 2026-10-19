@@ -11,6 +11,10 @@ from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
 
+MAX_PROVIDER_RESPONSE_BYTES = 256_000
+ALLOWED_ERROR_CATEGORIES = {"grammar", "spelling", "punctuation", "word_choice", "style"}
+
+
 class WritingProviderError(Exception):
     """Raised when a writing provider cannot produce a usable result."""
 
@@ -79,7 +83,10 @@ class GeminiWritingProvider:
         )
         try:
             with urlopen(request, timeout=self.timeout) as response:
-                response_payload = json.loads(response.read().decode("utf-8"))
+                response_bytes = response.read(MAX_PROVIDER_RESPONSE_BYTES + 1)
+                if len(response_bytes) > MAX_PROVIDER_RESPONSE_BYTES:
+                    raise WritingProviderError("Gemini response exceeded the maximum allowed size.")
+                response_payload = json.loads(response_bytes.decode("utf-8"))
         except (HTTPError, URLError, TimeoutError, OSError, ValueError) as exc:
             raise WritingProviderError("Gemini writing analysis request failed.") from exc
 
@@ -115,15 +122,16 @@ def validate_result(original_text: str, result: Any) -> dict[str, Any]:
         raise WritingProviderError("Provider returned an invalid result.")
     if result.get("schema_version") != 1:
         raise WritingProviderError("Provider returned an unsupported result schema.")
-    if not isinstance(result.get("corrected_text"), str):
+    corrected_text = result.get("corrected_text")
+    if not isinstance(corrected_text, str) or len(corrected_text) > 10_000:
         raise WritingProviderError("Provider returned an invalid corrected text field.")
-    if not isinstance(result.get("general_feedback"), str):
+    if not isinstance(result.get("general_feedback"), str) or len(result["general_feedback"]) > 2_000:
         raise WritingProviderError("Provider returned invalid feedback.")
     limitations = result.get("limitations")
     errors = result.get("errors")
-    if not isinstance(limitations, list) or not all(isinstance(item, str) for item in limitations):
+    if not isinstance(limitations, list) or len(limitations) > 10 or not all(isinstance(item, str) and len(item) <= 500 for item in limitations):
         raise WritingProviderError("Provider returned invalid limitations.")
-    if not isinstance(errors, list):
+    if not isinstance(errors, list) or len(errors) > 100:
         raise WritingProviderError("Provider returned an invalid error list.")
 
     validated_errors = []
@@ -136,7 +144,7 @@ def validate_result(original_text: str, result: Any) -> dict[str, Any]:
         original = error.get("original")
         correction = error.get("correction")
         explanation = error.get("explanation")
-        if not isinstance(category, str) or not category.strip():
+        if not isinstance(category, str) or category not in ALLOWED_ERROR_CATEGORIES:
             raise WritingProviderError("Provider returned an invalid error category.")
         if type(start) is not int or type(end) is not int:
             raise WritingProviderError("Provider returned invalid error offsets.")
@@ -144,7 +152,7 @@ def validate_result(original_text: str, result: Any) -> dict[str, Any]:
             raise WritingProviderError("Provider returned out-of-range error offsets.")
         if not isinstance(original, str) or original_text[start:end] != original:
             raise WritingProviderError("Provider returned an error span that does not match the submitted text.")
-        if not isinstance(correction, str) or not isinstance(explanation, str):
+        if not isinstance(correction, str) or len(correction) > 1_000 or not isinstance(explanation, str) or len(explanation) > 2_000:
             raise WritingProviderError("Provider returned an invalid correction or explanation.")
         validated_errors.append({
             "category": category,
@@ -157,7 +165,7 @@ def validate_result(original_text: str, result: Any) -> dict[str, Any]:
 
     return {
         "schema_version": 1,
-        "corrected_text": result["corrected_text"],
+        "corrected_text": corrected_text,
         "errors": validated_errors,
         "general_feedback": result["general_feedback"],
         "limitations": limitations,
