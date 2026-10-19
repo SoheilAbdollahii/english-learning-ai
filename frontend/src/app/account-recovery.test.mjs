@@ -29,6 +29,8 @@ test("verification page and resend page use their protected endpoints", async ()
   const resend = await readFile(new URL("./verify-email/resend/page.tsx", import.meta.url), "utf8");
   assert.match(verify, /\/api\/v1\/auth\/verify-email\//);
   assert.match(verify, /X-CSRFToken/);
+  assert.match(verify, /Press the button below to confirm/);
+  assert.match(verify, /onSubmit={submit}/);
   assert.match(resend, /\/api\/v1\/auth\/verify-email\/resend\//);
   assert.match(resend, /X-CSRFToken/);
 });
