@@ -145,7 +145,7 @@ export default function PlacementPage() {
     return (
       <main className="placement-shell">
         <div className="placement-topline">
-          <Link href="/" className="placement-back">← {t("{t("Back to dashboard")}")}</Link>
+          <Link href="/" className="placement-back">← {t("Back to dashboard")}</Link>
           <span className="placement-kicker">YOUR STARTING POINT</span>
         </div>
         <section className="placement-result" aria-labelledby="result-title">
