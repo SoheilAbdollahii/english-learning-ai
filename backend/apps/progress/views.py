@@ -28,7 +28,7 @@ def _learner_timezone(user):
 
 def _current_streak(timestamps, tz):
     active_dates = {timezone.localtime(timestamp, tz).date() for timestamp in timestamps}
-    today = timezone.localdate(tz)
+    today = timezone.localdate(timezone=tz)
     cursor = today if today in active_dates else today - timedelta(days=1)
     if cursor not in active_dates:
         return 0
@@ -48,7 +48,7 @@ class ProgressSummaryView(APIView):
         activities = LearningActivity.objects.filter(user=user)
         recent = list(activities[:8])
         tz = _learner_timezone(user)
-        timestamps = list(activities.filter(created_at__gte=now - timedelta(days=370)).values_list("created_at", flat=True))
+        timestamps = list(activities.filter(created_at__gte=now - timedelta(days=370)).order_by("-created_at").values_list("created_at", flat=True)[:5000])
         return Response({
             "sessions_completed": activities.count(),
             "words_reviewed": activities.filter(activity_type=LearningActivity.Type.VOCABULARY).count(),
