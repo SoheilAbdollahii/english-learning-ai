@@ -247,6 +247,12 @@ const fa: Record<string, string> = {
   "correct": "درست",
   "YOUR DRAFT": "پیش‌نویس شما",
   "Loading your saved writing…": "در حال بارگذاری نوشته‌های ذخیره‌شده…",
+
+  "Reviewed": "مرور شده",
+  "time": "بار",
+  "times": "بار",
+  "next interval": "فاصلهٔ بعدی",
+  "day": "روز",
 };
 
 type LocaleContextValue = {
