@@ -74,7 +74,7 @@ export default function RegisterPage() {
           </div>
         ) : (
           <>
-            <p className="eyebrow login-eyebrow">{t("{t("A FRESH START")}")}</p>
+            <p className="eyebrow login-eyebrow">{t("A FRESH START")}</p>
             <h1 id="register-title">{t("Make space to grow.")}</h1>
             <p className="login-description">{t("Create your personal learning space. Use a strong password you do not use elsewhere.")}</p>
             <form className="login-form" onSubmit={handleSubmit}>
