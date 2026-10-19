@@ -68,6 +68,60 @@ jobs:
       - run: npm run build
 
 
+  browser-e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      DJANGO_SECRET_KEY: ci-only-not-a-production-secret
+      DJANGO_DEBUG: "true"
+      DJANGO_SECURE_SSL_REDIRECT: "false"
+      DATABASE_URL: sqlite:///./e2e.sqlite3
+      DJANGO_ALLOWED_HOSTS: "127.0.0.1,localhost"
+      DJANGO_CSRF_TRUSTED_ORIGINS: "http://127.0.0.1:3000,http://localhost:3000"
+      BACKEND_API_URL: "http://127.0.0.1:8000"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Install backend and browser test dependencies
+        run: pip install -r backend/requirements.txt playwright
+      - name: Install Chromium
+        run: python -m playwright install --with-deps chromium
+      - name: Install frontend dependencies
+        run: npm ci --prefix frontend --no-audit --no-fund
+      - name: Prepare test database and learner account
+        run: |
+          cd backend
+          python manage.py migrate --noinput
+          python manage.py shell -c "from django.contrib.auth import get_user_model; U = get_user_model(); U.objects.filter(username='e2e-learner').delete(); U.objects.create_user(username='e2e-learner', email='e2e@example.test', password='Strong-test-pass-123', is_active=True)"
+      - name: Start backend
+        run: |
+          cd backend
+          nohup python manage.py runserver 127.0.0.1:8000 > /tmp/e2e-backend.log 2>&1 &
+      - name: Wait for backend readiness
+        run: curl --fail --silent --show-error --retry 30 --retry-delay 2 --retry-connrefused --retry-all-errors --max-time 5 http://127.0.0.1:8000/api/v1/ready/
+      - name: Build frontend
+        run: npm run build --prefix frontend
+      - name: Start frontend
+        run: |
+          cd frontend
+          nohup npm run start -- --hostname 127.0.0.1 > /tmp/e2e-frontend.log 2>&1 &
+      - name: Wait for frontend
+        run: curl --fail --silent --show-error --retry 30 --retry-delay 2 --retry-connrefused --retry-all-errors --max-time 5 http://127.0.0.1:3000/
+      - name: Run browser learner journey
+        run: |
+          if ! python -m pytest frontend/e2e/test_learner_journey.py -q; then
+            cat /tmp/e2e-backend.log
+            cat /tmp/e2e-frontend.log
+            exit 1
+          fi
+
   container-build:
     runs-on: ubuntu-latest
     env:
@@ -81,3 +135,21 @@ jobs:
         run: docker build --file backend/Dockerfile --tag english-learning-backend:ci backend
       - name: Build frontend image
         run: docker build --file frontend/Dockerfile --build-arg BACKEND_API_URL=http://backend:8000 --tag english-learning-frontend:ci frontend
+      - name: Start Compose stack and smoke-test services
+        run: |
+          cp .env.example .env
+          sed -i 's/^DJANGO_SECRET_KEY=.*/DJANGO_SECRET_KEY=ci-smoke-test-secret-with-enough-entropy-0123456789/' .env
+          docker compose up --detach --build
+          if ! curl --fail --silent --show-error --retry 30 --retry-delay 3 --retry-connrefused --retry-all-errors --max-time 5 http://127.0.0.1:8000/api/v1/ready/; then
+            docker compose ps
+            docker compose logs --no-color
+            exit 1
+          fi
+          if ! curl --fail --silent --show-error --retry 30 --retry-delay 3 --retry-connrefused --max-time 5 http://127.0.0.1:3000/; then
+            docker compose ps
+            docker compose logs --no-color
+            exit 1
+          fi
+      - name: Stop Compose stack
+        if: always()
+        run: docker compose down --volumes --remove-orphans
