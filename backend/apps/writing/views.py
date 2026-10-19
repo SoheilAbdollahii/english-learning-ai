@@ -1,6 +1,7 @@
 from rest_framework import permissions, status
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
+from rest_framework.throttling import UserRateThrottle
 from rest_framework.views import APIView
 from rest_framework.generics import RetrieveAPIView
 
@@ -9,8 +10,18 @@ from .serializers import WritingSubmissionCreateSerializer, WritingSubmissionSer
 from .services import WritingProviderError, analyze_writing
 
 
+class WritingSubmissionThrottle(UserRateThrottle):
+    scope = "writing_submission"
+
+
 class WritingSubmissionCollectionView(APIView):
     permission_classes = [permissions.IsAuthenticated]
+
+    def get_throttles(self):
+        # Only provider-backed submissions consume AI quota; history reads stay available.
+        if self.request.method == "POST":
+            return [WritingSubmissionThrottle()]
+        return []
 
     def get(self, request):
         paginator = LimitOffsetPagination()
