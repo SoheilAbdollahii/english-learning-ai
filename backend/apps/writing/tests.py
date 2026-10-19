@@ -1,6 +1,5 @@
 import pytest
 from django.core.cache import cache
-from django.test import override_settings
 from django.contrib.auth import get_user_model
 from rest_framework.test import APIClient
 
@@ -193,16 +192,18 @@ def test_production_security_defaults_do_not_use_insecure_cookie_settings():
 
 
 @pytest.mark.django_db
-def test_writing_submission_rate_limit_applies_only_to_provider_calls():
+def test_writing_submission_rate_limit_applies_only_to_provider_calls(monkeypatch):
+    from apps.writing.views import WritingSubmissionThrottle
+
+    monkeypatch.setattr(WritingSubmissionThrottle, "THROTTLE_RATES", {"writing_submission": "1/hour"})
     cache.clear()
     user = User.objects.create_user(username="writing-throttled", password="Strong-test-pass-123")
     client = APIClient()
     client.force_authenticate(user=user)
 
-    with override_settings(REST_FRAMEWORK={"DEFAULT_THROTTLE_RATES": {"writing_submission": "1/hour"}}):
-        first = client.post("/api/v1/writing/submissions/", {"text": "First sentence."}, format="json")
-        second = client.post("/api/v1/writing/submissions/", {"text": "Second sentence."}, format="json")
-        history = client.get("/api/v1/writing/submissions/")
+    first = client.post("/api/v1/writing/submissions/", {"text": "First sentence."}, format="json")
+    second = client.post("/api/v1/writing/submissions/", {"text": "Second sentence."}, format="json")
+    history = client.get("/api/v1/writing/submissions/")
 
     assert first.status_code == 201
     assert second.status_code == 429
