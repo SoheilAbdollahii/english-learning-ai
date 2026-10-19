@@ -43,6 +43,26 @@ def test_evaluation_rejects_missing_predictions():
         evaluate_predictions([{"id": "required"}], {})
 
 
+def test_evaluation_rejects_unexpected_predictions():
+    case = {"id": "expected", "original_text": "Hi.", "should_change": False, "acceptable_corrected_texts": ["Hi."], "reference_errors": []}
+    with pytest.raises(ValueError, match="Unexpected predictions"):
+        evaluate_predictions([case], {"expected": {"corrected_text": "Hi.", "errors": []}, "typo-id": {"corrected_text": "Hi.", "errors": []}})
+
+
+def test_evaluation_rejects_duplicate_case_ids():
+    case = {"id": "duplicate", "original_text": "Hi.", "should_change": False, "acceptable_corrected_texts": ["Hi."], "reference_errors": []}
+    with pytest.raises(ValueError, match="Duplicate case ids"):
+        evaluate_predictions([case, case], {})
+
+
+def test_evaluation_rejects_malformed_prediction_shapes():
+    case = {"id": "case", "original_text": "Hi.", "should_change": False, "acceptable_corrected_texts": ["Hi."], "reference_errors": []}
+    with pytest.raises(ValueError, match="corrected_text"):
+        evaluate_predictions([case], {"case": {"errors": []}})
+    with pytest.raises(ValueError, match="errors must be a list"):
+        evaluate_predictions([case], {"case": {"corrected_text": "Hi.", "errors": {}}})
+
+
 def test_result_validation_rejects_unknown_category_and_oversized_feedback():
     base = {
         "schema_version": 1,
