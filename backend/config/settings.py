@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "apps.placement.apps.PlacementConfig",
     "apps.writing.apps.WritingConfig",
     "apps.vocabulary.apps.VocabularyConfig",
+    "apps.reading.apps.ReadingConfig",
 ]
 
 MIDDLEWARE = [
