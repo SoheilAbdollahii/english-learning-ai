@@ -33,7 +33,7 @@ async function csrfToken(): Promise<string> {
 }
 
 export default function VocabularyPage() {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
   const [cards, setCards] = useState<VocabularyCard[]>([]);
   const [draft, setDraft] = useState<CardDraft>({ word: "", definition: "", example_sentence: "", translation: "" });
   const [revealed, setRevealed] = useState<Record<number, boolean>>({});
@@ -142,7 +142,7 @@ export default function VocabularyPage() {
         <p>{t("Build your own word collection and review each card when it is due. Your next review date changes only after you record how well you remembered the word.")}</p>
       </section>
 
-      <section className="vocabulary-summary" aria-label="Vocabulary overview">
+      <section className="vocabulary-summary" aria-label={t("Vocabulary overview")}>
         <article><span>{t("Due now")}</span><strong>{dueCards.length}</strong><small>{t("Ready for a review")}</small></article>
         <article><span>{t("In your collection")}</span><strong>{cards.length}</strong><small>{t("Words saved to your account")}</small></article>
         <article><span>{t("Mastered")}</span><strong>{cards.filter((card) => card.status === "mastered").length}</strong><small>{t("Based on review history")}</small></article>
@@ -168,8 +168,8 @@ export default function VocabularyPage() {
           <div><p className="placement-eyebrow">{t("YOUR STUDY SESSION")}</p><h2 id="review-title">{t("Review your words")}</h2></div>
           <button type="button" className="writing-view-button" onClick={() => setDueOnly((previous) => !previous)}>{dueOnly ? t("Show all words") : t("Show due only")}</button>
         </div>
-        {loading ? <p className="writing-empty" role="status">Loading your vocabulary…</p> : needsSignIn ? (
-          <p className="writing-empty">Your personal word collection is private. <Link href="/login">Sign in</Link> to continue.</p>
+        {loading ? <p className="writing-empty" role="status">{t("Loading your vocabulary…")}</p> : needsSignIn ? (
+          <p className="writing-empty">{t("Your personal word collection is private.")} <Link href="/login">{t("Sign in")}</Link> {t("to continue.")}</p>
         ) : visibleCards.length === 0 ? (
           <p className="writing-empty">{dueOnly ? "You're all caught up. Add a word or show your full collection." : "Your word collection is empty. Add your first word above."}</p>
         ) : (
@@ -177,22 +177,22 @@ export default function VocabularyPage() {
             {visibleCards.map((card) => (
               <article className="vocabulary-card" key={card.id}>
                 <div className="vocabulary-card-head">
-                  <div><span className={`vocabulary-status vocabulary-status-${card.status}`}>{card.status}</span><h3>{card.word}</h3></div>
+                  <div><span className={`vocabulary-status vocabulary-status-${card.status}`}>{t(card.status)}</span><h3 lang="en" dir="ltr">{card.word}</h3></div>
                   <span className="vocabulary-due">{new Date(card.due_at).getTime() <= Date.now() ? "Due now" : `Due ${new Date(card.due_at).toLocaleDateString()}`}</span>
                 </div>
                 {revealed[card.id] ? (
-                  <div className="vocabulary-definition">
-                    <p>{card.definition}</p>
-                    {card.translation && <p className="vocabulary-translation">{card.translation}</p>}
-                    {card.example_sentence && <blockquote>{card.example_sentence}</blockquote>}
+                  <div className="vocabulary-definition" dir="auto">
+                    <p lang="en" dir="ltr">{card.definition}</p>
+                    {card.translation && <p className="vocabulary-translation" lang={locale} dir="auto">{card.translation}</p>}
+                    {card.example_sentence && <blockquote lang="en" dir="ltr">{card.example_sentence}</blockquote>}
                   </div>
-                ) : <button type="button" className="vocabulary-reveal" onClick={() => setRevealed((previous) => ({ ...previous, [card.id]: true }))}>Reveal meaning <span aria-hidden="true">↓</span></button>}
+                ) : <button type="button" className="vocabulary-reveal" onClick={() => setRevealed((previous) => ({ ...previous, [card.id]: true }))}>{t("Reveal meaning")} <span aria-hidden="true">↓</span></button>}
                 {revealed[card.id] && (
                   <div className="vocabulary-grades" aria-label={`How well did you remember ${card.word}?`}>
-                    <button type="button" disabled={reviewingId === card.id} onClick={() => void reviewCard(card, 1)}>Again</button>
-                    <button type="button" disabled={reviewingId === card.id} onClick={() => void reviewCard(card, 3)}>Hard</button>
-                    <button type="button" disabled={reviewingId === card.id} onClick={() => void reviewCard(card, 4)}>Good</button>
-                    <button type="button" disabled={reviewingId === card.id} onClick={() => void reviewCard(card, 5)}>Easy</button>
+                    <button type="button" disabled={reviewingId === card.id} onClick={() => void reviewCard(card, 1)}>{t("Again")}</button>
+                    <button type="button" disabled={reviewingId === card.id} onClick={() => void reviewCard(card, 3)}>{t("Hard")}</button>
+                    <button type="button" disabled={reviewingId === card.id} onClick={() => void reviewCard(card, 4)}>{t("Good")}</button>
+                    <button type="button" disabled={reviewingId === card.id} onClick={() => void reviewCard(card, 5)}>{t("Easy")}</button>
                   </div>
                 )}
                 <p className="vocabulary-card-meta">Reviewed {card.repetitions} {card.repetitions === 1 ? "time" : "times"} · next interval {card.interval_days} {card.interval_days === 1 ? "day" : "days"}</p>
@@ -201,7 +201,7 @@ export default function VocabularyPage() {
           </div>
         )}
       </section>
-      <p className="vocabulary-footnote">Scheduling uses a deterministic SM-2-inspired rule set. It is a learning aid, not a guarantee of long-term retention.</p>
+      <p className="vocabulary-footnote">{t("Scheduling uses a deterministic SM-2-inspired rule set. It is a learning aid, not a guarantee of long-term retention.")}</p>
     </main>
   );
 }
