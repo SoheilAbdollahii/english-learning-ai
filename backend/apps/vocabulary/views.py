@@ -2,6 +2,8 @@ from django.db import transaction
 from django.utils import timezone
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
+from rest_framework.pagination import LimitOffsetPagination
+from rest_framework.exceptions import ValidationError
 from rest_framework.views import APIView
 
 from .models import VocabularyCard, VocabularyReviewEvent
@@ -52,7 +54,13 @@ class VocabularyReviewView(APIView):
 
 
 
+class VocabularyReviewHistoryPagination(LimitOffsetPagination):
+    default_limit = 20
+    max_limit = 100
+
+
 class VocabularyReviewHistoryView(generics.ListAPIView):
+    pagination_class = VocabularyReviewHistoryPagination
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = VocabularyReviewEventSerializer
 
@@ -62,5 +70,7 @@ class VocabularyReviewHistoryView(generics.ListAPIView):
         ).select_related("card")
         card_id = self.request.query_params.get("card")
         if card_id:
+            if not card_id.isdecimal():
+                raise ValidationError({"card": "Provide a numeric vocabulary card ID."})
             queryset = queryset.filter(card_id=card_id)
         return queryset
