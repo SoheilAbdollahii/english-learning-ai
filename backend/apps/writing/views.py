@@ -5,6 +5,8 @@ from rest_framework.throttling import UserRateThrottle
 from rest_framework.views import APIView
 from rest_framework.generics import RetrieveAPIView
 
+from apps.progress.models import LearningActivity
+from apps.progress.services import record_activity
 from .models import WritingSubmission
 from .serializers import WritingSubmissionCreateSerializer, WritingSubmissionSerializer
 from .services import WritingProviderError, analyze_writing
@@ -60,6 +62,7 @@ class WritingSubmissionCollectionView(APIView):
         submission.provider = provider_name
         submission.result = result
         submission.save(update_fields=("status", "provider", "result", "updated_at"))
+        record_activity(request.user, LearningActivity.Type.WRITING, submission.pk)
         return Response(WritingSubmissionSerializer(submission).data, status=status.HTTP_201_CREATED)
 
 
