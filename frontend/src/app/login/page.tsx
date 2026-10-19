@@ -66,6 +66,8 @@ export default function LoginPage() {
           <label htmlFor="username">{t("Username")}</label>
           <input
             id="username"
+            lang="en"
+            dir="ltr"
             name="username"
             autoComplete="username"
             value={username}
@@ -76,6 +78,7 @@ export default function LoginPage() {
           <label htmlFor="password">{t("Password")}</label>
           <input
             id="password"
+            dir="ltr"
             name="password"
             type="password"
             autoComplete="current-password"
