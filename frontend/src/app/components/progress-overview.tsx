@@ -64,7 +64,7 @@ export default function ProgressOverview() {
         <article className="stat-card">
           <span className="stat-icon stat-icon-yellow" aria-hidden="true">✦</span>
           <p className="stat-label">{t("Day streak")}</p>
-          <p className="stat-value">{value(summary?.current_streak_days)} <span>days</span></p>
+          <p className="stat-value">{value(summary?.current_streak_days)} <span>{t("days")}</span></p>
           <p className="stat-hint">{t("Consecutive days with recorded learning")}</p>
         </article>
         <article className="stat-card">
@@ -76,7 +76,7 @@ export default function ProgressOverview() {
       </section>
 
       {needsSignIn ? (
-        <p className="progress-note">{t("Sign in to see your personal progress.")} <Link href="/login">Sign in</Link></p>
+        <p className="progress-note">{t("Sign in to see your personal progress.")} <Link href="/login">{t("Sign in")}</Link></p>
       ) : failed ? (
         <p className="progress-note">Progress is temporarily unavailable. Your learning pages are still available.</p>
       ) : summary ? (
@@ -91,7 +91,7 @@ export default function ProgressOverview() {
           <Recommendations />
           <section className="progress-recent" aria-labelledby="recent-activity-title">
             <div className="section-heading">
-              <div><p className="eyebrow">YOUR LEARNING TRAIL</p><h2 id="recent-activity-title">{t("Recent activity")}</h2></div>
+              <div><p className="eyebrow">{t("YOUR LEARNING TRAIL")}</p><h2 id="recent-activity-title">{t("Recent activity")}</h2></div>
               <span className="section-caption">{t("Latest saved sessions")}</span>
             </div>
             {summary.recent_activity.length === 0 ? (
