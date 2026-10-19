@@ -177,6 +177,8 @@ REST_FRAMEWORK = {
         # Provider-backed writing calls can incur third-party costs.
         "writing_submission": os.environ.get("WRITING_SUBMISSIONS_PER_HOUR", "10/hour"),
         "registration": os.environ.get("REGISTRATION_RATE_LIMIT", "5/hour"),
+        "password_reset": os.environ.get("PASSWORD_RESET_RATE_LIMIT", "5/hour"),
+        "email_verification": os.environ.get("EMAIL_VERIFICATION_RATE_LIMIT", "5/hour"),
     },
     "DEFAULT_RENDERER_CLASSES": [
         "rest_framework.renderers.JSONRenderer",
