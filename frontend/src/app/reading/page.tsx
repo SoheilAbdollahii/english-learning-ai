@@ -18,7 +18,7 @@ async function getCsrfToken(): Promise<string> {
 }
 
 export default function ReadingPage() {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
   const [passages, setPassages] = useState<PassageSummary[]>([]);
   const [passage, setPassage] = useState<PassageDetail | null>(null);
   const [answers, setAnswers] = useState<Record<string, string>>({});
@@ -109,37 +109,37 @@ export default function ReadingPage() {
         <p>{t("Read an original short passage, answer a few questions, and get a score with explanations. Correct answers stay hidden until you submit.")}</p>
       </section>
 
-      <section className="reading-library" aria-label="Available reading passages">
-        <div className="placement-progress-heading"><span>{t("Choose a passage")}</span><strong>{passages.length} available</strong></div>
+      <section className="reading-library" aria-label={t("Available reading passages")}>
+        <div className="placement-progress-heading"><span>{t("Choose a passage")}</span><strong>{passages.length} {t("available")}</strong></div>
         <div className="reading-passage-tabs">
           {passages.map((item) => (
             <button key={item.id} type="button" className={passage?.id === item.id ? "reading-passage-tab reading-passage-tab-active" : "reading-passage-tab"} onClick={() => void loadPassage(item.id)}>
-              <span>{item.level}</span><strong>{item.title}</strong><small>{item.question_count} questions</small>
+              <span>{item.level}</span><strong>{item.title}</strong><small>{item.question_count} {t("questions")}</small>
             </button>
           ))}
         </div>
       </section>
 
-      {loading || loadingPassage ? <p className="placement-loading" role="status">Loading your reading passage…</p> : !passage ? (
-        <p className="writing-empty">No published passages are available yet.</p>
+      {loading || loadingPassage ? <p className="placement-loading" role="status">{t("Loading your reading passage…")}</p> : !passage ? (
+        <p className="writing-empty">{t("No published passages are available yet.")}</p>
       ) : (
         <>
           <article className="reading-passage" aria-labelledby="passage-title">
-            <div className="reading-passage-meta"><span>{passage.level} · VERSION {passage.content_version}</span><span>{passage.questions.length} questions</span></div>
-            <h2 id="passage-title">{passage.title}</h2>
-            <p className="reading-passage-body">{passage.body}</p>
-            <p className="reading-source">{passage.source_note}</p>
+            <div className="reading-passage-meta"><span>{passage.level} · {t("VERSION")} {passage.content_version}</span><span>{passage.questions.length} {t("questions")}</span></div>
+            <h2 id="passage-title" lang="en" dir="ltr">{passage.title}</h2>
+            <p className="reading-passage-body" lang="en" dir="ltr">{passage.body}</p>
+            <p className="reading-source" lang="en" dir="ltr">{passage.source_note}</p>
           </article>
 
           {!result ? (
-            <section className="placement-quiz reading-quiz" aria-label="Reading comprehension questions">
-              <div className="placement-progress-heading"><span>{t("YOUR ANSWERS")}</span><strong>{answeredCount} of {passage.questions.length} answered</strong></div>
+            <section className="placement-quiz reading-quiz" aria-label={t("Reading comprehension questions")}>
+              <div className="placement-progress-heading"><span>{t("YOUR ANSWERS")}</span><strong>{answeredCount} {t("of")} {passage.questions.length} {t("answered")}</strong></div>
               <div className="placement-progress-track" role="progressbar" aria-label="Questions answered" aria-valuemin={0} aria-valuemax={passage.questions.length} aria-valuenow={answeredCount}>
                 <div className="placement-progress-fill" style={{ width: `${passage.questions.length ? answeredCount / passage.questions.length * 100 : 0}%` }} />
               </div>
               <div className="placement-question-list">
                 {passage.questions.map((question, index) => (
-                  <fieldset className="placement-question" key={question.id}>
+                  <fieldset className="placement-question" key={question.id} lang="en" dir="ltr">
                     <legend><span className="placement-question-number">{String(index + 1).padStart(2, "0")}</span><span>{question.prompt}</span></legend>
                     <div className="placement-options">
                       {Object.entries(question.options).map(([key, label]) => {
@@ -153,24 +153,24 @@ export default function ReadingPage() {
                   </fieldset>
                 ))}
               </div>
-              {error && <p className="placement-error" role="alert">{error} {needsSignIn && <Link href="/login">Sign in</Link>}</p>}
-              <div className="placement-submit-row"><p>Your answers are scored on the server.</p><button className="placement-submit" type="button" onClick={submitAttempt} disabled={submitting || answeredCount !== passage.questions.length}>{submitting ? "Saving result…" : t("Check my answers")} <span aria-hidden="true">↗</span></button></div>
+              {error && <p className="placement-error" role="alert">{t(error)} {needsSignIn && <Link href="/login">{t("Sign in")}</Link>}</p>}
+              <div className="placement-submit-row"><p>{t("Your answers are scored on the server.")}</p><button className="placement-submit" type="button" onClick={submitAttempt} disabled={submitting || answeredCount !== passage.questions.length}>{submitting ? t("Saving result…") : t("Check my answers")} <span aria-hidden="true">↗</span></button></div>
             </section>
           ) : (
             <section className="reading-result" aria-labelledby="reading-result-title" aria-live="polite">
               <p className="placement-eyebrow">{t("READING COMPLETE")}</p>
-              <h2 id="reading-result-title">You got {result.score} of {result.max_score} points.</h2>
-              <p className="reading-result-score">{result.percentage}% <span>correct</span></p>
+              <h2 id="reading-result-title">{locale === "fa" ? `امتیاز شما ${result.score} از ${result.max_score} است.` : `You got ${result.score} of ${result.max_score} points.`}</h2>
+              <p className="reading-result-score">{result.percentage}% <span>{t("correct")}</span></p>
               <div className="reading-feedback-list">
                 {result.result_details.map((item, index) => (
                   <article key={item.question_id} className="reading-feedback-item">
-                    <span className={item.correct ? "reading-answer-mark reading-answer-correct" : "reading-answer-mark reading-answer-wrong"}>{item.correct ? "✓ Correct" : "↻ Review"}</span>
-                    <h3>{index + 1}. {item.prompt}</h3>
-                    <p>{item.explanation || `Correct answer: ${item.correct_option.toUpperCase()}.`}</p>
+                    <span className={item.correct ? "reading-answer-mark reading-answer-correct" : "reading-answer-mark reading-answer-wrong"}>{item.correct ? `✓ ${t("Correct")}` : `↻ ${t("Review")}`}</span>
+                    <h3 lang="en" dir="ltr">{index + 1}. {item.prompt}</h3>
+                    <p lang="en" dir="ltr">{item.explanation || `Correct answer: ${item.correct_option.toUpperCase()}.`}</p>
                   </article>
                 ))}
               </div>
-              <div className="placement-result-actions"><button className="placement-secondary-button" type="button" onClick={() => { setAnswers({}); setResult(null); setError(""); }}>{t("Try this passage again")}</button><Link href="/" className="placement-primary-link">Back to dashboard</Link></div>
+              <div className="placement-result-actions"><button className="placement-secondary-button" type="button" onClick={() => { setAnswers({}); setResult(null); setError(""); }}>{t("Try this passage again")}</button><Link href="/" className="placement-primary-link">{t("Back to dashboard")}</Link></div>
             </section>
           )}
         </>
