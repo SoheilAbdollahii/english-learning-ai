@@ -57,7 +57,7 @@ Open a second terminal from the repository root:
 
 ```bash
 cd frontend
-npm install
+npm ci
 npm run dev
 ```
 
@@ -88,7 +88,7 @@ Frontend:
 
 ```bash
 cd frontend
-npm install
+npm ci
 npm run lint
 npm run typecheck
 npm test
@@ -101,7 +101,7 @@ The checks above are configured in CI but must be observed running successfully 
 
 - Do not commit `.env` or provider API keys.
 - `/api/v1/health/` is liveness only; `/api/v1/ready/` checks database connectivity and unapplied migrations without exposing internals.
-- Session login/logout, profile, owner-scoped learning records, server-side placement/reading scoring, vocabulary review scheduling, Writing result validation, production-mode secret enforcement, and basic AI request throttling and a database-backed rolling-24-hour Writing quota are implemented in the current PR stack.
+- Session login/logout, profile, owner-scoped learning records, server-side placement/reading scoring, vocabulary review scheduling, Writing result validation, production-mode secret enforcement, and basic AI request throttling and a database-backed rolling-24-hour Writing quota are implemented in the current codebase. For multi-worker deployments, configure `REDIS_URL` for shared throttling state.
 - Writing uses a demo provider unless a Gemini API key is configured; the demo provider is not a tutor and must not be presented as real grammar feedback.
 - Before production: complete and merge the stacked PRs in dependency order; configure HTTPS/proxy settings and secure cookies for the actual deployment; add account recovery/registration policy, immutable content/version controls, provider token/cost accounting, privacy/retention policy, backup/restore drills, and an evaluated writing dataset. Run the full release checklist and CI on the final merge commit.
 
