@@ -1,6 +1,6 @@
 # Initial REST API Contract
 
-Status: partially implemented. Session CSRF/login/logout, profile, placement, writing, vocabulary review, and the initial Reading comprehension flow are implemented with automated tests. Progress and usage-summary endpoints remain proposals. Gemini Developer API integration is optional and enabled only when the backend environment has a configured `GEMINI_API_KEY`; without it, the clearly labelled demo provider remains active.
+Status: partially implemented. Session CSRF/login/logout, profile, placement, writing, vocabulary review, initial Reading comprehension, and a persisted progress summary are implemented with automated tests. Usage accounting remains a follow-up. Gemini Developer API integration is optional and enabled only when the backend environment has a configured `GEMINI_API_KEY`; without it, the clearly labelled demo provider remains active.
 
 ## Conventions
 - Prefix routes with /api/v1/.
@@ -61,10 +61,14 @@ Status: partially implemented. Session CSRF/login/logout, profile, placement, wr
 - GET /api/v1/reading/attempts/{attempt_id}/ — authenticated owner-only result including answer feedback and explanation snapshots.
 - Two original sample passages (A2 and B1) are seeded by migration. Content is original starter content, not externally licensed material. The current MVP does not yet include passage authoring workflows, immutable question version snapshots, or attempt history UI.
 
+### Progress (initial persisted summary)
+- GET /api/v1/progress/summary/ — authenticated; returns completed activity count, vocabulary reviews, reading/writing/placement totals, due/mastered vocabulary counts, current consecutive-day streak, and the latest eight activity events.
+- Activity events are recorded after successful writing submissions, completed reading attempts, placement attempts, and vocabulary review outcomes. Event metadata avoids storing submitted writing text.
+- Study duration is intentionally not reported because the current product does not collect reliable session-duration data.
+
 ## Planned endpoint inventory
 
-### Progress and usage
-- GET /api/v1/progress/summary/
+### Recommendations and usage
 - GET /api/v1/progress/recommendations/
 - GET /api/v1/usage/
 
