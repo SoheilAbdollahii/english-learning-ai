@@ -15,6 +15,7 @@ async function getCsrfToken(): Promise<string> {
 export default function RegisterPage() {
   const { t } = useLocale();
   const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
@@ -35,16 +36,17 @@ export default function RegisterPage() {
         method: "POST",
         credentials: "same-origin",
         headers: { "Content-Type": "application/json", "X-CSRFToken": csrfToken },
-        body: JSON.stringify({ username: username.trim(), password }),
+        body: JSON.stringify({ username: username.trim(), email: email.trim(), password }),
       });
       const data = await response.json().catch(() => ({})) as {
         username?: string | string[];
+        email?: string | string[];
         password?: string[];
         detail?: string;
         status?: string;
       };
       if (!response.ok) {
-        const fieldError = Array.isArray(data.password) ? data.password[0] : Array.isArray(data.username) ? data.username[0] : undefined;
+        const fieldError = Array.isArray(data.password) ? data.password[0] : Array.isArray(data.username) ? data.username[0] : Array.isArray(data.email) ? data.email[0] : undefined;
         throw new Error(fieldError ?? data.detail ?? "We couldn't create your account.");
       }
       setCreatedUsername(typeof data.username === "string" ? data.username : username.trim().toLowerCase());
@@ -69,7 +71,8 @@ export default function RegisterPage() {
           <div className="register-success" role="status">
             <p className="eyebrow login-eyebrow">ACCOUNT CREATED</p>
             <h1 id="register-title">{t("Welcome")}, <em>{createdUsername}.</em></h1>
-            <p className="login-description">{t("Your account is ready. Sign in to start saving your English practice.")}</p>
+            <p className="login-description">{t("Your account was created. Check your email and open the verification link before signing in.")}</p>
+            <p className="login-footnote"><Link href="/verify-email/resend">{t("Resend verification email")}</Link></p>
             <Link className="login-submit register-login-link" href="/login">{t("Continue to sign in")}</Link>
           </div>
         ) : (
@@ -80,6 +83,8 @@ export default function RegisterPage() {
             <form className="login-form" onSubmit={handleSubmit}>
               <label htmlFor="register-username">{t("Username")}</label>
               <input id="register-username" lang="en" dir="ltr" name="username" autoComplete="username" value={username} onChange={(event) => setUsername(event.target.value)} required maxLength={150} minLength={1} />
+              <label htmlFor="register-email">{t("Email address")}</label>
+              <input id="register-email" type="email" dir="ltr" name="email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} required maxLength={254} />
               <label htmlFor="register-password">{t("Password")} <span>({t("at least 12 characters")})</span></label>
               <input id="register-password" dir="ltr" name="password" type="password" autoComplete="new-password" value={password} onChange={(event) => setPassword(event.target.value)} required minLength={12} />
               <label htmlFor="register-confirm-password">{t("Confirm password")}</label>
@@ -87,7 +92,7 @@ export default function RegisterPage() {
               {error && <p className="login-error" role="alert">{error}</p>}
               <button className="login-submit" type="submit" disabled={busy}>{busy ? "Creating account…" : t("Create account")}</button>
             </form>
-            <p className="login-footnote">Registration is rate-limited. {t("Email verification and account recovery are not available yet.")}</p>
+            <p className="login-footnote">{t("You must verify your email address before signing in.")}</p>
             <p className="register-switch">{t("Already have an account?")} <Link href="/login">Sign in</Link></p>
           </>
         )}
