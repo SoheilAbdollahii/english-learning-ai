@@ -85,3 +85,16 @@ test("dashboard primary content and navigation have named landmarks", async () =
   assert.match(page, /aria-labelledby="page-title"/);
   assert.match(page, /aria-current="page"/);
 });
+
+
+test("progress dashboard exposes an accessible learner-local seven-day activity chart", async () => {
+  const progress = await readFile(new URL("./components/progress-overview.tsx", import.meta.url), "utf8");
+  const locale = await readFile(new URL("./components/locale-provider.tsx", import.meta.url), "utf8");
+  assert.match(progress, /weekly_activity/);
+  assert.match(progress, /role="meter"/);
+  assert.match(progress, /aria-valuenow={day.count}/);
+  assert.match(progress, /toLocaleDateString\(locale === "fa" \? "fa-IR" : "en-US"/);
+  assert.match(progress, /Weekly activity/);
+  assert.match(locale, /"Weekly activity": "فعالیت هفتگی"/);
+  assert.match(locale, /"Activity in the last seven days": "فعالیت در هفت روز گذشته"/);
+});
