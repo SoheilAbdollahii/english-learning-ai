@@ -2,6 +2,7 @@ import json
 
 import pytest
 from django.test import override_settings
+from django.core import mail
 from django.contrib.auth import get_user_model
 from django.test import Client
 
@@ -63,6 +64,7 @@ def test_login_rejects_wrong_password():
 @pytest.mark.django_db
 @override_settings(EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend")
 def test_registration_requires_csrf_and_creates_normalized_username():
+    mail.outbox.clear()
     client = Client(enforce_csrf_checks=True)
     denied = client.post(
         "/api/v1/auth/register/",
@@ -91,6 +93,7 @@ def test_registration_requires_csrf_and_creates_normalized_username():
 @pytest.mark.django_db
 @override_settings(EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend")
 def test_registration_rejects_weak_password_and_case_insensitive_duplicate():
+    mail.outbox.clear()
     client = Client(enforce_csrf_checks=True)
     token = client.get("/api/v1/auth/csrf/").json()["csrfToken"]
     weak = client.post(
