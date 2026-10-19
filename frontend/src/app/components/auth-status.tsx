@@ -57,7 +57,7 @@ export default function AuthStatus() {
       if (!response.ok) throw new Error("Sign out failed. Please try again.");
       setUsername(null);
     } catch {
-      window.alert("We couldn't sign you out. Please check your connection and try again.");
+      window.alert(t("We couldn't sign you out. Please check your connection and try again."));
     } finally {
       setBusy(false);
     }
@@ -70,7 +70,7 @@ export default function AuthStatus() {
     <div className="auth-status">
       <span className="auth-greeting">{t("Hi")}, {username}</span>
       <button className="auth-button" type="button" onClick={signOut} disabled={busy}>
-        {busy ? "Signing out…" : t("Sign out")}
+        {busy ? t("Signing out…") : t("Sign out")}
       </button>
     </div>
   );
