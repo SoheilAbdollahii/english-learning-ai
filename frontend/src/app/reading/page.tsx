@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useLocale } from "../components/locale-provider";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 type PassageSummary = { id: number; slug: string; title: string; level: string; content_version: number; question_count: number };
@@ -17,6 +18,7 @@ async function getCsrfToken(): Promise<string> {
 }
 
 export default function ReadingPage() {
+  const { t } = useLocale();
   const [passages, setPassages] = useState<PassageSummary[]>([]);
   const [passage, setPassage] = useState<PassageDetail | null>(null);
   const [answers, setAnswers] = useState<Record<string, string>>({});
@@ -98,17 +100,17 @@ export default function ReadingPage() {
   return (
     <main className="placement-shell reading-shell">
       <div className="placement-topline">
-        <Link href="/" className="placement-back">← Dashboard</Link>
-        <span className="placement-kicker">WORDWISE · READING ROOM</span>
+        <Link href="/" className="placement-back">← {t("Back to dashboard")}</Link>
+        <span className="placement-kicker">{t("WORDWISE · READING ROOM")}</span>
       </div>
       <section className="placement-intro" aria-labelledby="reading-title">
-        <p className="placement-eyebrow">READ A LITTLE, UNDERSTAND A LOT</p>
-        <h1 id="reading-title">Stories for <em>curious minds.</em></h1>
-        <p>Read an original short passage, answer a few questions, and get a score with explanations. Correct answers stay hidden until you submit.</p>
+        <p className="placement-eyebrow">{t("READ A LITTLE, UNDERSTAND A LOT")}</p>
+        <h1 id="reading-title">{t("Stories for curious minds.")}</h1>
+        <p>{t("Read an original short passage, answer a few questions, and get a score with explanations. Correct answers stay hidden until you submit.")}</p>
       </section>
 
       <section className="reading-library" aria-label="Available reading passages">
-        <div className="placement-progress-heading"><span>CHOOSE A PASSAGE</span><strong>{passages.length} available</strong></div>
+        <div className="placement-progress-heading"><span>{t("Choose a passage")}</span><strong>{passages.length} available</strong></div>
         <div className="reading-passage-tabs">
           {passages.map((item) => (
             <button key={item.id} type="button" className={passage?.id === item.id ? "reading-passage-tab reading-passage-tab-active" : "reading-passage-tab"} onClick={() => void loadPassage(item.id)}>
@@ -131,7 +133,7 @@ export default function ReadingPage() {
 
           {!result ? (
             <section className="placement-quiz reading-quiz" aria-label="Reading comprehension questions">
-              <div className="placement-progress-heading"><span>YOUR ANSWERS</span><strong>{answeredCount} of {passage.questions.length} answered</strong></div>
+              <div className="placement-progress-heading"><span>{t("YOUR ANSWERS")}</span><strong>{answeredCount} of {passage.questions.length} answered</strong></div>
               <div className="placement-progress-track" role="progressbar" aria-label="Questions answered" aria-valuemin={0} aria-valuemax={passage.questions.length} aria-valuenow={answeredCount}>
                 <div className="placement-progress-fill" style={{ width: `${passage.questions.length ? answeredCount / passage.questions.length * 100 : 0}%` }} />
               </div>
@@ -152,11 +154,11 @@ export default function ReadingPage() {
                 ))}
               </div>
               {error && <p className="placement-error" role="alert">{error} {needsSignIn && <Link href="/login">Sign in</Link>}</p>}
-              <div className="placement-submit-row"><p>Your answers are scored on the server.</p><button className="placement-submit" type="button" onClick={submitAttempt} disabled={submitting || answeredCount !== passage.questions.length}>{submitting ? "Saving result…" : "Check my answers"} <span aria-hidden="true">↗</span></button></div>
+              <div className="placement-submit-row"><p>Your answers are scored on the server.</p><button className="placement-submit" type="button" onClick={submitAttempt} disabled={submitting || answeredCount !== passage.questions.length}>{submitting ? "Saving result…" : "{t("Check my answers")}"} <span aria-hidden="true">↗</span></button></div>
             </section>
           ) : (
             <section className="reading-result" aria-labelledby="reading-result-title" aria-live="polite">
-              <p className="placement-eyebrow">READING COMPLETE</p>
+              <p className="placement-eyebrow">{t("READING COMPLETE")}</p>
               <h2 id="reading-result-title">You got {result.score} of {result.max_score} points.</h2>
               <p className="reading-result-score">{result.percentage}% <span>correct</span></p>
               <div className="reading-feedback-list">
@@ -168,7 +170,7 @@ export default function ReadingPage() {
                   </article>
                 ))}
               </div>
-              <div className="placement-result-actions"><button className="placement-secondary-button" type="button" onClick={() => { setAnswers({}); setResult(null); setError(""); }}>Try this passage again</button><Link href="/" className="placement-primary-link">Back to dashboard</Link></div>
+              <div className="placement-result-actions"><button className="placement-secondary-button" type="button" onClick={() => { setAnswers({}); setResult(null); setError(""); }}>{t("Try this passage again")}</button><Link href="/" className="placement-primary-link">Back to dashboard</Link></div>
             </section>
           )}
         </>
