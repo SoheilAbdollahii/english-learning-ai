@@ -1,0 +1,64 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-english_learning}
+      POSTGRES_USER: ${POSTGRES_USER:-english_learning}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-local_password}
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-english_learning} -d ${POSTGRES_DB:-english_learning}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  backend:
+    build:
+      context: ./backend
+    environment:
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:?Set DJANGO_SECRET_KEY in .env before starting containers}
+      DJANGO_DEBUG: "false"
+      # Local Compose serves HTTP; production deployments should use HTTPS and keep redirect enabled.
+      DJANGO_SECURE_SSL_REDIRECT: "false"
+      DJANGO_SECURE_HSTS_SECONDS: "0"
+      DJANGO_TRUST_X_FORWARDED_PROTO: "false"
+      DJANGO_ALLOWED_HOSTS: "localhost,127.0.0.1,backend"
+      DJANGO_CSRF_TRUSTED_ORIGINS: "http://localhost:3000,http://127.0.0.1:3000"
+      DATABASE_URL: "postgresql://${POSTGRES_USER:-english_learning}:${POSTGRES_PASSWORD:-local_password}@db:5432/${POSTGRES_DB:-english_learning}"
+      WRITING_SUBMISSIONS_PER_HOUR: ${WRITING_SUBMISSIONS_PER_HOUR:-10/hour}
+      WRITING_SUBMISSIONS_PER_DAY: ${WRITING_SUBMISSIONS_PER_DAY:-30}
+      REGISTRATION_RATE_LIMIT: ${REGISTRATION_RATE_LIMIT:-5/hour}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-2.5-flash}
+      GEMINI_TIMEOUT_SECONDS: ${GEMINI_TIMEOUT_SECONDS:-25}
+    command: ["sh", "-c", "python manage.py migrate --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:8000 --workers 3 --timeout 60"]
+    ports:
+      - "127.0.0.1:8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "from urllib.request import urlopen; urlopen('http://127.0.0.1:8000/api/v1/ready/', timeout=3).read()"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        BACKEND_API_URL: "http://backend:8000"
+    environment:
+      BACKEND_API_URL: "http://backend:8000"
+    ports:
+      - "127.0.0.1:3000:3000"
+    depends_on:
+      backend:
+        condition: service_healthy
+
+volumes:
+  postgres_data:

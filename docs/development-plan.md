@@ -15,28 +15,45 @@ Status: initial estimate. Schedule depends on weekly availability, AI budget, ho
 Create backend/frontend skeletons, environment configuration, PostgreSQL local setup, lint/tests/CI, and repeatable developer documentation.
 
 ### Phase 3 — Accounts and placement
-Custom user model, profile, authentication, cross-user authorization tests, versioned placement assessment, server-side scoring.
+
+Status: **Core authentication and placement flow implemented; registration MVP added in the current branch.** Session auth, profile preferences, owner-scoped placement attempts, and server-side scoring have automated tests. Public registration now has CSRF protection, normalized usernames, Django password validation (12-character minimum), and an anonymous throttle. Email verification, password reset/recovery, and production abuse controls remain outstanding.
 
 ### Phase 4 — Writing MVP
 Provider-neutral adapter, fake provider for tests, versioned result schema, span validation, history, timeout/failure handling, usage accounting, evaluation baseline.
 
+Current status: **Provider usage accounting and CI verification implemented; educational quality evaluation remains open.** The server-side Gemini adapter uses a bounded timeout and a 2,048-token output ceiling, captures provider-reported prompt/output token counts, and persists aggregate usage without storing the provider payload or learner text in the usage ledger. Optional estimated cost is calculated only when the deployment explicitly configures both input/output rates from its active price sheet; no vendor rate is assumed. Without `GEMINI_API_KEY`, the clearly-labelled demo adapter remains active and has no token/cost usage. The synthetic writing evaluation dataset remains draft and needs human review plus a measured run against the configured provider.
+
 ### Phase 5 — Reading and Vocabulary
-Curated licensed/versioned content, server-side Reading scoring, vocabulary review state and tested spaced-repetition rules.
+
+Vocabulary status: **Verified in CI on PR #6** ([run](https://github.com/SoheilAbdollahii/english-learning-ai/actions/runs/39221335506)); cross-module acceptance coverage and atomic review persistence are **verified in CI on PR #17** ([run](https://github.com/SoheilAbdollahii/english-learning-ai/actions/runs/39229554954)). The MVP includes owner-scoped cards, case-insensitive duplicate prevention, due-card filtering, a deterministic SM-2-inspired schedule, review grades, and a responsive review UI. Review-state changes and activity events now share a transaction, and the view locks the owned card while applying a review. Remaining vocabulary work includes immutable review-event history, curated licensed word packs, and richer progress analytics.
+
+Reading core flow: **Verified in CI on PR #7** ([run](https://github.com/SoheilAbdollahii/english-learning-ai/actions/runs/39221772403)). Attempt-history UI and paginated history endpoint are covered by PR #16, with CI passing for backend, frontend, and container build. The initial flow includes two original A2/B1 passages, published-only public endpoints, hidden answer keys before submission, exact-answer validation, server-side scoring, owner-scoped saved attempts, feedback explanations, and a responsive learner page. Remaining work includes immutable question-version snapshots, authoring/content review, and more reviewed passages.
 
 ### Phase 6 — Progress and personalization
-Defined metrics from persisted records and transparent rule-based recommendations.
+
+Progress status: **Verified in CI on PR #8** ([run](https://github.com/SoheilAbdollahii/english-learning-ai/actions/runs/39222238189)). The dashboard reads persisted session counts, vocabulary review outcomes, due/mastered word counts, reading/writing/placement totals, current streak, and recent activity from an authenticated API. Learning activity events are written by the corresponding backend flows. Study duration remains intentionally unreported until reliable duration tracking is designed.
+
+Rule-based recommendations: **Verified in CI on PR #9** ([run](https://github.com/SoheilAbdollahii/english-learning-ai/actions/runs/39222517527)). Up to three next steps are selected from persisted due-word and module-history evidence, with a human-readable reason and direct route. This is a deterministic heuristic, not an AI-generated claim.
+
+Remaining: additional timezone/history edge-case coverage and validation of quota concurrency against production PostgreSQL. Provider token/cost accounting is now implemented in PR #18; estimates require configured rates and are not billing records.
 
 ### Phase 7 — Frontend integration
 Complete learner flows, RTL/LTR and accessibility checks, E2E scenarios, production build checks.
 
 ### Phase 8 — Usage controls
-Server-enforced quotas and clear limit behavior. Defer payment integration until provider, market, and compliance needs are known.
+
+Usage status: **Basic durable quota verified in CI on PR #10** ([run](https://github.com/SoheilAbdollahii/english-learning-ai/actions/runs/39222991351)). Writing requests reserve a database-backed slot before provider work; the rolling 24-hour default is 30 submissions per learner and provider failures consume a slot. A private usage summary exposes used/remaining slots and character volume. A per-hour DRF throttle remains as an additional guard.
+
+Provider-reported token metadata and optional rate-configured cost estimates are implemented in PR #18. Remaining: add operational alerting and test concurrent quota reservations against production PostgreSQL. Do not use this MVP ledger for billing.
 
 ### Phase 9 — Optional RAG
 Proceed only with a concrete use case; evaluate source rights, retrieval quality, answer quality, and evidence attribution separately.
 
 ### Phase 10 — Release
-Production configuration, migrations, backup strategy, privacy/logging review, deployment guide, and regression run.
+
+Release tooling status: **Verified in CI on PR #13** ([run](https://github.com/SoheilAbdollahii/english-learning-ai/actions/runs/39224375843)). Added backend/frontend Dockerfiles, a local PostgreSQL Docker Compose setup, a database/migration readiness endpoint, and a release checklist that separates local smoke tests from production requirements.
+
+Remaining before production: execute the container smoke test in a Docker-capable environment; validate PostgreSQL quota concurrency; configure real HTTPS/proxy/cache/secrets; complete privacy and backup/restore drills; complete educator review and live-provider Writing evaluation; add email verification/account recovery; review and merge the stacked PRs in dependency order; run the final release regression.
 
 ## MVP acceptance criteria
 - AC-01 Accounts: users authenticate and access only their own private records.

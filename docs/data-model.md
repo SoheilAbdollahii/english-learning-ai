@@ -1,6 +1,6 @@
 # Initial Data Model
 
-Status: logical model plus first implemented profile schema. Remaining domain entities are proposals until implemented with migrations and tests.
+Status: implemented profile, placement, writing, and initial vocabulary card schemas; Reading and progress entities remain proposals until implemented with migrations and tests.
 
 ## Design rules
 - The current scaffold uses Django's built-in User model to avoid premature custom-auth complexity. Revisit any custom-user requirement before production data exists; changing user models after launch is a high-cost migration.
@@ -32,21 +32,21 @@ Status: logical model plus first implemented profile schema. Remaining domain en
 
 Keep a canonical validated analysis result. Add normalized error records only where querying or analytics need them. Raw model output is not trusted application data.
 
-### Reading
-- Passage: content, level, language, source/license metadata, content version, publication state.
-- Question: passage, prompt, options, explanation, type and version.
-- ReadingAttempt: user, passage version, score, start and completion timestamps.
-- ReadingAnswer: attempt, question version, submitted answer, correctness, optional explanation snapshot.
+### Reading (initial implementation)
+- Passage: slug, title, original passage body, CEFR level, content version, source note, publication state, and creation timestamp. The public API only lists published passages.
+- ReadingQuestion: passage, prompt, options, correct option, explanation, points, and order. Public serializers intentionally omit correct options and explanations until an attempt is submitted.
+- ReadingAttempt: user, passage reference and version, submitted answers, result/explanation snapshots, server-calculated score and percentage, and completion timestamp.
+- Original A2 and B1 sample passages are seeded through a data migration. Follow-up work: enforce immutable published content versions and add normalized per-question answer-event records if analytics require them.
 
-### Vocabulary
-- Word: lemma, part of speech, definitions, examples, level, locale, source/license metadata.
-- VocabularyState: user, word, learning status, due date, interval/ease or equivalent algorithm state, last review.
-- VocabularyReview: user, word, review type, response grade, review time.
-
-Displaying a word is not evidence of mastery. Only recorded review outcomes update spaced-repetition state. The initial algorithm must be deterministic and unit-tested.
+### Vocabulary (initial implementation)
+- VocabularyCard: user, word, English definition, optional example and translation, status, repetitions, interval, ease factor, due timestamp, last review timestamp, and created/updated timestamps.
+- A case-insensitive database uniqueness constraint prevents the same learner from saving duplicate words.
+- The review endpoint accepts a grade from 0 to 5 and applies a deterministic SM-2-inspired scheduling function. Grades below 3 restart the interval; successful reviews grow intervals. A card is not marked mastered merely because it is displayed.
+- Automated tests cover owner isolation, duplicate prevention, due filtering, input bounds, and interval transitions.
+- Follow-up: immutable VocabularyReview event records and curated word content with source/license metadata.
 
 ### Progress and usage
-- LearningActivity: optional domain event for timeline and summary; do not build a generic event-sourcing platform.
+- LearningActivity (implemented): user, activity type, related object ID, minimal metadata, and timestamp. Events are written for successful writing submissions, reading attempts, placement attempts, and vocabulary reviews. Do not expand this into a generic event-sourcing platform.
 - Recommendation: compute on demand initially unless persistence is needed for history or reproducibility.
 - UsageRecord: user, operation, timestamp, outcome, and provider usage/cost metadata where available.
 - Plan/UsagePolicy: optional quota configuration; real payments remain out of initial MVP.

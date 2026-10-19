@@ -4,6 +4,8 @@ from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from apps.progress.models import LearningActivity
+from apps.progress.services import record_activity
 from .models import Assessment, PlacementAttempt
 from .serializers import (
     AssessmentDetailSerializer,
@@ -66,6 +68,7 @@ class PlacementAttemptCreateView(APIView):
                 estimated_level=estimate_level(score, max_score),
                 scoring_version=1,
             )
+            record_activity(request.user, LearningActivity.Type.PLACEMENT, attempt.pk)
         return Response(AttemptResultSerializer(attempt).data, status=status.HTTP_201_CREATED)
 
 

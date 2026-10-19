@@ -15,6 +15,9 @@ permissions:
 jobs:
   backend:
     runs-on: ubuntu-latest
+    env:
+      DJANGO_SECRET_KEY: ci-only-not-a-production-secret
+      DJANGO_SECURE_SSL_REDIRECT: "false"
     defaults:
       run:
         working-directory: backend
@@ -47,3 +50,18 @@ jobs:
       - run: npm run typecheck
       - run: npm test
       - run: npm run build
+
+
+  container-build:
+    runs-on: ubuntu-latest
+    env:
+      DJANGO_SECRET_KEY: ci-only-not-a-production-secret
+      DJANGO_SECURE_SSL_REDIRECT: "false"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate Compose configuration
+        run: docker compose config --quiet
+      - name: Build backend image
+        run: docker build --file backend/Dockerfile --tag english-learning-backend:ci backend
+      - name: Build frontend image
+        run: docker build --file frontend/Dockerfile --build-arg BACKEND_API_URL=http://backend:8000 --tag english-learning-frontend:ci frontend
