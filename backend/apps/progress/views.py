@@ -49,6 +49,20 @@ class ProgressSummaryView(APIView):
         recent = list(activities[:8])
         tz = _learner_timezone(user)
         timestamps = list(activities.filter(created_at__gte=now - timedelta(days=370)).order_by("-created_at").values_list("created_at", flat=True)[:5000])
+        local_today = timezone.localdate(timezone=tz)
+        weekly_start = local_today - timedelta(days=6)
+        weekly_counts = {}
+        for timestamp in activities.filter(created_at__gte=now - timedelta(days=8)).values_list("created_at", flat=True):
+            activity_date = timezone.localtime(timestamp, tz).date()
+            if weekly_start <= activity_date <= local_today:
+                weekly_counts[activity_date] = weekly_counts.get(activity_date, 0) + 1
+        weekly_activity = [
+            {
+                "date": (weekly_start + timedelta(days=offset)).isoformat(),
+                "count": weekly_counts.get(weekly_start + timedelta(days=offset), 0),
+            }
+            for offset in range(7)
+        ]
         return Response({
             "sessions_completed": activities.count(),
             "words_reviewed": activities.filter(activity_type=LearningActivity.Type.VOCABULARY).count(),
@@ -58,6 +72,7 @@ class ProgressSummaryView(APIView):
             "due_words": VocabularyCard.objects.filter(user=user, due_at__lte=now).count(),
             "mastered_words": VocabularyCard.objects.filter(user=user, status=VocabularyCard.Status.MASTERED).count(),
             "current_streak_days": _current_streak(timestamps, tz),
+            "weekly_activity": weekly_activity,
             "recent_activity": [
                 {
                     "type": item.activity_type,
