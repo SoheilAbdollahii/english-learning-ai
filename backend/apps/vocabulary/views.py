@@ -4,11 +4,12 @@ from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import VocabularyCard
+from .models import VocabularyCard, VocabularyReviewEvent
 from .serializers import (
     VocabularyCardCreateSerializer,
     VocabularyCardSerializer,
     VocabularyReviewSerializer,
+    VocabularyReviewEventSerializer,
 )
 from .services import apply_review
 
@@ -48,3 +49,18 @@ class VocabularyReviewView(APIView):
         except VocabularyCard.DoesNotExist:
             return Response({"detail": "Vocabulary card not found."}, status=status.HTTP_404_NOT_FOUND)
         return Response(VocabularyCardSerializer(card).data, status=status.HTTP_200_OK)
+
+
+
+class VocabularyReviewHistoryView(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = VocabularyReviewEventSerializer
+
+    def get_queryset(self):
+        queryset = VocabularyReviewEvent.objects.filter(
+            user=self.request.user,
+        ).select_related("card")
+        card_id = self.request.query_params.get("card")
+        if card_id:
+            queryset = queryset.filter(card_id=card_id)
+        return queryset
