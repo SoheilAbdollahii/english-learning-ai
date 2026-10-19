@@ -60,8 +60,9 @@ Status: partially implemented. Session CSRF/login/logout, profile, placement, wr
 - GET /api/v1/reading/passages/ — public list of published original passages with level, content version, and question count.
 - GET /api/v1/reading/passages/{passage_id}/ — published passage and public question options. Correct options and explanations are omitted before submission.
 - POST /api/v1/reading/attempts/ — authenticated; accepts a passage ID and exactly one valid option per question; server calculates weighted score and percentage.
+- GET /api/v1/reading/attempts/?limit=10&offset=0 — authenticated, paginated owner-only attempt history (maximum page size 50).
 - GET /api/v1/reading/attempts/{attempt_id}/ — authenticated owner-only result including answer feedback and explanation snapshots.
-- Two original sample passages (A2 and B1) are seeded by migration. Content is original starter content, not externally licensed material. The current MVP does not yet include passage authoring workflows, immutable question version snapshots, or attempt history UI.
+- Two original sample passages (A2 and B1) are seeded by migration. Content is original starter content, not externally licensed material. The current MVP does not yet include passage authoring workflows or immutable question version snapshots; the learner-facing attempt-history UI is being added in PR #16 and remains subject to CI verification.
 
 ### Progress (initial persisted summary)
 - GET /api/v1/progress/summary/ — authenticated; returns completed activity count, vocabulary reviews, reading/writing/placement totals, due/mastered vocabulary counts, current consecutive-day streak, and the latest eight activity events.

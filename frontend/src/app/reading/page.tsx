@@ -9,6 +9,7 @@ type ReadingQuestion = { id: number; prompt: string; options: Record<string, str
 type PassageDetail = PassageSummary & { body: string; source_note: string; questions: ReadingQuestion[] };
 type AnswerDetail = { question_id: number; prompt: string; selected_option: string; correct_option: string; correct: boolean; explanation: string };
 type ReadingResult = { id: number; passage: number; passage_title: string; passage_version: number; submitted_answers: Record<string, string>; result_details: AnswerDetail[]; score: number; max_score: number; percentage: number; completed_at: string };
+type ReadingAttemptSummary = { id: number; passage_title: string; passage_version: number; score: number; max_score: number; percentage: number; completed_at: string };
 
 async function getCsrfToken(): Promise<string> {
   const response = await fetch("/api/v1/auth/csrf/", { credentials: "same-origin", cache: "no-store" });
@@ -23,6 +24,8 @@ export default function ReadingPage() {
   const [passage, setPassage] = useState<PassageDetail | null>(null);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [result, setResult] = useState<ReadingResult | null>(null);
+  const [history, setHistory] = useState<ReadingAttemptSummary[]>([]);
+  const [historyNeedsSignIn, setHistoryNeedsSignIn] = useState(false);
   const [loading, setLoading] = useState(true);
   const [loadingPassage, setLoadingPassage] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -47,6 +50,21 @@ export default function ReadingPage() {
 
   useEffect(() => {
     let active = true;
+    async function loadHistory() {
+      try {
+        const response = await fetch("/api/v1/reading/attempts/?limit=8", { credentials: "same-origin", cache: "no-store" });
+        if (response.status === 401 || response.status === 403) {
+          if (active) setHistoryNeedsSignIn(true);
+          return;
+        }
+        if (!response.ok) return;
+        const data = await response.json() as { results?: ReadingAttemptSummary[] };
+        if (active) setHistory(data.results ?? []);
+      } catch {
+        // History is supplementary; keep passage practice available if it fails.
+      }
+    }
+    void loadHistory();
     async function loadPassages() {
       try {
         const response = await fetch("/api/v1/reading/passages/", { credentials: "same-origin", cache: "no-store" });
@@ -90,6 +108,8 @@ export default function ReadingPage() {
       }
       if (!response.ok) throw new Error(data.detail ?? "We couldn't save your reading result.");
       setResult(data);
+      setHistoryNeedsSignIn(false);
+      setHistory((previous) => [data, ...previous.filter((item) => item.id !== data.id)].slice(0, 8));
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "We couldn't submit your answers.");
     } finally {
@@ -175,7 +195,27 @@ export default function ReadingPage() {
           )}
         </>
       )}
-      {error && (!passage || result) && <p className="placement-error" role="alert">{error}</p>}
+      <section className="reading-history" aria-labelledby="reading-history-title">
+        <div className="section-heading">
+          <div><p className="placement-eyebrow">{t("YOUR PRACTICE")}</p><h2 id="reading-history-title">{t("Your reading history")}</h2></div>
+          <span className="section-caption">{history.length} {t("recent attempts")}</span>
+        </div>
+        {historyNeedsSignIn && history.length === 0 ? (
+          <p className="writing-empty">{t("Sign in to see your saved reading history.")} <Link href="/login">{t("Sign in")}</Link></p>
+        ) : history.length === 0 ? (
+          <p className="writing-empty">{t("Your reading attempts will appear here after you finish a passage.")}</p>
+        ) : (
+          <div className="reading-history-list">
+            {history.map((attempt) => (
+              <article className="reading-history-item" key={attempt.id}>
+                <div><strong lang="en" dir="ltr">{attempt.passage_title}</strong><span>{new Date(attempt.completed_at).toLocaleDateString(locale === "fa" ? "fa-IR" : "en-US")} · {t("VERSION")} {attempt.passage_version}</span></div>
+                <strong className="reading-history-score">{attempt.percentage}%</strong>
+              </article>
+            ))}
+          </div>
+        )}
+      </section>
+      {error && (!passage || result) && <p className="placement-error" role="alert">{t(error)}</p>}
     </main>
   );
 }
