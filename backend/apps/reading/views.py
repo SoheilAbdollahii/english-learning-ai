@@ -57,6 +57,20 @@ class ReadingAttemptCreateView(APIView):
             }
             for question in questions
         ]
+        question_snapshots = [
+            {
+                "question_id": question.pk,
+                "prompt": question.prompt,
+                "options": dict(question.options),
+                "correct_option": question.correct_option,
+                "explanation": question.explanation,
+                "points": question.points,
+                "order": question.order,
+                "selected_option": answers[str(question.pk)],
+                "correct": answers[str(question.pk)] == question.correct_option,
+            }
+            for question in questions
+        ]
         with transaction.atomic():
             attempt = ReadingAttempt.objects.create(
                 user=request.user,
@@ -64,6 +78,7 @@ class ReadingAttemptCreateView(APIView):
                 passage_version=passage.content_version,
                 submitted_answers=answers,
                 result_details=details,
+                question_snapshots=question_snapshots,
                 score=score,
                 max_score=max_score,
                 percentage=round(score * 100 / max_score) if max_score else 0,
