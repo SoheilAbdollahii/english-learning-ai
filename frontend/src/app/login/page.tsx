@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useLocale } from "../components/locale-provider";
 import { useState } from "react";
 import type { FormEvent } from "react";
 
@@ -16,6 +17,7 @@ async function getCsrfToken(): Promise<string> {
 }
 
 export default function LoginPage() {
+  const { t } = useLocale();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -51,17 +53,17 @@ export default function LoginPage() {
 
   return (
     <main className="login-shell">
-      <Link className="login-back" href="/" aria-label="Back to dashboard">← Back to dashboard</Link>
+      <Link className="login-back" href="/" aria-label="Back to dashboard">← {t("Back to dashboard")}</Link>
       <section className="login-card" aria-labelledby="login-title">
         <Link className="brand login-brand" href="/">
           <span className="brand-mark" aria-hidden="true">e.</span>
           <span className="brand-name">wordwise<span>LEARNING STUDIO</span></span>
         </Link>
-        <p className="eyebrow login-eyebrow">WELCOME BACK</p>
-        <h1 id="login-title">Make today<br /><em>count.</em></h1>
-        <p className="login-description">Sign in to continue your English learning journey.</p>
+        <p className="eyebrow login-eyebrow">{t("WELCOME BACK")}</p>
+        <h1 id="login-title">{t("Make today count.")}</h1>
+        <p className="login-description">{t("Sign in to continue your English learning journey.")}</p>
         <form className="login-form" onSubmit={handleSubmit}>
-          <label htmlFor="username">Username</label>
+          <label htmlFor="username">{t("Username")}</label>
           <input
             id="username"
             name="username"
@@ -71,7 +73,7 @@ export default function LoginPage() {
             required
             maxLength={150}
           />
-          <label htmlFor="password">Password</label>
+          <label htmlFor="password">{t("Password")}</label>
           <input
             id="password"
             name="password"
@@ -83,10 +85,10 @@ export default function LoginPage() {
           />
           {error && <p className="login-error" role="alert">{error}</p>}
           <button className="login-submit" type="submit" disabled={busy}>
-            {busy ? "Signing in…" : "Sign in"}
+            {busy ? "Signing in…" : t("Sign in")}
           </button>
         </form>
-        <p className="login-footnote">New to Wordwise? <Link href="/register">Create an account</Link></p>
+        <p className="login-footnote">{t("New to Wordwise?")} <Link href="/register">{t("Create an account")}</Link></p>
       </section>
     </main>
   );
