@@ -15,6 +15,7 @@ type ProgressSummaryData = {
   due_words: number;
   mastered_words: number;
   current_streak_days: number;
+  weekly_activity: { date: string; count: number }[];
   recent_activity: RecentActivity[];
 };
 
@@ -51,6 +52,7 @@ export default function ProgressOverview() {
   }, []);
 
   const value = (number: number | undefined) => loading ? "—" : String(number ?? 0);
+  const weeklyMaximum = Math.max(1, ...(summary?.weekly_activity ?? []).map((day) => day.count));
 
   return (
     <div className="progress-overview" aria-busy={loading}>
@@ -87,6 +89,36 @@ export default function ProgressOverview() {
             <article><span>{t("Level checks")}</span><strong>{summary.placement_attempts}</strong></article>
             <article><span>{t("Words due")}</span><strong>{summary.due_words}</strong></article>
             <article><span>{t("Mastered words")}</span><strong>{summary.mastered_words}</strong></article>
+          </section>
+          <section className="progress-weekly" aria-labelledby="weekly-activity-title">
+            <div className="section-heading">
+              <div><p className="eyebrow">{t("YOUR LEARNING TRAIL")}</p><h2 id="weekly-activity-title">{t("Weekly activity")}</h2></div>
+              <span className="section-caption">{t("Activity in the last seven days")}</span>
+            </div>
+            <ul className="weekly-activity-list" aria-label={t("Activity in the last seven days")}>
+              {summary.weekly_activity.map((day) => {
+                const date = new Date(`${day.date}T12:00:00`);
+                const dayLabel = date.toLocaleDateString(locale === "fa" ? "fa-IR" : "en-US", { weekday: "short" });
+                const height = `${(day.count / weeklyMaximum) * 100}%`;
+                return (
+                  <li key={day.date}>
+                    <span className="weekly-activity-day">{dayLabel}</span>
+                    <div
+                      className="weekly-activity-track"
+                      role="meter"
+                      aria-label={`${dayLabel} ${t("activity")}`}
+                      aria-valuemin={0}
+                      aria-valuemax={weeklyMaximum}
+                      aria-valuenow={day.count}
+                      aria-valuetext={`${day.count} ${t("activities")}`}
+                    >
+                      <span style={{ height }} />
+                    </div>
+                    <strong className="weekly-activity-count">{day.count}</strong>
+                  </li>
+                );
+              })}
+            </ul>
           </section>
           <Recommendations />
           <section className="progress-recent" aria-labelledby="recent-activity-title">
