@@ -22,7 +22,7 @@ class WritingSubmissionCollectionView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_throttles(self):
-        # Only provider-backed submissions consume AI quota; history reads stay available.
+        # Bound write requests; the durable daily quota is enforced in the POST handler.
         if self.request.method == "POST":
             return [WritingSubmissionThrottle()]
         return []
