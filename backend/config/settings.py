@@ -101,6 +101,24 @@ DATABASE_URL = os.environ.get(
 )
 DATABASES = {"default": dj_database_url.parse(DATABASE_URL, conn_max_age=60)}
 
+# Shared cache is required for consistent throttling across multiple workers.
+# Local development and CI may omit REDIS_URL and use an in-process cache.
+REDIS_URL = os.environ.get("REDIS_URL", "").strip()
+if REDIS_URL:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.redis.RedisCache",
+            "LOCATION": REDIS_URL,
+        }
+    }
+else:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+            "LOCATION": "english-learning-ai-local",
+        }
+    }
+
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator", "OPTIONS": {"min_length": 12}},
