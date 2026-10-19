@@ -66,7 +66,7 @@ Status: core MVP endpoints are implemented with automated tests. Session CSRF/lo
 - Two original sample passages (A2 and B1) are seeded by migration. Content is original starter content, not externally licensed material. The current MVP does not yet include passage authoring workflows or immutable question version snapshots; the learner-facing attempt-history UI is being added in PR #16 and remains subject to CI verification.
 
 ### Progress (initial persisted summary)
-- GET /api/v1/progress/summary/ — authenticated; returns completed activity count, vocabulary reviews, reading/writing/placement totals, due/mastered vocabulary counts, current consecutive-day streak, and the latest eight activity events.
+- GET /api/v1/progress/summary/ — authenticated; returns completed activity count, vocabulary reviews, reading/writing/placement totals, due/mastered vocabulary counts, current consecutive-day streak, seven daily `weekly_activity` buckets (`date` in the learner's profile timezone and recorded-event `count` for the previous seven local calendar days), and the latest eight activity events. Invalid or missing profile timezones fall back to UTC. The dashboard renders the buckets as an accessible localized bar chart; counts are recorded events, not inferred study duration or mastery.
 - Activity events are recorded after successful writing submissions, completed reading attempts, placement attempts, and vocabulary review outcomes. Event metadata avoids storing submitted writing text.
 - Study duration is intentionally not reported because the current product does not collect reliable session-duration data.
 
