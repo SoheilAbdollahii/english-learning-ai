@@ -27,7 +27,7 @@ Current status: **Writing application flow and quality tooling are implemented; 
 
 Vocabulary status: **Verified in CI on PR #6** ([run](https://github.com/SoheilAbdollahii/english-learning-ai/actions/runs/39221335506)); cross-module acceptance coverage and atomic review persistence are **verified in CI on PR #17** ([run](https://github.com/SoheilAbdollahii/english-learning-ai/actions/runs/39229554954)). The MVP includes owner-scoped cards, case-insensitive duplicate prevention, due-card filtering, a deterministic SM-2-inspired schedule, review grades, and a responsive review UI. Review-state changes and activity events now share a transaction, and the view locks the owned card while applying a review. Immutable vocabulary review-event snapshots and an owner-scoped paginated history endpoint are **verified in CI on PR #32** ([run](https://github.com/SoheilAbdollahii/english-learning-ai/actions/runs/39252120822)). Remaining vocabulary work includes curated licensed word packs and richer progress analytics.
 
-Reading core flow: **Verified in CI on PR #7** ([run](https://github.com/SoheilAbdollahii/english-learning-ai/actions/runs/39221772403)). Attempt-history UI and paginated history endpoint are covered by PR #16, with CI passing for backend, frontend, and container build. The initial flow includes two original A2/B1 passages, published-only public endpoints, hidden answer keys before submission, exact-answer validation, server-side scoring, owner-scoped saved attempts, feedback explanations, and a responsive learner page. Remaining work includes immutable question-version snapshots, authoring/content review, and more reviewed passages.
+Reading core flow: **Verified in CI on PR #7** ([run](https://github.com/SoheilAbdollahii/english-learning-ai/actions/runs/39221772403)). Attempt-history UI and paginated history endpoint are covered by PR #16, with CI passing for backend, frontend, and container build. The initial flow includes two original A2/B1 passages, published-only public endpoints, hidden answer keys before submission, exact-answer validation, server-side scoring, owner-scoped saved attempts, feedback explanations, and a responsive learner page. Immutable question-version snapshots are implemented in PR #36 and pending CI verification; remaining work includes authoring/content review and more reviewed passages.
 
 ### Phase 6 — Progress and personalization
 
@@ -51,9 +51,9 @@ Proceed only with a concrete use case; evaluate source rights, retrieval quality
 
 ### Phase 10 — Release
 
-Release tooling status: **Verified in CI on PR #13** ([run](https://github.com/SoheilAbdollahii/english-learning-ai/actions/runs/39224375843)). Added backend/frontend Dockerfiles, a local PostgreSQL Docker Compose setup, a database/migration readiness endpoint, and a release checklist that separates local smoke tests from production requirements.
+Release tooling status: **Verified in CI on PR #13** ([run](https://github.com/SoheilAbdollahii/english-learning-ai/actions/runs/39224375843)). Added backend/frontend Dockerfiles, a local PostgreSQL Docker Compose setup, a database/migration readiness endpoint, and a release checklist that separates local smoke tests from production requirements. A running-stack Compose smoke test is added to CI in PR #37 and awaits verification.
 
-Remaining before production: execute the container smoke test in a Docker-capable environment; verify quota behavior in the actual multi-worker production topology; configure real HTTPS/proxy/cache/secrets and SMTP; complete privacy and backup/restore drills; complete educator review and live-provider Writing evaluation; run real-browser E2E/accessibility checks; and run the final release regression.
+Remaining before production: verify quota behavior in the actual multi-worker production topology; configure real HTTPS/proxy/cache/secrets and SMTP; complete privacy and backup/restore drills; complete educator review and live-provider Writing evaluation; run real-browser E2E/accessibility checks; and run the final release regression.
 
 ## MVP acceptance criteria
 - AC-01 Accounts: users authenticate and access only their own private records.
