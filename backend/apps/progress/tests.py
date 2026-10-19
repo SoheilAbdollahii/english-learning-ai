@@ -42,7 +42,7 @@ def test_progress_summary_is_private_and_counts_persisted_activity():
     assert len(weekly) == 7
     assert [day["date"] for day in weekly] == sorted(day["date"] for day in weekly)
     assert sum(day["count"] for day in weekly) == 2
-    assert weekly[-1]["date"] == timezone.localdate().isoformat()
+    assert weekly[-1]["date"] == timezone.localdate(timezone=_learner_timezone(user)).isoformat()
     assert [item["type"] for item in response.data["recent_activity"]] == ["reading", "vocabulary"]
 
 
