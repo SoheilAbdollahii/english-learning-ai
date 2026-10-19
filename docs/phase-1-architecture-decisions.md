@@ -1,6 +1,6 @@
 # Phase 1 — Architecture Decisions and Integration Plan
 
-Status: proposed; review required before implementation and merge.
+Status: approved for implementation planning; product-code changes remain subject to their phase-specific review.
 Date: 2026-10-19
 
 ## 1. Executive decision
@@ -47,7 +47,7 @@ The currently open PRs form this dependency chain:
 
 PR #15 is not in the currently observed chain and must be inspected separately if it remains relevant. Do not merge a downstream PR directly to `main` before its required base changes have landed. Before each merge, re-check the live base/head SHAs, review unresolved comments and run CI on the candidate merge commit.
 
-Recommended order: validate #1 into `main), then advance one dependent PR at a time in the observed order. If repository permissions or branch protections prevent this, prepare a reviewed integration branch and open a single explicit integration PR; do not silently retarget or merge the stack.
+Recommended order: validate #1 into `main`, then advance one dependent PR at a time in the observed order. If repository permissions or branch protections prevent this, prepare a reviewed integration branch and open a single explicit integration PR; do not silently retarget or merge the stack.
 
 ## 5. Confirmed risks and required actions
 
@@ -100,9 +100,8 @@ Before a release candidate can be called integrated:
 
 ## 8. Next implementation sequence
 
-1. Review and approve this architecture/integration decision.
-2. Integrate the PR stack in dependency order with CI evidence at each step.
-3. Add a committed frontend lockfile and use `npm ci`.
-4. Configure and test shared rate limiting for production.
-5. Run the full test suite against the integrated candidate and fix verified failures.
-6. Complete the human-reviewed Writing evaluation and remaining release gates.
+1. Re-check the live dependency graph and integrate the PR stack in order, with review and CI evidence at each step.
+2. Add a committed frontend lockfile and use `npm ci`.
+3. Configure and test shared rate limiting for production.
+4. Run the full test suite against the integrated candidate and fix verified failures.
+5. Complete the human-reviewed Writing evaluation and remaining release gates.
