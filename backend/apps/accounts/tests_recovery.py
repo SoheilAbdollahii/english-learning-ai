@@ -5,12 +5,14 @@ from urllib.parse import urlparse, parse_qs
 import pytest
 from django.contrib.auth import get_user_model
 from django.core import mail
+from django.core.cache import cache
 from django.test import Client, override_settings
 
 User = get_user_model()
 
 
 def csrf_client():
+    cache.clear()
     client = Client(enforce_csrf_checks=True)
     token = client.get("/api/v1/auth/csrf/").json()["csrfToken"]
     return client, token
