@@ -25,6 +25,7 @@ def token_params(message):
 @pytest.mark.django_db
 @override_settings(EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend")
 def test_registration_requires_email_and_sends_verification_link():
+    mail.outbox.clear()
     client, token = csrf_client()
     response = client.post(
         "/api/v1/auth/register/",
@@ -43,6 +44,7 @@ def test_registration_requires_email_and_sends_verification_link():
 @pytest.mark.django_db
 @override_settings(EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend")
 def test_email_verification_activates_user_and_token_cannot_be_reused():
+    mail.outbox.clear()
     client, token = csrf_client()
     user = User.objects.create_user(username="pending", email="pending@example.com", password="Strong-test-pass-123", is_active=False)
     from django.contrib.auth.tokens import default_token_generator
@@ -73,6 +75,7 @@ def test_email_verification_activates_user_and_token_cannot_be_reused():
 @pytest.mark.django_db
 @override_settings(EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend")
 def test_password_reset_is_generic_and_changes_password_with_valid_token():
+    mail.outbox.clear()
     user = User.objects.create_user(username="reset-me", email="reset@example.com", password="Old-strong-pass-123")
     client, token = csrf_client()
     unknown = client.post(
@@ -121,6 +124,7 @@ def test_password_reset_is_generic_and_changes_password_with_valid_token():
 @pytest.mark.django_db
 @override_settings(EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend")
 def test_password_reset_rejects_weak_password_and_inactive_accounts():
+    mail.outbox.clear()
     user = User.objects.create_user(username="inactive", email="inactive@example.com", password="Old-strong-pass-123", is_active=False)
     client, token = csrf_client()
     response = client.post(
