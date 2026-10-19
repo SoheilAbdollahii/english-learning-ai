@@ -32,11 +32,11 @@ Status: implemented profile, placement, writing, and initial vocabulary card sch
 
 Keep a canonical validated analysis result. Add normalized error records only where querying or analytics need them. Raw model output is not trusted application data.
 
-### Reading
-- Passage: content, level, language, source/license metadata, content version, publication state.
-- Question: passage, prompt, options, explanation, type and version.
-- ReadingAttempt: user, passage version, score, start and completion timestamps.
-- ReadingAnswer: attempt, question version, submitted answer, correctness, optional explanation snapshot.
+### Reading (initial implementation)
+- Passage: slug, title, original passage body, CEFR level, content version, source note, publication state, and creation timestamp. The public API only lists published passages.
+- ReadingQuestion: passage, prompt, options, correct option, explanation, points, and order. Public serializers intentionally omit correct options and explanations until an attempt is submitted.
+- ReadingAttempt: user, passage reference and version, submitted answers, result/explanation snapshots, server-calculated score and percentage, and completion timestamp.
+- Original A2 and B1 sample passages are seeded through a data migration. Follow-up work: enforce immutable published content versions and add normalized per-question answer-event records if analytics require them.
 
 ### Vocabulary (initial implementation)
 - VocabularyCard: user, word, English definition, optional example and translation, status, repetitions, interval, ease factor, due timestamp, last review timestamp, and created/updated timestamps.
