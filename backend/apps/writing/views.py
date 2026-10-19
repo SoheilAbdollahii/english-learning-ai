@@ -7,9 +7,11 @@ from rest_framework.generics import RetrieveAPIView
 
 from apps.progress.models import LearningActivity
 from apps.progress.services import record_activity
+from apps.usage.models import AIUsageRecord
+from apps.usage.services import finish_usage, reserve_writing_usage
 from .models import WritingSubmission
 from .serializers import WritingSubmissionCreateSerializer, WritingSubmissionSerializer
-from .services import WritingProviderError, analyze_writing
+from .services import WritingProviderError, analyze_writing, get_provider
 
 
 class WritingSubmissionThrottle(UserRateThrottle):
@@ -37,6 +39,18 @@ class WritingSubmissionCollectionView(APIView):
     def post(self, request):
         serializer = WritingSubmissionCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        usage_record, daily_limit, used = reserve_writing_usage(request.user, len(serializer.validated_data["text"]))
+        if usage_record is None:
+            return Response(
+                {
+                    "code": "usage_limit_exceeded",
+                    "detail": "Your rolling 24-hour writing submission limit has been reached. Please try again later.",
+                    "limit": daily_limit,
+                    "used": used,
+                },
+                status=status.HTTP_429_TOO_MANY_REQUESTS,
+            )
+        provider_hint = get_provider().name
         submission = WritingSubmission.objects.create(
             user=request.user,
             original_text=serializer.validated_data["text"],
@@ -45,6 +59,7 @@ class WritingSubmissionCollectionView(APIView):
         try:
             provider_name, result = analyze_writing(submission.original_text)
         except WritingProviderError:
+            finish_usage(usage_record, provider_hint, AIUsageRecord.Status.FAILED, "analysis_unavailable")
             submission.status = WritingSubmission.Status.FAILED
             submission.failure_category = "analysis_unavailable"
             submission.save(update_fields=("status", "failure_category", "updated_at"))
@@ -62,6 +77,7 @@ class WritingSubmissionCollectionView(APIView):
         submission.provider = provider_name
         submission.result = result
         submission.save(update_fields=("status", "provider", "result", "updated_at"))
+        finish_usage(usage_record, provider_name, AIUsageRecord.Status.SUCCEEDED)
         record_activity(request.user, LearningActivity.Type.WRITING, submission.pk)
         return Response(WritingSubmissionSerializer(submission).data, status=status.HTTP_201_CREATED)
 
