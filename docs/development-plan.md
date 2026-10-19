@@ -50,7 +50,10 @@ Remaining: persist actual provider token metadata where available, configure a v
 Proceed only with a concrete use case; evaluate source rights, retrieval quality, answer quality, and evidence attribution separately.
 
 ### Phase 10 — Release
-Production configuration, migrations, backup strategy, privacy/logging review, deployment guide, and regression run.
+
+Release tooling status: **Implemented — CI verification pending.** Added backend/frontend Dockerfiles, a local PostgreSQL Docker Compose setup, a database/migration readiness endpoint, and a release checklist that separates local smoke tests from production requirements.
+
+Remaining before production: execute the container smoke test in a Docker-capable environment; validate PostgreSQL quota concurrency; configure real HTTPS/proxy/cache/secrets; complete privacy and backup/restore drills; review and merge the stacked PRs in dependency order; run the final release regression.
 
 ## MVP acceptance criteria
 - AC-01 Accounts: users authenticate and access only their own private records.

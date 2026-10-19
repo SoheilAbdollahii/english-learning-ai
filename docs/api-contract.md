@@ -14,7 +14,8 @@ Status: partially implemented. Session CSRF/login/logout, profile, placement, wr
 ## Implemented endpoints
 
 ### Health
-- GET /api/v1/health/ — public process-level health response; not a database/dependency readiness check.
+- GET /api/v1/health/ — public liveness response; confirms the process is serving but does not check dependencies.
+- GET /api/v1/ready/ — public readiness response; checks database connectivity and unapplied migrations and returns generic failure details without exposing driver internals.
 
 ### Current learner profile
 - GET /api/v1/me/ — authenticated user's id, username, email, name fields, and profile preferences.
