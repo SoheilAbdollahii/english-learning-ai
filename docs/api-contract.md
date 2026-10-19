@@ -52,7 +52,8 @@ Status: core MVP endpoints are implemented with automated tests. Session CSRF/lo
 ### Vocabulary (initial review MVP)
 - GET /api/v1/vocabulary/cards/ — authenticated; returns only the current learner's cards ordered by due date. Add `?due=true` to return cards due now.
 - POST /api/v1/vocabulary/cards/ — authenticated; creates a card with word, English definition, optional example and translation. A learner cannot save the same word twice, ignoring case.
-- POST /api/v1/vocabulary/cards/{card_id}/review/ — authenticated owner-only; accepts `quality` from 0 to 5 and returns the updated schedule.
+- POST /api/v1/vocabulary/cards/{card_id}/review/ — authenticated owner-only; accepts `quality` from 0 to 5 and returns the updated schedule. Each successful review atomically appends a review-event snapshot.
+- GET /api/v1/vocabulary/reviews/?limit=20&offset=0 — authenticated, paginated owner-only review-event history. Optional `card` filters by numeric card ID. Each event preserves the word and before/after scheduling state as recorded at review time; the API exposes no edit/delete operation.
 - Review scheduling is a deterministic SM-2-inspired rule set: grades below 3 reset the interval to one day; successful reviews progress through 1 day, 6 days, then ease-adjusted intervals. Five successful repetitions and a minimum 21-day interval mark a card mastered. Displaying a card alone does not change mastery.
 - The current card model stores a single owner-scoped card and its scheduling state; separate immutable review-event history and curated licensed vocabulary content are future work.
 
