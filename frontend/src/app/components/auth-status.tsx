@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useLocale } from "./locale-provider";
 
 import { useEffect, useState } from "react";
 
@@ -18,6 +19,7 @@ async function getCsrfToken(): Promise<string> {
 }
 
 export default function AuthStatus() {
+  const { t } = useLocale();
   const [username, setUsername] = useState<string | null>(null);
   const [ready, setReady] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -62,13 +64,13 @@ export default function AuthStatus() {
   }
 
   if (!ready) return <span className="auth-status-placeholder" aria-label="Checking sign-in status" />;
-  if (!username) return <Link className="auth-link" href="/login">Sign in</Link>;
+  if (!username) return <Link className="auth-link" href="/login">{t("Sign in")}</Link>;
 
   return (
     <div className="auth-status">
-      <span className="auth-greeting">Hi, {username}</span>
+      <span className="auth-greeting">{t("Hi")}, {username}</span>
       <button className="auth-button" type="button" onClick={signOut} disabled={busy}>
-        {busy ? "Signing out…" : "Sign out"}
+        {busy ? "Signing out…" : t("Sign out")}
       </button>
     </div>
   );
