@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useLocale } from "../components/locale-provider";
 import { useEffect, useState } from "react";
 
 type WritingError = {
@@ -54,6 +55,7 @@ async function getCsrfToken(): Promise<string> {
 }
 
 export default function WritingPage() {
+  const { t } = useLocale();
   const [text, setText] = useState("");
   const [history, setHistory] = useState<WritingSubmission[]>([]);
   const [current, setCurrent] = useState<WritingSubmission | null>(null);
@@ -136,8 +138,8 @@ export default function WritingPage() {
   return (
     <main className="writing-shell">
       <div className="writing-topline">
-        <Link href="/" className="placement-back">← Dashboard</Link>
-        <span className="placement-kicker">WORDWISE · WRITING STUDIO</span>
+        <Link href="/" className="placement-back">← {t("Back to dashboard")}</Link>
+        <span className="placement-kicker">{t("WORDWISE · WRITING STUDIO")}</span>
       </div>
 
       <section className="writing-intro" aria-labelledby="writing-title">
@@ -149,8 +151,8 @@ export default function WritingPage() {
       <section className="writing-composer" aria-labelledby="composer-title">
         <div className="writing-composer-heading">
           <div>
-            <p className="placement-eyebrow">YOUR DRAFT</p>
-            <h2 id="composer-title">What would you like to say?</h2>
+            <p className="placement-eyebrow">{t("YOUR DRAFT")}</p>
+            <h2 id="composer-title">{t("What would you like to say?")}</h2>
           </div>
           <span className="writing-character-count">{text.length} / 5,000</span>
         </div>
