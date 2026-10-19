@@ -1,6 +1,6 @@
 # Initial REST API Contract
 
-Status: partially implemented. Session CSRF/login/logout, profile, placement, writing, vocabulary review, initial Reading comprehension, and a persisted progress summary are implemented with automated tests. Basic durable Writing quota accounting is implemented; provider token and monetary cost accounting remain follow-up work. Gemini Developer API integration is optional and enabled only when the backend environment has a configured `GEMINI_API_KEY`; without it, the clearly labelled demo provider remains active.
+Status: partially implemented. Session CSRF/login/logout, profile, placement, writing, vocabulary review, initial Reading comprehension, and a persisted progress summary are implemented with automated tests. PR #17 adds an integration test covering placement, vocabulary review, Reading, Writing in deterministic demo mode, and progress-summary consistency; it also makes vocabulary review-state and activity persistence atomic. Basic durable Writing quota accounting is implemented; provider token and monetary cost accounting remain follow-up work. Gemini Developer API integration is optional and enabled only when the backend environment has a configured `GEMINI_API_KEY`; without it, the clearly labelled demo provider remains active.
 
 ## Conventions
 - Prefix routes with /api/v1/.
