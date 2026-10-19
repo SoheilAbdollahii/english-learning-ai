@@ -35,7 +35,7 @@ Progress status: **Verified in CI on PR #8** ([run](https://github.com/SoheilAbd
 
 Rule-based recommendations: **Verified in CI on PR #9** ([run](https://github.com/SoheilAbdollahii/english-learning-ai/actions/runs/39222517527)). Up to three next steps are selected from persisted due-word and module-history evidence, with a human-readable reason and direct route. This is a deterministic heuristic, not an AI-generated claim.
 
-Remaining: additional timezone/history edge-case coverage and actual provider usage-cost accounting.
+Remaining: additional timezone/history edge-case coverage and validation of quota concurrency against production PostgreSQL. Provider token/cost accounting is now implemented in PR #18; estimates require configured rates and are not billing records.
 
 ### Phase 7 — Frontend integration
 Complete learner flows, RTL/LTR and accessibility checks, E2E scenarios, production build checks.
@@ -44,7 +44,7 @@ Complete learner flows, RTL/LTR and accessibility checks, E2E scenarios, product
 
 Usage status: **Basic durable quota verified in CI on PR #10** ([run](https://github.com/SoheilAbdollahii/english-learning-ai/actions/runs/39222991351)). Writing requests reserve a database-backed slot before provider work; the rolling 24-hour default is 30 submissions per learner and provider failures consume a slot. A private usage summary exposes used/remaining slots and character volume. A per-hour DRF throttle remains as an additional guard.
 
-Remaining: persist actual provider token metadata where available, configure a validated pricing table before calculating monetary cost, add alerting, and test concurrent quota reservations against production PostgreSQL. Do not use this MVP ledger for billing.
+Provider-reported token metadata and optional rate-configured cost estimates are implemented in PR #18. Remaining: add operational alerting and test concurrent quota reservations against production PostgreSQL. Do not use this MVP ledger for billing.
 
 ### Phase 9 — Optional RAG
 Proceed only with a concrete use case; evaluate source rights, retrieval quality, answer quality, and evidence attribution separately.
@@ -53,7 +53,7 @@ Proceed only with a concrete use case; evaluate source rights, retrieval quality
 
 Release tooling status: **Verified in CI on PR #13** ([run](https://github.com/SoheilAbdollahii/english-learning-ai/actions/runs/39224375843)). Added backend/frontend Dockerfiles, a local PostgreSQL Docker Compose setup, a database/migration readiness endpoint, and a release checklist that separates local smoke tests from production requirements.
 
-Remaining before production: execute the container smoke test in a Docker-capable environment; validate PostgreSQL quota concurrency; configure real HTTPS/proxy/cache/secrets; complete privacy and backup/restore drills; review and merge the stacked PRs in dependency order; run the final release regression.
+Remaining before production: execute the container smoke test in a Docker-capable environment; validate PostgreSQL quota concurrency; configure real HTTPS/proxy/cache/secrets; complete privacy and backup/restore drills; complete educator review and live-provider Writing evaluation; add email verification/account recovery; review and merge the stacked PRs in dependency order; run the final release regression.
 
 ## MVP acceptance criteria
 - AC-01 Accounts: users authenticate and access only their own private records.
