@@ -172,6 +172,11 @@ def validate_result(original_text: str, result: Any) -> dict[str, Any]:
             "explanation": explanation,
         })
 
+    ordered_errors = sorted(validated_errors, key=lambda item: (item["start"], item["end"]))
+    for previous, current in zip(ordered_errors, ordered_errors[1:]):
+        if current["start"] < previous["end"]:
+            raise WritingProviderError("Provider returned overlapping error spans.")
+
     return {
         "schema_version": 1,
         "corrected_text": corrected_text,
