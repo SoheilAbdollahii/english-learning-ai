@@ -19,7 +19,7 @@ test("login page uses CSRF-protected session auth and accessible form fields", a
   assert.match(login, /autoComplete="username"/);
   assert.match(login, /autoComplete="current-password"/);
   assert.match(login, /role="alert"/);
-  assert.match(login, /Public registration is not available yet/);
+  assert.match(login, /href="\/register"/);
 });
 
 test("dashboard header exposes session status controls", async () => {
