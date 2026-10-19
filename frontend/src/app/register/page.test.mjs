@@ -8,6 +8,6 @@ test("registration form uses CSRF-protected API and confirms password", async ()
   assert.match(page, /\/api\/v1\/auth\/csrf\//);
   assert.match(page, /X-CSRFToken/);
   assert.match(page, /password !== confirmPassword/);
-  assert.match(page, /minLength={12}/);
+  assert.match(page, /minLength=\{12\}/);
   assert.match(page, /email verification and account recovery are not available yet/i);
 });
