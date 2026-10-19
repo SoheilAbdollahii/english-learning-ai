@@ -56,7 +56,7 @@ class RegistrationView(APIView):
         if User.objects.filter(username__iexact=username).exists():
             return Response({"username": ["This username is already taken."]}, status=status.HTTP_400_BAD_REQUEST)
 
-        candidate = User(username=username)
+        candidate = User(username=username, email=email)
         try:
             validate_password(password, user=candidate)
         except DjangoValidationError as exc:
