@@ -15,7 +15,7 @@ An AI-powered English learning web application.
 ## Repository map
 
 - `backend/` — Django REST API for accounts, placement, writing, vocabulary, reading, and progress
-- `frontend/` — Next.js learner dashboard, session sign-in, placement quiz, Writing Studio, Vocabulary review, and Reading Room
+- `frontend/` — Next.js learner dashboard, registration/sign-in, placement quiz, Writing Studio, Vocabulary review, and Reading Room
 - `frontend/tests/` — frontend dashboard smoke tests
 - `docs/architecture.md` — architecture decisions
 - `docs/data-model.md` — proposed learning data model
@@ -61,7 +61,7 @@ npm install
 npm run dev
 ```
 
-Open `http://localhost:3000`. Sign in at `http://localhost:3000/login` using the Django superuser you created. The frontend proxies `/api/*` to `http://127.0.0.1:8000` by default; set `BACKEND_API_URL` if your backend runs elsewhere. The dashboard's progress summary is derived from saved activities; study duration is intentionally not shown because reliable session-duration tracking is not yet implemented. For a different frontend origin, set `DJANGO_CSRF_TRUSTED_ORIGINS` to comma-separated origins including `https://` in production. Create a user through Django admin or `createsuperuser`; public registration is not yet available.
+Open `http://localhost:3000`. Create a learner account at `http://localhost:3000/register` or sign in at `http://localhost:3000/login`. The frontend proxies `/api/*` to `http://127.0.0.1:8000` by default; set `BACKEND_API_URL` if your backend runs elsewhere. The dashboard's progress summary is derived from saved activities; study duration is intentionally not shown because reliable session-duration tracking is not yet implemented. For a different frontend origin, set `DJANGO_CSRF_TRUSTED_ORIGINS` to comma-separated origins including `https://` in production. Registration is CSRF-protected and throttled, with a 12-character minimum password policy. Email verification and password recovery are not yet available; add them before a broad public launch.
 
 ## Checks
 
